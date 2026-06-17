@@ -606,7 +606,7 @@ select option { font-family: 'Source Serif 4', serif; }
 <div class="masthead">
   <div class="masthead-title">
     CV<span class="mark">Craft</span>
-    <span class="masthead-tag">Composed by Claude</span>
+    <span class="masthead-tag">Composed by AI</span>
   </div>
   <div class="masthead-right">
     <span class="beta-badge">Free during beta</span>
@@ -740,7 +740,7 @@ Adobe Certified Expert, 2022"></textarea>
         <div class="empty-page" id="empty-state">
           <div class="empty-mark">AWAITING COPY</div>
           <h3>Your page is blank</h3>
-          <p>Fill the form on the left. Claude sets it in type the moment you're ready.</p>
+          <p>Fill the form on the left. Your CV is set in type the moment you're ready.</p>
         </div>
 
         <div class="cv-content" id="cv-content" style="display:none;">
@@ -783,7 +783,7 @@ Adobe Certified Expert, 2022"></textarea>
 </div>
 
 <div class="dev-note">
-  <strong>Dev note —</strong> this page calls <span style="font-weight:600">/api/claude</span>, a same-origin proxy that holds the Anthropic key server-side. Run <span style="font-weight:600">server.js</span> alongside this file (see README) or click <strong>View specimen</strong> above to see the finished layout without a live key.
+  <strong>Dev note —</strong> this page calls <span style="font-weight:600">/api/claude</span>, a same-origin proxy that holds the Gemini API key server-side. Run <span style="font-weight:600">server.js</span> alongside this file (see README) or click <strong>View specimen</strong> above to see the finished layout without a live key.
 </div>
 
 <script>
@@ -938,7 +938,7 @@ async function generate() {
 
   const body = document.getElementById('cv-body');
   body.innerHTML = '';
-  document.getElementById('status').innerHTML = '<span class="spin"></span> Claude is composing your CV…';
+  document.getElementById('status').innerHTML = '<span class="spin"></span> Composing your CV…';
   document.getElementById('status').className = 'status-strip';
 
   try {
@@ -946,7 +946,7 @@ async function generate() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
+        model: 'gemini-2.5-flash',
         max_tokens: 1200,
         stream: true,
         messages: [{ role: 'user', content: buildPrompt() }]
@@ -1017,7 +1017,7 @@ async function generate() {
   } catch (err) {
     body.innerHTML = `<div style="font-size:13.5px;color:var(--ink-soft);">
       <strong style="color:var(--red);display:block;margin-bottom:8px;">The page could not be set.</strong>
-      ${err.message.includes('401')||err.message.toLowerCase().includes('key') ? 'The server is missing a valid Anthropic key.' :
+      ${err.message.includes('401')||err.message.toLowerCase().includes('key') ? 'The server is missing a valid Gemini API key.' :
         err.message.includes('fetch')||err.message.includes('Network') ? 'No proxy server responded. See the dev note below.' :
         escHtml(err.message)}
       <br><br><a href="#" onclick="showDemo();return false;" style="color:var(--red);">View a specimen instead →</a>
