@@ -1,5 +1,5 @@
 // CVCraft — Backend Proxy Server
-// Forwards requests to Anthropic API with your key, handles CORS.
+// Forwards requests to Google's free Gemini API, handles CORS.
 // Run: node server.js
 // Requires: npm install express cors node-fetch dotenv
 
@@ -13,6 +13,8 @@ import 'dotenv/config';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
 
 // ── Middleware ──
 app.use(cors({
@@ -28,38 +30,96 @@ app.use(express.static(join(__dirname, 'public')));
 // ── Health check ──
 app.get('/health', (_, res) => res.json({ ok: true, time: new Date().toISOString() }));
 
-// ── Claude proxy endpoint ──
+// ── Gemini proxy endpoint ──
+// Keeps the same /api/claude path and the same { messages: [...], stream: true }
+// request shape the frontend already sends, so the frontend doesn't need to change.
+// This endpoint translates that shape into what Gemini expects, and translates
+// Gemini's streamed chunks back into the same simple text-delta shape the
+// frontend already knows how to parse.
 app.post('/api/claude', async (req, res) => {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY;
 
   if (!apiKey) {
     return res.status(500).json({
-      error: { message: 'ANTHROPIC_API_KEY is not set on the server.' }
+      error: { message: 'GEMINI_API_KEY is not set on the server.' }
     });
   }
 
+  // The frontend sends Anthropic-style { messages: [{ role, content }] }.
+  // Gemini wants { contents: [{ role, parts: [{ text }] }] }.
+  const userText = (req.body.messages || [])
+    .map(m => (typeof m.content === 'string' ? m.content : ''))
+    .join('\n\n');
+
+  const geminiBody = {
+    contents: [{ role: 'user', parts: [{ text: userText }] }],
+    generationConfig: {
+      maxOutputTokens: req.body.max_tokens || 1200,
+    },
+  };
+
+  const wantsStream = !!req.body.stream;
+  const url = wantsStream
+    ? `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:streamGenerateContent?alt=sse&key=${apiKey}`
+    : `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${apiKey}`;
+
   try {
-    const upstream = await fetch('https://api.anthropic.com/v1/messages', {
+    const upstream = await fetch(url, {
       method: 'POST',
-      headers: {
-        'Content-Type':         'application/json',
-        'x-api-key':            apiKey,
-        'anthropic-version':    '2023-06-01',
-      },
-      body: JSON.stringify(req.body),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(geminiBody),
     });
 
-    res.status(upstream.status);
-    res.setHeader('Content-Type', upstream.headers.get('content-type') || 'application/json');
-
-    if (req.body.stream) {
-      // node-fetch v3 body is a Node Readable in this runtime — pipe directly
-      upstream.body.on('error', (e) => { console.error('[stream error]', e.message); res.end(); });
-      upstream.body.pipe(res);
-    } else {
-      const data = await upstream.json();
-      res.json(data);
+    if (!upstream.ok) {
+      const errText = await upstream.text().catch(() => '');
+      let message = 'Gemini API error ' + upstream.status;
+      try { message = JSON.parse(errText).error?.message || message; } catch {}
+      return res.status(upstream.status).json({ error: { message } });
     }
+
+    if (!wantsStream) {
+      const data = await upstream.json();
+      const text = data.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('') || '';
+      return res.json({ content: [{ type: 'text', text }] });
+    }
+
+    // ── Streaming: translate Gemini SSE chunks into the simple shape
+    // the frontend expects: data: {"type":"content_block_delta","delta":{"text":"..."}}
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+
+    let buffer = '';
+    upstream.body.on('data', (chunk) => {
+      buffer += chunk.toString('utf8');
+      const lines = buffer.split('\n');
+      buffer = lines.pop();
+
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        const raw = line.slice(6).trim();
+        if (!raw || raw === '[DONE]') continue;
+        try {
+          const parsed = JSON.parse(raw);
+          const text = parsed.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('') || '';
+          if (text) {
+            res.write(`data: ${JSON.stringify({ type: 'content_block_delta', delta: { text } })}\n\n`);
+          }
+        } catch {
+          // Incomplete JSON fragment — wait for more data
+        }
+      }
+    });
+
+    upstream.body.on('end', () => {
+      res.write('data: [DONE]\n\n');
+      res.end();
+    });
+
+    upstream.body.on('error', (e) => {
+      console.error('[stream error]', e.message);
+      res.end();
+    });
 
   } catch (err) {
     console.error('[proxy error]', err.message);
@@ -69,5 +129,5 @@ app.post('/api/claude', async (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`\n  CVCraft proxy running at http://localhost:${PORT}`);
-  console.log(`  API key: ${process.env.ANTHROPIC_API_KEY ? '✓ loaded from .env' : '✗ MISSING — set ANTHROPIC_API_KEY'}\n`);
+  console.log(`  Gemini key: ${process.env.GEMINI_API_KEY ? '✓ loaded from .env' : '✗ MISSING — set GEMINI_API_KEY'}\n`);
 });
