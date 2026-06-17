@@ -244,6 +244,57 @@ select option { font-family: 'Source Serif 4', serif; }
 }
 .intake-divider .line { flex: 1; height: 1px; background: var(--rule); }
 
+/* repeatable job rows */
+.job-row {
+  border: 1px solid var(--rule-dark);
+  background: var(--card);
+  padding: 12px 13px 13px;
+  margin-bottom: 10px;
+  position: relative;
+}
+.job-row-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+.job-row-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.job-remove {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10.5px;
+  color: var(--red-dim);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0;
+}
+.job-remove:hover { color: var(--red); }
+.job-row .frow2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.job-row input, .job-row textarea { margin-bottom: 8px; }
+.job-row textarea { min-height: 58px; }
+.add-row-btn {
+  width: 100%;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: transparent;
+  border: 1px dashed var(--rule-dark);
+  color: var(--ink-soft);
+  padding: 9px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.add-row-btn:hover { border-color: var(--sage); color: var(--sage); background: var(--sage-pale); }
+
 /* skill chips */
 .chip-field { margin-bottom: 6px; }
 .chip-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 10px; }
@@ -654,11 +705,9 @@ select option { font-family: 'Source Serif 4', serif; }
     </div>
 
     <div class="field">
-      <div class="flabel">Work history <span class="opt">rough notes are fine</span></div>
-      <textarea id="experience" rows="6" placeholder="Product Designer at Studio Nine (2021–now)
-- led redesign of the booking flow
-- ran user interviews, shipped 3 major features
-- mentored two junior designers" oninput="updateProgress()"></textarea>
+      <div class="flabel">Work history <span class="opt">add as many as you need</span></div>
+      <div id="job-list"></div>
+      <button type="button" class="add-row-btn" onclick="addJobRow()">+ Add another job</button>
     </div>
     <div class="field">
       <div class="flabel">Education</div>
@@ -679,13 +728,22 @@ select option { font-family: 'Source Serif 4', serif; }
 
     <div class="intake-divider">
       <div class="num">4</div>
-      <div class="lbl">Extras</div>
+      <div class="lbl">Extras <span class="opt" style="text-transform:none;font-size:11px;">— all optional</span></div>
       <div class="line"></div>
     </div>
     <div class="field">
-      <div class="flabel">Awards, languages, certifications <span class="opt">optional</span></div>
-      <textarea id="achievements" rows="3" placeholder="Speaks English, Yoruba, French
-Adobe Certified Expert, 2022"></textarea>
+      <div class="flabel">Projects <span class="opt">optional</span></div>
+      <textarea id="projects" rows="3" placeholder="Personal portfolio site — built with Figma + Webflow, 2k monthly visitors
+Side project: budgeting app prototype, 200 beta users"></textarea>
+    </div>
+    <div class="field">
+      <div class="flabel">Awards & certifications <span class="opt">optional</span></div>
+      <textarea id="certifications" rows="2" placeholder="Adobe Certified Expert, 2022
+1st place, FAST Coding Competition, 2021"></textarea>
+    </div>
+    <div class="field">
+      <div class="flabel">Languages <span class="opt">optional</span></div>
+      <input type="text" id="languages" placeholder="English (fluent), Urdu (native), Arabic (basic)">
     </div>
 
     <button class="compose-btn" id="gen-btn" onclick="generate()">
@@ -764,7 +822,7 @@ Adobe Certified Expert, 2022"></textarea>
 // single flag controls whether downloads are free or behind the paywall.
 const FREE_MODE = true;
 
-const SECTION_KEYS = ['PROFESSIONAL SUMMARY','WORK EXPERIENCE','EDUCATION','KEY SKILLS','ACHIEVEMENTS & ADDITIONAL INFORMATION'];
+const SECTION_KEYS = ['PROFESSIONAL SUMMARY','WORK EXPERIENCE','EDUCATION','KEY SKILLS','PROJECTS','ACHIEVEMENTS & ADDITIONAL INFORMATION'];
 
 const REGIONS = [
   {id:'global', label:'Global', instr:'Write in clear, international professional English. Avoid region-specific jargon.'},
@@ -831,10 +889,67 @@ function updateChips() {
 }
 updateChips();
 
+// ── Repeatable job rows ──
+let jobCounter = 0;
+function addJobRow(prefill) {
+  jobCounter++;
+  const id = jobCounter;
+  const wrap = document.createElement('div');
+  wrap.className = 'job-row';
+  wrap.id = 'job-row-' + id;
+  wrap.innerHTML = `
+    <div class="job-row-head">
+      <span class="job-row-num">Job ${id}</span>
+      <button type="button" class="job-remove" onclick="removeJobRow(${id})">Remove</button>
+    </div>
+    <div class="frow2">
+      <input type="text" class="job-title" placeholder="Job title" oninput="updateProgress()">
+      <input type="text" class="job-company" placeholder="Company, City">
+    </div>
+    <input type="text" class="job-dates" placeholder="e.g. 2021–Present">
+    <textarea class="job-notes" rows="3" placeholder="Rough notes — what you did, results, numbers if you have them"></textarea>
+  `;
+  document.getElementById('job-list').appendChild(wrap);
+  renumberJobs();
+}
+function removeJobRow(id) {
+  const el = document.getElementById('job-row-' + id);
+  if (el) el.remove();
+  renumberJobs();
+  updateProgress();
+}
+function renumberJobs() {
+  const rows = document.querySelectorAll('#job-list .job-row');
+  rows.forEach((row, i) => {
+    row.querySelector('.job-row-num').textContent = 'Job ' + (i + 1);
+  });
+}
+function getJobsText() {
+  const rows = document.querySelectorAll('#job-list .job-row');
+  const entries = [];
+  rows.forEach(row => {
+    const title = row.querySelector('.job-title').value.trim();
+    const company = row.querySelector('.job-company').value.trim();
+    const dates = row.querySelector('.job-dates').value.trim();
+    const notes = row.querySelector('.job-notes').value.trim();
+    if (!title && !company && !notes) return;
+    let block = [title, company].filter(Boolean).join(' — ');
+    if (dates) block += ` (${dates})`;
+    if (notes) block += '\n' + notes;
+    entries.push(block);
+  });
+  return entries.join('\n\n');
+}
+// Start with one empty job row visible
+addJobRow();
+
 function updateProgress() {
-  const fields = ['fname','lname','email','experience'];
-  const filled = fields.filter(id => document.getElementById(id)?.value.trim()).length;
-  const pct = Math.round((filled / fields.length) * 100);
+  const hasJob = document.querySelectorAll('#job-list .job-row .job-title')
+    .length > 0 && [...document.querySelectorAll('#job-list .job-title')].some(i => i.value.trim());
+  const fields = ['fname','lname','email'];
+  let filled = fields.filter(id => document.getElementById(id)?.value.trim()).length;
+  if (hasJob) filled += 1;
+  const pct = Math.round((filled / (fields.length + 1)) * 100);
   document.getElementById('prog-fill').style.width = pct + '%';
   document.getElementById('pct-label').textContent = pct + '%';
 }
@@ -845,28 +960,36 @@ function buildPrompt() {
   const lname = document.getElementById('lname').value.trim();
   const role = document.getElementById('target-role').value.trim();
   const city = document.getElementById('city').value.trim();
-  const experience = document.getElementById('experience').value.trim();
+  const experience = getJobsText();
   const education = document.getElementById('education').value.trim();
   const skills = [
     ...[...document.querySelectorAll('.chip.on')].map(c => c.textContent),
     ...document.getElementById('skills-extra').value.split(',').map(s => s.trim()).filter(Boolean)
   ];
-  const achievements = document.getElementById('achievements').value.trim();
+  const projects = document.getElementById('projects').value.trim();
+  const certifications = document.getElementById('certifications').value.trim();
+  const languages = document.getElementById('languages').value.trim();
   const regionInstr = REGIONS.find(r => r.id === region).instr;
+
+  const extrasLines = [];
+  if (certifications) extrasLines.push('Certifications/Awards: ' + certifications);
+  if (languages) extrasLines.push('Languages: ' + languages);
+  const extrasText = extrasLines.join('\n') || 'None provided';
 
   return `You are an expert CV writer. ${regionInstr}
 
 RULES:
 - Strong action verbs, quantify achievements wherever possible
-- If experience is thin (fresh grad), emphasise education and potential
+- If experience is thin (fresh grad), emphasise education, projects, and potential
 - Concise, employers skim in 6 seconds
+- If PROJECTS data is empty, omit that section entirely from your output
 - Output ONLY these sections, headings in ALL CAPS on their own line:
 
 PROFESSIONAL SUMMARY
 [2-3 sentences]
 
 WORK EXPERIENCE
-[Job Title — Company, City (Start–End)\\n• bullet\\n• bullet]
+[Job Title — Company, City (Start–End)\\n• bullet\\n• bullet — repeat for each job provided, most recent first]
 
 EDUCATION
 [Degree — Institution, Year]
@@ -874,18 +997,22 @@ EDUCATION
 KEY SKILLS
 [comma-separated, 8-12 skills]
 
+PROJECTS
+[Project name — one line description with impact/result, if any projects were provided. Omit this whole section if none provided.]
+
 ACHIEVEMENTS & ADDITIONAL INFORMATION
-[certs, languages, awards]
+[certifications, awards, languages — from the data provided]
 
 CANDIDATE DATA:
 Name: ${fname} ${lname}
 Target Role: ${role || sector}
 Sector: ${sector}
 City: ${city}
-Experience: ${experience || 'Fresh graduate'}
+Work Experience (one or more jobs): ${experience || 'Fresh graduate / no experience listed'}
 Education: ${education || 'Not provided'}
 Skills: ${skills.join(', ') || 'Not specified'}
-Achievements: ${achievements || 'None'}`;
+Projects: ${projects || 'None provided'}
+${extrasText}`;
 }
 
 async function generate() {
@@ -907,7 +1034,9 @@ async function generate() {
   document.getElementById('cv-email').textContent = document.getElementById('email').value || '—';
   document.getElementById('cv-city').textContent = document.getElementById('city').value || '—';
   const li = document.getElementById('linkedin').value.trim();
-  if (li) { document.getElementById('cv-linkedin').style.display='inline'; document.getElementById('cv-linkedin').textContent = li; }
+  const liEl = document.getElementById('cv-linkedin');
+  if (li) { liEl.style.display = 'inline'; liEl.textContent = li; }
+  else { liEl.style.display = 'none'; liEl.textContent = '—'; }
 
   const body = document.getElementById('cv-body');
   body.innerHTML = '';
@@ -920,7 +1049,7 @@ async function generate() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'gemini-2.5-flash',
-        max_tokens: 1200,
+        max_tokens: 2000,
         stream: true,
         messages: [{ role: 'user', content: buildPrompt() }]
       })
@@ -1012,10 +1141,10 @@ function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replac
 
 function calcScore() {
   let s = 45;
-  if (document.getElementById('experience').value.length > 80) s += 20;
+  if (getJobsText().length > 60) s += 20;
   if (document.getElementById('education').value.length > 20) s += 10;
   if (document.querySelectorAll('.chip.on').length > 0) s += 10;
-  if (document.getElementById('achievements').value.length > 20) s += 10;
+  if (document.getElementById('certifications').value.trim() || document.getElementById('languages').value.trim() || document.getElementById('projects').value.trim()) s += 10;
   if (document.getElementById('linkedin').value.trim()) s += 5;
   return Math.min(s, 100);
 }
@@ -1109,6 +1238,7 @@ Product Designer — Flux Travel, Lagos  (2018–2021)
 • Partnered with engineering to cut design-to-ship time from 6 weeks to 2`,
     'EDUCATION': `BA Graphic Design — Central Saint Martins, London  (2014–2018)`,
     'KEY SKILLS': `Figma, Design systems, Prototyping, User research, Adobe Creative Cloud, Accessibility (WCAG), Cross-functional leadership, Workshop facilitation`,
+    'PROJECTS': `Personal design portfolio — built in Webflow, averaging 2,000 monthly visitors and several inbound client leads`,
     'ACHIEVEMENTS & ADDITIONAL INFORMATION': `• Speaker, Design Matters Lisbon 2023
 • Languages: English (native), Yoruba (native), Portuguese (conversational)
 • Adobe Certified Expert, 2022`
