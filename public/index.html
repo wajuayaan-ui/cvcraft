@@ -56,16 +56,6 @@ body {
   gap: 10px;
 }
 .masthead-title .mark { color: var(--red); }
-.masthead-tag {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10.5px;
-  letter-spacing: 0.08em;
-  color: var(--ink-faint);
-  text-transform: uppercase;
-  border-left: 1px solid var(--rule-dark);
-  padding-left: 10px;
-  margin-left: 2px;
-}
 .masthead-right {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 11px;
@@ -581,18 +571,6 @@ select option { font-family: 'Source Serif 4', serif; }
 }
 .cancel-link:hover { color: var(--ink); }
 
-/* Dev note */
-.dev-note {
-  border-top: 1px solid var(--ink);
-  background: var(--paper-dim);
-  padding: 11px 36px;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  color: var(--ink-soft);
-  line-height: 1.7;
-}
-.dev-note strong { color: var(--ink); }
-
 @media (max-width: 980px) {
   .desk { grid-template-columns: 1fr; }
   .fold { display: none; }
@@ -606,7 +584,6 @@ select option { font-family: 'Source Serif 4', serif; }
 <div class="masthead">
   <div class="masthead-title">
     CV<span class="mark">Craft</span>
-    <span class="masthead-tag">Composed by AI</span>
   </div>
   <div class="masthead-right">
     <span class="beta-badge">Free during beta</span>
@@ -780,10 +757,6 @@ Adobe Certified Expert, 2022"></textarea>
       <button class="cancel-link" onclick="closePaywall()">Not yet</button>
     </div>
   </div>
-</div>
-
-<div class="dev-note">
-  <strong>Dev note —</strong> this page calls <span style="font-weight:600">/api/claude</span>, a same-origin proxy that holds the Gemini API key server-side. Run <span style="font-weight:600">server.js</span> alongside this file (see README) or click <strong>View specimen</strong> above to see the finished layout without a live key.
 </div>
 
 <script>
@@ -1074,10 +1047,19 @@ function simulatePay() {
 function downloadPDF() {
   const name = document.getElementById('cv-name').textContent.trim();
   const html = document.getElementById('cv-content').innerHTML;
-  const win = window.open('', '_blank');
-  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${name} — CV</title>
+  const docTitle = (name || 'CV') + ' - CV';
+  const win = window.open('about:blank', '_blank');
+  if (!win) {
+    setStatus('Your browser blocked the new tab. Allow popups for this site and try again.', 'err');
+    return;
+  }
+  win.document.title = docTitle;
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${docTitle}</title>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Source Serif 4',serif;font-size:14px;color:#1C1B19;max-width:680px;margin:0 auto;}
+<style>
+@page { margin: 12mm; }
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Source Serif 4',serif;font-size:14px;color:#1C1B19;max-width:680px;margin:0 auto;}
 .cv-letterhead{padding:30px 38px 18px;border-bottom:1.5px solid #1C1B19;}
 .cv-name{font-weight:700;font-size:26px;letter-spacing:-.4px;}
 .cv-role{font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#A8341F;margin-top:5px;}
@@ -1087,9 +1069,20 @@ function downloadPDF() {
 .cv-sec{margin-bottom:18px;}
 .cv-sec-title{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid #DDD8CC;}
 .cv-sec-body{font-size:13px;color:#57534A;line-height:1.7;white-space:pre-wrap;word-break:break-word;}
-@media print{body{-webkit-print-color-adjust:exact;}}
-</style></head><body>${html}<script>window.onload=()=>{window.print();window.close();}<\/script></body></html>`);
+@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}
+</style></head><body>${html}</body></html>`);
   win.document.close();
+  win.document.title = docTitle;
+
+  setStatus('In the print window: choose "Save as PDF" and untick "Headers and footers" for a clean page.', 'ok');
+
+  win.onload = () => {
+    win.document.title = docTitle;
+    setTimeout(() => {
+      win.focus();
+      win.print();
+    }, 200);
+  };
 }
 
 function showDemo() {
