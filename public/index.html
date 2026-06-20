@@ -3,874 +3,397 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CVCraft — Your story, set in type</title>
+<title>CVCraft — KSA & ATS Ready CV Builder</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 :root {
-  --paper:      #FBF9F4;
-  --paper-dim:  #F3EFE6;
-  --card:       #FFFFFF;
-  --ink:        #1C1B19;
-  --ink-soft:   #57534A;
-  --ink-faint:  #8C8678;
-  --rule:       #DDD8CC;
-  --rule-dark:  #C7C1B2;
-  --red:        #A8341F;
-  --red-dim:    #C9926A;
-  --red-pale:   #F4E2DA;
-  --sage:       #6B7560;
-  --sage-pale:  #E9ECE4;
+  --paper: #FBF9F4; --paper-dim: #F3EFE6; --card: #FFFFFF;
+  --ink: #1C1B19; --ink-soft: #57534A; --ink-faint: #8C8678;
+  --rule: #DDD8CC; --rule-dark: #C7C1B2;
+  --red: #A8341F; --red-pale: #F4E2DA; --red-dim: #C9926A;
+  --sage: #6B7560; --sage-pale: #E9ECE4;
   --shadow-paper: 0 1px 0 rgba(28,27,25,0.04), 0 14px 30px -10px rgba(28,27,25,0.18), 0 2px 6px rgba(28,27,25,0.06);
 }
-
-body {
-  font-family: 'Source Serif 4', serif;
-  background: var(--paper);
-  color: var(--ink);
-  min-height: 100vh;
-  font-size: 15px;
-  line-height: 1.6;
-}
-
-.mono { font-family: 'IBM Plex Mono', monospace; }
-
-/* ── Masthead ── */
-.masthead {
-  border-bottom: 1.5px solid var(--ink);
-  padding: 18px 36px 14px;
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  background: var(--paper);
-}
-.masthead-title {
-  font-family: 'Source Serif 4', serif;
-  font-weight: 700;
-  font-size: 26px;
-  letter-spacing: -0.3px;
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-}
-.masthead-title .mark { color: var(--red); }
-.masthead-right {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  color: var(--ink-faint);
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-.demo-link {
-  background: none;
-  border: 1px solid var(--ink);
-  color: var(--ink);
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.03em;
-  padding: 6px 13px;
-  cursor: pointer;
-  transition: all 0.15s;
-  text-transform: uppercase;
-}
-.demo-link:hover { background: var(--ink); color: var(--paper); }
-.beta-badge {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10.5px;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--sage);
-  border: 1px solid var(--sage);
-  background: var(--sage-pale);
-  padding: 4px 10px;
-}
-
-/* ── Layout: desk with carbon-copy fold ── */
-.desk {
-  display: grid;
-  grid-template-columns: 1fr 28px 1fr;
-  max-width: 1320px;
-  margin: 0 auto;
-  min-height: calc(100vh - 64px);
-}
-
-.fold {
-  position: relative;
-  background: linear-gradient(to right, var(--paper) 0%, var(--paper-dim) 50%, var(--paper) 100%);
-}
-.fold::before {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 24px; bottom: 24px;
-  width: 0;
-  border-left: 1.5px dashed var(--rule-dark);
-}
-.fold-label {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%) rotate(90deg);
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 9.5px;
-  letter-spacing: 0.15em;
-  color: var(--ink-faint);
-  text-transform: uppercase;
-  white-space: nowrap;
-  background: var(--paper-dim);
-  padding: 4px 0;
-}
-
-/* ── LEFT: the intake form, styled like a typed form ── */
-.intake {
-  padding: 36px 40px 60px;
-}
-.intake-head {
-  margin-bottom: 24px;
-}
-.intake-eyebrow {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10.5px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--red);
-  margin-bottom: 6px;
-}
-.intake-head h1 {
-  font-size: 22px;
-  font-weight: 600;
-  letter-spacing: -0.2px;
-}
-.intake-head p {
-  font-size: 13.5px;
-  color: var(--ink-soft);
-  margin-top: 5px;
-}
-
-/* form field */
-.field {
-  margin-bottom: 16px;
-}
-.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.flabel {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10.5px;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-  margin-bottom: 5px;
-}
-.flabel .opt { text-transform: none; letter-spacing: 0; font-style: italic; color: var(--ink-faint); opacity: 0.8; }
-
-input, select, textarea {
-  width: 100%;
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid var(--rule-dark);
-  padding: 6px 1px 8px;
-  font-family: 'Source Serif 4', serif;
-  font-size: 15px;
-  color: var(--ink);
-  outline: none;
-  transition: border-color 0.15s;
-}
-input::placeholder, textarea::placeholder { color: var(--ink-faint); font-style: italic; opacity: 0.7; }
-input:focus, select:focus, textarea:focus { border-bottom: 1.5px solid var(--red); }
-textarea { resize: vertical; min-height: 76px; line-height: 1.55; border: 1px solid var(--rule-dark); border-radius: 1px; padding: 9px 11px; background: var(--card); }
-textarea:focus { border-color: var(--red); }
-select {
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='none' viewBox='0 0 24 24'%3E%3Cpath stroke='%2357534A' stroke-width='2' stroke-linecap='round' d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 2px center;
-  cursor: pointer;
-}
-select option { font-family: 'Source Serif 4', serif; }
-
-/* Region selector — styled like postal stamps */
-.region-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 4px;
-}
-.stamp {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.02em;
-  padding: 6px 12px;
-  border: 1px solid var(--rule-dark);
-  background: var(--card);
-  color: var(--ink-soft);
-  cursor: pointer;
-  transition: all 0.12s;
-}
-.stamp:hover { border-color: var(--ink); color: var(--ink); }
-.stamp.on {
-  border: 1px solid var(--red);
-  background: var(--red-pale);
-  color: var(--red);
-  font-weight: 500;
-}
-
-/* Section dividers in form */
-.intake-divider {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 28px 0 16px;
-}
-.intake-divider .num {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  color: var(--red);
-  border: 1px solid var(--red);
-  width: 20px; height: 20px;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-}
-.intake-divider .lbl {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-}
-.intake-divider .line { flex: 1; height: 1px; background: var(--rule); }
-
-/* repeatable job rows */
-.job-row {
-  border: 1px solid var(--rule-dark);
-  background: var(--card);
-  padding: 12px 13px 13px;
-  margin-bottom: 10px;
-  position: relative;
-}
-.job-row-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 8px;
-}
-.job-row-num {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-}
-.job-remove {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10.5px;
-  color: var(--red-dim);
-  background: none;
-  border: none;
-  cursor: pointer;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  padding: 0;
-}
-.job-remove:hover { color: var(--red); }
-.job-row .frow2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.job-row input, .job-row textarea { margin-bottom: 8px; }
-.job-row textarea { min-height: 58px; }
-.add-row-btn {
-  width: 100%;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  background: transparent;
-  border: 1px dashed var(--rule-dark);
-  color: var(--ink-soft);
-  padding: 9px;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-.add-row-btn:hover { border-color: var(--sage); color: var(--sage); background: var(--sage-pale); }
-
-/* skill chips */
-.chip-field { margin-bottom: 6px; }
-.chip-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 10px; }
-.chip {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  padding: 4px 10px;
-  border: 1px solid var(--rule-dark);
-  background: transparent;
-  color: var(--ink-soft);
-  cursor: pointer;
-  transition: all 0.12s;
-}
-.chip:hover { border-color: var(--sage); color: var(--sage); }
-.chip.on {
-  border-color: var(--sage);
-  background: var(--sage-pale);
-  color: var(--sage);
-}
-
-/* generate button — like a rubber stamp action */
-.compose-btn {
-  width: 100%;
-  margin-top: 26px;
-  background: var(--ink);
-  color: var(--paper);
-  border: none;
-  padding: 15px;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 12.5px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  transition: background 0.15s;
-  position: relative;
-}
-.compose-btn:hover { background: var(--red); }
-.compose-btn:disabled { background: var(--rule-dark); color: var(--ink-faint); cursor: not-allowed; }
-.compose-btn .key { font-size: 14px; }
-
-.progress-line {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 14px;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  color: var(--ink-faint);
-}
-.progress-track { flex: 1; height: 1px; background: var(--rule); position: relative; }
-.progress-fill { position: absolute; top: -1.5px; left: 0; height: 4px; background: var(--red); width: 0%; transition: width 0.3s; }
-
-/* ── RIGHT: the page preview ── */
-.page-side {
-  padding: 36px 40px 60px;
-  display: flex;
-  flex-direction: column;
-}
-.page-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-}
-.page-eyebrow {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10.5px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.page-eyebrow .live-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--rule-dark);
-}
-.page-eyebrow .live-dot.active { background: var(--red); animation: pulse-dot 1.4s ease-in-out infinite; }
-@keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
-.page-actions { display: flex; gap: 8px; }
-.pbtn {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.02em;
-  padding: 6px 13px;
-  border: 1px solid var(--ink);
-  background: transparent;
-  color: var(--ink);
-  cursor: pointer;
-  transition: all 0.15s;
-}
-.pbtn:hover { background: var(--ink); color: var(--paper); }
-.pbtn:disabled { border-color: var(--rule-dark); color: var(--ink-faint); cursor: not-allowed; }
-.pbtn:disabled:hover { background: transparent; color: var(--ink-faint); }
-.pbtn.primary { background: var(--red); border-color: var(--red); color: var(--paper); }
-.pbtn.primary:hover { background: #8B2A18; border-color: #8B2A18; }
-.pbtn.primary:disabled { background: var(--rule-dark); border-color: var(--rule-dark); }
-
-/* score, mono badge */
-.score-tag {
-  display: none;
-  align-items: center;
-  gap: 6px;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10.5px;
-  color: var(--sage);
-  border: 1px solid var(--sage);
-  padding: 3px 9px;
-}
-
-/* The page itself */
-.page-wrap { flex: 1; display: flex; justify-content: center; }
-.page {
-  background: var(--card);
-  width: 100%;
-  max-width: 580px;
-  min-height: 760px;
-  box-shadow: var(--shadow-paper);
-  position: relative;
-}
-.page::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 5px;
-  background: repeating-linear-gradient(90deg, var(--red) 0 14px, transparent 14px 24px);
-  opacity: 0.85;
-}
-
-.empty-page {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 700px;
-  text-align: center;
-  padding: 50px;
-  color: var(--ink-faint);
-}
-.empty-mark {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  border: 1px dashed var(--rule-dark);
-  padding: 16px 24px;
-  margin-bottom: 16px;
-}
-.empty-page h3 { font-family: 'Source Serif 4', serif; font-size: 17px; color: var(--ink-soft); font-weight: 600; margin-bottom: 6px; }
-.empty-page p { font-size: 13px; max-width: 250px; line-height: 1.6; }
-
-.cv-content { position: relative; padding-top: 5px; }
-
-.cv-letterhead {
-  padding: 34px 44px 22px;
-  border-bottom: 1.5px solid var(--ink);
-}
-.cv-name {
-  font-family: 'Source Serif 4', serif;
-  font-weight: 700;
-  font-size: 30px;
-  letter-spacing: -0.4px;
-  color: var(--ink);
-  line-height: 1.1;
-}
-.cv-role {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 11.5px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--red);
-  margin-top: 6px;
-}
-.cv-contacts {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 16px;
-  margin-top: 14px;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  color: var(--ink-soft);
-}
-.cv-contacts span::before { content: '—  '; color: var(--rule-dark); }
-
-.cv-body { padding: 26px 44px 44px; }
-.cv-sec { margin-bottom: 22px; }
-.cv-sec:last-child { margin-bottom: 0; }
-.cv-sec-title {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10.5px;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--ink);
-  margin-bottom: 9px;
-  padding-bottom: 6px;
-  border-bottom: 1px solid var(--rule);
-}
-.cv-sec-body {
-  font-size: 14px;
-  color: var(--ink-soft);
-  line-height: 1.75;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-
-/* Status strip */
-.status-strip {
-  margin-top: 14px;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  color: var(--ink-faint);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 18px;
-}
-.status-strip.ok { color: var(--sage); }
-.status-strip.err { color: var(--red); }
-.spin {
-  width: 9px; height: 9px;
-  border: 1.5px solid var(--rule-dark);
-  border-top-color: var(--red);
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-  flex-shrink: 0;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* Watermark for unpaid preview */
-.page.locked .cv-content::after {
-  content: 'SPECIMEN — UNPAID';
-  position: absolute;
-  top: 46%; left: 50%;
-  transform: translate(-50%,-50%) rotate(-30deg);
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 38px;
-  letter-spacing: 0.2em;
-  color: rgba(168,52,31,0.06);
-  pointer-events: none;
-  white-space: nowrap;
-}
-
-/* ── Paywall ── */
-.overlay {
-  display: none;
-  position: fixed; inset: 0;
-  background: rgba(28,27,25,0.55);
-  z-index: 200;
-  align-items: center;
-  justify-content: center;
-}
-.overlay.open { display: flex; }
-.ticket {
-  background: var(--paper);
-  width: 92%;
-  max-width: 380px;
-  padding: 0;
-  box-shadow: var(--shadow-paper);
-  position: relative;
-}
-.ticket::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 5px;
-  background: repeating-linear-gradient(90deg, var(--red) 0 14px, transparent 14px 24px);
-}
-.ticket-inner { padding: 36px 32px 28px; text-align: center; }
-.ticket-eyebrow {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10.5px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--red);
-  margin-bottom: 10px;
-}
-.ticket h2 { font-family: 'Source Serif 4', serif; font-size: 22px; font-weight: 700; margin-bottom: 8px; }
-.ticket-sub { font-size: 13.5px; color: var(--ink-soft); margin-bottom: 20px; line-height: 1.5; }
-.price-stamp {
-  display: inline-block;
-  border: 1.5px solid var(--ink);
-  padding: 10px 22px;
-  margin-bottom: 4px;
-}
-.price-stamp .amt { font-family: 'Source Serif 4', serif; font-weight: 700; font-size: 28px; color: var(--ink); }
-.price-note { font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; color: var(--ink-faint); margin: 8px 0 22px; text-transform: uppercase; letter-spacing: 0.05em; }
-.ticket-feats {
-  text-align: left;
-  border-top: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
-  padding: 14px 4px;
-  margin-bottom: 22px;
-  font-size: 13px;
-  color: var(--ink-soft);
-  line-height: 2;
-}
-.ticket-feats div::before { content: '✓  '; color: var(--sage); font-weight: 600; }
-.pay-btn {
-  width: 100%;
-  background: var(--ink);
-  color: var(--paper);
-  border: none;
-  padding: 14px;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 12px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  cursor: pointer;
-  margin-bottom: 12px;
-  transition: background 0.15s;
-}
-.pay-btn:hover { background: var(--red); }
-.cancel-link {
-  background: none; border: none;
-  font-family: 'IBM Plex Mono', monospace;
-  color: var(--ink-faint); font-size: 11px;
-  cursor: pointer; text-transform: uppercase; letter-spacing: 0.04em;
-}
-.cancel-link:hover { color: var(--ink); }
-
-@media (max-width: 980px) {
-  .desk { grid-template-columns: 1fr; }
-  .fold { display: none; }
-  .masthead { padding: 16px 20px; }
-  .intake, .page-side { padding: 24px 20px 40px; }
+body { font-family:'Source Serif 4',serif; background:var(--paper); color:var(--ink); min-height:100vh; font-size:14px; line-height:1.6; }
+/* masthead */
+.masthead { border-bottom:1.5px solid var(--ink); padding:14px 28px; display:flex; align-items:center; justify-content:space-between; background:var(--paper); }
+.masthead-title { font-weight:700; font-size:22px; letter-spacing:-0.3px; }
+.masthead-title .mark { color:var(--red); }
+.masthead-right { display:flex; align-items:center; gap:10px; }
+.beta-badge { font-family:'IBM Plex Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:0.05em; color:var(--sage); border:1px solid var(--sage); background:var(--sage-pale); padding:4px 10px; }
+.demo-link { font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.03em; padding:5px 12px; border:1px solid var(--ink); background:transparent; color:var(--ink); cursor:pointer; text-transform:uppercase; transition:all 0.15s; }
+.demo-link:hover { background:var(--ink); color:var(--paper); }
+/* layout */
+.app { display:grid; grid-template-columns:440px 1fr; height:calc(100vh - 53px); overflow:hidden; }
+/* LEFT: form */
+.form-side { background:var(--card); border-right:1px solid var(--rule-dark); overflow-y:auto; scrollbar-width:thin; scrollbar-color:var(--rule) transparent; }
+.form-inner { padding:22px 24px 40px; }
+.form-head { margin-bottom:18px; }
+.form-eyebrow { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--red); margin-bottom:5px; }
+.form-head h1 { font-size:19px; font-weight:600; }
+.form-head p { font-size:12.5px; color:var(--ink-soft); margin-top:3px; }
+/* section dividers */
+.sec-div { display:flex; align-items:center; gap:8px; margin:22px 0 12px; }
+.sec-div .n { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--red); border:1px solid var(--red); width:18px; height:18px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.sec-div .t { font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.07em; text-transform:uppercase; color:var(--ink-soft); }
+.sec-div .l { flex:1; height:1px; background:var(--rule); }
+/* fields */
+.f { margin-bottom:12px; }
+.f2 { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.f3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
+.flabel { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.05em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:4px; display:flex; justify-content:space-between; align-items:baseline; }
+.flabel .opt { text-transform:none; font-style:italic; opacity:0.7; }
+input, select, textarea { width:100%; background:transparent; border:none; border-bottom:1px solid var(--rule-dark); padding:5px 1px 7px; font-family:'Source Serif 4',serif; font-size:13.5px; color:var(--ink); outline:none; transition:border-color 0.15s; }
+input::placeholder, textarea::placeholder { color:var(--ink-faint); font-style:italic; opacity:0.7; }
+input:focus, select:focus, textarea:focus { border-bottom:1.5px solid var(--red); }
+select { appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='none' viewBox='0 0 24 24'%3E%3Cpath stroke='%238C8678' stroke-width='2' d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 2px center; cursor:pointer; }
+select option { font-family:'Source Serif 4',serif; }
+textarea { resize:vertical; min-height:64px; border:1px solid var(--rule-dark); border-radius:1px; background:var(--paper); padding:8px 10px; line-height:1.5; }
+textarea:focus { border-color:var(--red); }
+/* repeatable rows */
+.rep-row { border:1px solid var(--rule-dark); background:var(--paper); padding:10px 12px 12px; margin-bottom:8px; }
+.rep-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+.rep-num { font-family:'IBM Plex Mono',monospace; font-size:9.5px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-faint); }
+.rep-rm { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--red-dim); background:none; border:none; cursor:pointer; text-transform:uppercase; letter-spacing:0.03em; }
+.rep-rm:hover { color:var(--red); }
+.rep-row input, .rep-row textarea { margin-bottom:7px; }
+.rep-row textarea { min-height:52px; }
+.add-btn { width:100%; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.04em; text-transform:uppercase; background:transparent; border:1px dashed var(--rule-dark); color:var(--ink-soft); padding:8px; cursor:pointer; transition:all 0.15s; margin-bottom:12px; }
+.add-btn:hover { border-color:var(--sage); color:var(--sage); background:var(--sage-pale); }
+/* chips */
+.chip-row { display:flex; flex-wrap:wrap; gap:5px; margin:5px 0 8px; }
+.chip { font-family:'IBM Plex Mono',monospace; font-size:10.5px; padding:3px 9px; border:1px solid var(--rule-dark); background:transparent; color:var(--ink-soft); cursor:pointer; transition:all 0.12s; }
+.chip:hover { border-color:var(--sage); color:var(--sage); }
+.chip.on { border-color:var(--sage); background:var(--sage-pale); color:var(--sage); }
+/* skill category rows */
+.skill-cat-row { display:grid; grid-template-columns:110px 1fr; gap:8px; margin-bottom:6px; align-items:start; }
+.skill-cat-row input:first-child { font-family:'IBM Plex Mono',monospace; font-size:11.5px; }
+/* progress + generate */
+.form-bottom { padding:0 24px 24px; background:var(--card); border-right:1px solid var(--rule-dark); }
+.progress-row { display:flex; align-items:center; gap:8px; margin-bottom:10px; font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--ink-faint); }
+.prog-track { flex:1; height:1px; background:var(--rule); position:relative; }
+.prog-fill { position:absolute; top:-1.5px; left:0; height:4px; background:var(--red); width:0%; transition:width 0.3s; }
+.gen-btn { width:100%; background:var(--ink); color:var(--paper); border:none; padding:13px; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; transition:background 0.15s; }
+.gen-btn:hover { background:var(--red); }
+.gen-btn:disabled { background:var(--rule-dark); color:var(--ink-faint); cursor:not-allowed; }
+/* RIGHT: preview */
+.preview-side { background:var(--paper); display:flex; flex-direction:column; overflow:hidden; }
+.preview-toolbar { background:var(--card); border-bottom:1px solid var(--rule-dark); padding:0 20px; height:46px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+.tb-left { display:flex; align-items:center; gap:10px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:0.07em; }
+.live-dot { width:6px; height:6px; border-radius:50%; background:var(--rule-dark); }
+.live-dot.on { background:var(--red); animation:pulse 1.4s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.3} }
+.score-tag { display:none; align-items:center; font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--sage); border:1px solid var(--sage); padding:3px 9px; }
+.tb-actions { display:flex; gap:6px; }
+.tbtn { font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.02em; padding:5px 12px; border:1px solid var(--ink); background:transparent; color:var(--ink); cursor:pointer; text-transform:uppercase; transition:all 0.15s; }
+.tbtn:hover { background:var(--ink); color:var(--paper); }
+.tbtn:disabled { border-color:var(--rule-dark); color:var(--ink-faint); cursor:not-allowed; }
+.tbtn:disabled:hover { background:transparent; color:var(--ink-faint); }
+.tbtn.primary { background:var(--red); border-color:var(--red); color:var(--paper); }
+.tbtn.primary:hover { background:#8B2A18; border-color:#8B2A18; }
+.tbtn.primary:disabled { background:var(--rule-dark); border-color:var(--rule-dark); }
+/* paper */
+.paper-wrap { flex:1; overflow-y:auto; padding:20px; display:flex; justify-content:center; scrollbar-width:thin; scrollbar-color:var(--rule) transparent; }
+.paper { background:var(--card); width:100%; max-width:640px; min-height:800px; box-shadow:var(--shadow-paper); position:relative; transition:box-shadow 0.3s; }
+.paper::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; background:repeating-linear-gradient(90deg,var(--red) 0 12px,transparent 12px 20px); }
+.paper.gen { box-shadow:0 2px 4px rgba(168,52,31,0.08),0 8px 32px rgba(168,52,31,0.12),0 0 0 2px rgba(168,52,31,0.15); }
+/* CV content */
+.cv-wrap { padding-top:4px; }
+/* KSA format header */
+.cv-hdr { padding:22px 32px 16px; border-bottom:2px solid var(--ink); text-align:center; }
+.cv-name { font-family:'Source Serif 4',serif; font-weight:700; font-size:26px; letter-spacing:-0.3px; text-decoration:underline; text-underline-offset:3px; margin-bottom:5px; }
+.cv-contact-line { font-size:11.5px; color:var(--ink); margin-bottom:3px; line-height:1.8; }
+.cv-contact-line strong { font-weight:600; }
+/* CV body sections */
+.cv-bd { padding:16px 32px 32px; }
+.cv-sec { margin-bottom:16px; }
+.cv-sec-title { font-family:'Source Serif 4',serif; font-weight:700; font-size:12px; text-transform:uppercase; letter-spacing:0.06em; text-align:center; border-bottom:1.5px solid var(--ink); padding:3px 0; margin-bottom:9px; }
+.cv-sec-body { font-size:12px; color:var(--ink-soft); line-height:1.7; white-space:pre-wrap; word-break:break-word; }
+/* empty state */
+.empty-cv { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:700px; text-align:center; padding:40px; color:var(--ink-faint); }
+.empty-mark { font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.1em; border:1px dashed var(--rule-dark); padding:14px 22px; margin-bottom:14px; }
+.empty-cv h3 { font-size:16px; font-weight:600; color:var(--ink-soft); margin-bottom:5px; }
+.empty-cv p { font-size:12.5px; max-width:230px; line-height:1.6; }
+/* status */
+.status-strip { background:var(--card); border-top:1px solid var(--rule); padding:6px 18px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--ink-faint); min-height:30px; display:flex; align-items:center; gap:6px; flex-shrink:0; }
+.status-strip.ok { color:var(--sage); }
+.status-strip.err { color:var(--red); }
+@keyframes spin { to{transform:rotate(360deg)} }
+.spin { width:10px; height:10px; border:1.5px solid var(--rule); border-top-color:var(--red); border-radius:50%; animation:spin 0.7s linear infinite; flex-shrink:0; }
+/* paywall modal */
+.overlay { display:none; position:fixed; inset:0; background:rgba(28,27,25,0.55); backdrop-filter:blur(3px); z-index:200; align-items:center; justify-content:center; }
+.overlay.open { display:flex; }
+.ticket { background:var(--paper); width:92%; max-width:360px; box-shadow:var(--shadow-paper); position:relative; }
+.ticket::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; background:repeating-linear-gradient(90deg,var(--red) 0 12px,transparent 12px 20px); }
+.ticket-inner { padding:30px 28px 24px; text-align:center; }
+.ticket-eyebrow { font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--red); margin-bottom:8px; }
+.ticket h2 { font-size:20px; font-weight:700; margin-bottom:6px; }
+.ticket-sub { font-size:13px; color:var(--ink-soft); margin-bottom:16px; line-height:1.5; }
+.price-stamp { display:inline-block; border:1.5px solid var(--ink); padding:8px 20px; margin-bottom:4px; }
+.price-stamp .amt { font-size:26px; font-weight:700; }
+.price-note { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--ink-faint); margin:6px 0 18px; text-transform:uppercase; letter-spacing:0.05em; }
+.ticket-feats { text-align:left; border-top:1px solid var(--rule); border-bottom:1px solid var(--rule); padding:12px 4px; margin-bottom:18px; font-size:12.5px; color:var(--ink-soft); line-height:2; }
+.ticket-feats div::before { content:'✓  '; color:var(--sage); font-weight:600; }
+.pay-btn { width:100%; background:var(--ink); color:var(--paper); border:none; padding:12px; font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.06em; text-transform:uppercase; cursor:pointer; margin-bottom:10px; transition:background 0.15s; }
+.pay-btn:hover { background:var(--red); }
+.cancel-link { background:none; border:none; font-family:'IBM Plex Mono',monospace; color:var(--ink-faint); font-size:10.5px; cursor:pointer; text-transform:uppercase; letter-spacing:0.04em; }
+.cancel-link:hover { color:var(--ink); }
+@media (max-width:900px) {
+  .app { grid-template-columns:1fr; height:auto; overflow:visible; }
+  .form-side,.form-bottom { border-right:none; }
+  .preview-side { min-height:600px; }
 }
 </style>
 </head>
 <body>
 
 <div class="masthead">
-  <div class="masthead-title">
-    CV<span class="mark">Craft</span>
-  </div>
+  <div class="masthead-title">CV<span class="mark">Craft</span></div>
   <div class="masthead-right">
-    <span class="beta-badge">Free during beta</span>
+    <span class="beta-badge">Free · Beta</span>
     <button class="demo-link" onclick="showDemo()">View specimen</button>
   </div>
 </div>
 
-<div class="desk">
+<div class="app">
+<!-- ═══ LEFT: FORM ═══ -->
+<div style="display:flex;flex-direction:column;overflow:hidden;background:var(--card);border-right:1px solid var(--rule-dark);">
+<div class="form-side" style="flex:1;overflow-y:auto;">
+<div class="form-inner">
 
-  <!-- LEFT: intake form -->
-  <div class="intake">
-    <div class="intake-head">
-      <div class="intake-eyebrow">Application file</div>
-      <h1>Tell us who you are</h1>
-      <p>Write plainly. We'll set it properly.</p>
-    </div>
-
-    <div class="region-row" id="region-row"></div>
-
-    <div class="field">
-      <div class="flabel">Target sector</div>
-      <select id="sector" onchange="updateChips()"></select>
-    </div>
-
-    <div class="intake-divider">
-      <div class="num">1</div>
-      <div class="lbl">Identity</div>
-      <div class="line"></div>
-    </div>
-
-    <div class="field-row">
-      <div class="field">
-        <div class="flabel">First name</div>
-        <input type="text" id="fname" placeholder="Amara" oninput="updateProgress()">
-      </div>
-      <div class="field">
-        <div class="flabel">Last name</div>
-        <input type="text" id="lname" placeholder="Okafor" oninput="updateProgress()">
-      </div>
-    </div>
-    <div class="field">
-      <div class="flabel">Position you want</div>
-      <input type="text" id="target-role" placeholder="Senior Product Designer" oninput="updateProgress()">
-    </div>
-    <div class="field-row">
-      <div class="field">
-        <div class="flabel">Phone</div>
-        <input type="text" id="phone" placeholder="+1 555 0100">
-      </div>
-      <div class="field">
-        <div class="flabel">City, country</div>
-        <input type="text" id="city" placeholder="Lisbon, Portugal">
-      </div>
-    </div>
-    <div class="field">
-      <div class="flabel">Email</div>
-      <input type="email" id="email" placeholder="amara@email.com" oninput="updateProgress()">
-    </div>
-    <div class="field">
-      <div class="flabel">Portfolio / LinkedIn <span class="opt">optional</span></div>
-      <input type="text" id="linkedin" placeholder="linkedin.com/in/amara">
-    </div>
-
-    <div class="intake-divider">
-      <div class="num">2</div>
-      <div class="lbl">Track record</div>
-      <div class="line"></div>
-    </div>
-
-    <div class="field">
-      <div class="flabel">Work history <span class="opt">add as many as you need</span></div>
-      <div id="job-list"></div>
-      <button type="button" class="add-row-btn" onclick="addJobRow()">+ Add another job</button>
-    </div>
-    <div class="field">
-      <div class="flabel">Education</div>
-      <textarea id="education" rows="3" placeholder="BA Graphic Design — Central Saint Martins, 2019" oninput="updateProgress()"></textarea>
-    </div>
-
-    <div class="intake-divider">
-      <div class="num">3</div>
-      <div class="lbl">Capabilities</div>
-      <div class="line"></div>
-    </div>
-
-    <div class="field chip-field">
-      <div class="flabel">Tap what applies</div>
-      <div class="chip-row" id="chip-row"></div>
-      <input type="text" id="skills-extra" placeholder="other skills, comma separated">
-    </div>
-
-    <div class="intake-divider">
-      <div class="num">4</div>
-      <div class="lbl">Extras <span class="opt" style="text-transform:none;font-size:11px;">— all optional</span></div>
-      <div class="line"></div>
-    </div>
-    <div class="field">
-      <div class="flabel">Projects <span class="opt">optional</span></div>
-      <textarea id="projects" rows="3" placeholder="Personal portfolio site — built with Figma + Webflow, 2k monthly visitors
-Side project: budgeting app prototype, 200 beta users"></textarea>
-    </div>
-    <div class="field">
-      <div class="flabel">Awards & certifications <span class="opt">optional</span></div>
-      <textarea id="certifications" rows="2" placeholder="Adobe Certified Expert, 2022
-1st place, FAST Coding Competition, 2021"></textarea>
-    </div>
-    <div class="field">
-      <div class="flabel">Languages <span class="opt">optional</span></div>
-      <input type="text" id="languages" placeholder="English (fluent), Urdu (native), Arabic (basic)">
-    </div>
-
-    <button class="compose-btn" id="gen-btn" onclick="generate()">
-      <span class="key">✒</span> Set my CV in type
-    </button>
-    <div class="progress-line">
-      <span id="pct-label">0%</span>
-      <div class="progress-track"><div class="progress-fill" id="prog-fill"></div></div>
-      <span>complete</span>
-    </div>
+  <div class="form-head">
+    <div class="form-eyebrow">KSA / ATS Format</div>
+    <h1>Build your CV</h1>
+    <p>Fill in your details — AI writes and formats it instantly.</p>
   </div>
 
-  <!-- FOLD -->
-  <div class="fold"><div class="fold-label">carbon copy</div></div>
-
-  <!-- RIGHT: page preview -->
-  <div class="page-side">
-    <div class="page-head">
-      <div class="page-eyebrow"><span class="live-dot" id="live-dot"></span>Proof</div>
-      <div class="page-actions">
-        <span class="score-tag" id="score-tag"><span id="score-val">—</span></span>
-        <button class="pbtn" id="copy-btn" disabled onclick="copyText()">Copy text</button>
-        <button class="pbtn primary" id="dl-btn" disabled onclick="openPaywall()">Print PDF — Free</button>
-      </div>
-    </div>
-
-    <div class="page-wrap">
-      <div class="page locked" id="page">
-        <div class="empty-page" id="empty-state">
-          <div class="empty-mark">AWAITING COPY</div>
-          <h3>Your page is blank</h3>
-          <p>Fill the form on the left. Your CV is set in type the moment you're ready.</p>
-        </div>
-
-        <div class="cv-content" id="cv-content" style="display:none;">
-          <div class="cv-letterhead">
-            <div class="cv-name" id="cv-name">—</div>
-            <div class="cv-role" id="cv-role">—</div>
-            <div class="cv-contacts">
-              <span id="cv-phone">—</span>
-              <span id="cv-email">—</span>
-              <span id="cv-city">—</span>
-              <span id="cv-linkedin" style="display:none;">—</span>
-            </div>
-          </div>
-          <div class="cv-body" id="cv-body"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="status-strip" id="status">Ready when you are.</div>
+  <!-- Region -->
+  <div class="f">
+    <div class="flabel">Format for region</div>
+    <div class="chip-row" id="region-row"></div>
   </div>
+
+  <!-- Sector -->
+  <div class="f">
+    <div class="flabel">Target sector</div>
+    <select id="sector" onchange="updateChips()"></select>
+  </div>
+
+  <!-- ── 1. PERSONAL ── -->
+  <div class="sec-div"><div class="n">1</div><div class="t">Personal</div><div class="l"></div></div>
+
+  <div class="f2">
+    <div class="f"><div class="flabel">First name</div><input type="text" id="fname" placeholder="John" oninput="updateProgress()"></div>
+    <div class="f"><div class="flabel">Last name</div><input type="text" id="lname" placeholder="Smith" oninput="updateProgress()"></div>
+  </div>
+  <div class="f"><div class="flabel">Target job title</div><input type="text" id="target-role" placeholder="IT Support Engineer / Data Analyst" oninput="updateProgress()"></div>
+  <div class="f2">
+    <div class="f"><div class="flabel">Phone</div><input type="text" id="phone" placeholder="+966 5X XXX XXXX"></div>
+    <div class="f"><div class="flabel">City, Country</div><input type="text" id="city" placeholder="Riyadh, Saudi Arabia"></div>
+  </div>
+  <div class="f"><div class="flabel">Email</div><input type="email" id="email" placeholder="you@email.com" oninput="updateProgress()"></div>
+  <div class="f2">
+    <div class="f"><div class="flabel">LinkedIn <span class="opt">optional</span></div><input type="text" id="linkedin" placeholder="linkedin.com/in/yourname"></div>
+    <div class="f"><div class="flabel">GitHub <span class="opt">optional</span></div><input type="text" id="github" placeholder="github.com/yourusername"></div>
+  </div>
+  <!-- KSA specific fields -->
+  <div class="f2">
+    <div class="f"><div class="flabel">Date of birth <span class="opt">KSA format</span></div><input type="text" id="dob" placeholder="01-Jan-1995"></div>
+    <div class="f"><div class="flabel">Nationality</div><input type="text" id="nationality" placeholder="Your nationality"></div>
+  </div>
+  <div class="f2">
+    <div class="f"><div class="flabel">Iqama number <span class="opt">optional</span></div><input type="text" id="iqama" placeholder="XXXXXXXXXX"></div>
+    <div class="f"><div class="flabel">Iqama status <span class="opt">optional</span></div><input type="text" id="iqama-status" placeholder="Transferable"></div>
+  </div>
+
+  <!-- ── 2. SUMMARY ── -->
+  <div class="sec-div"><div class="n">2</div><div class="t">Summary</div><div class="l"></div></div>
+  <div class="f"><div class="flabel">Professional summary <span class="opt">rough notes are fine — AI will rewrite</span></div>
+  <textarea id="summary" rows="4" placeholder="Data Science graduate, 2 years IT Support/System admin, strong in data visualization, Excel, Power BI, networking, AI tools..."></textarea></div>
+
+  <!-- ── 3. SKILLS ── -->
+  <div class="sec-div"><div class="n">3</div><div class="t">Skills</div><div class="l"></div></div>
+  <div class="f"><div class="flabel">Quick add <span class="opt">tap to toggle</span></div><div class="chip-row" id="chip-row"></div></div>
+  <div class="f"><div class="flabel">Skill categories <span class="opt">Category → skills (add as many rows as needed)</span></div>
+    <div id="skill-cat-list"></div>
+    <button type="button" class="add-btn" onclick="addSkillCat()">+ Add skill category</button>
+  </div>
+
+  <!-- ── 4. EXPERIENCE ── -->
+  <div class="sec-div"><div class="n">4</div><div class="t">Work experience</div><div class="l"></div></div>
+  <div class="f"><div id="job-list"></div>
+    <button type="button" class="add-btn" onclick="addJob()">+ Add another job</button>
+  </div>
+
+  <!-- ── 5. PROJECTS ── -->
+  <div class="sec-div"><div class="n">5</div><div class="t">Projects <span style="font-size:9.5px;font-weight:400;opacity:0.7;"> — optional</span></div><div class="l"></div></div>
+  <div class="f"><div id="project-list"></div>
+    <button type="button" class="add-btn" onclick="addProject()">+ Add project</button>
+  </div>
+
+  <!-- ── 6. EDUCATION ── -->
+  <div class="sec-div"><div class="n">6</div><div class="t">Education</div><div class="l"></div></div>
+  <div class="f"><div id="edu-list"></div>
+    <button type="button" class="add-btn" onclick="addEdu()">+ Add qualification</button>
+  </div>
+  <div class="f"><div class="flabel">Relevant coursework <span class="opt">optional</span></div>
+  <textarea id="coursework" rows="2" placeholder="Machine Learning, Data Visualization, Computer Networks, Database Systems..."></textarea></div>
+
+  <!-- ── 7. CERTIFICATIONS ── -->
+  <div class="sec-div"><div class="n">7</div><div class="t">Certifications <span style="font-size:9.5px;font-weight:400;opacity:0.7;"> — optional</span></div><div class="l"></div></div>
+  <div class="f"><div id="cert-list"></div>
+    <button type="button" class="add-btn" onclick="addCert()">+ Add certification</button>
+  </div>
+
+  <!-- ── 8. ACHIEVEMENTS ── -->
+  <div class="sec-div"><div class="n">8</div><div class="t">Achievements <span style="font-size:9.5px;font-weight:400;opacity:0.7;"> — optional</span></div><div class="l"></div></div>
+  <div class="f"><div class="flabel">One achievement per line</div>
+  <textarea id="achievements" rows="3" placeholder="Top 4 out of 96 employees at Sybrid for outstanding performance&#10;Digitized patient records at Kuwait Medical Complex"></textarea></div>
+
+  <!-- ── 9. LANGUAGES ── -->
+  <div class="sec-div"><div class="n">9</div><div class="t">Languages</div><div class="l"></div></div>
+  <div class="f" id="lang-list"></div>
+  <button type="button" class="add-btn" onclick="addLang()">+ Add language</button>
+
+  <!-- ── 10. SOFT SKILLS ── -->
+  <div class="sec-div"><div class="n">10</div><div class="t">Soft skills <span style="font-size:9.5px;font-weight:400;opacity:0.7;"> — optional</span></div><div class="l"></div></div>
+  <div class="f"><div class="flabel">Comma separated</div>
+  <input type="text" id="softskills" placeholder="Communication, Problem solving, Teamwork, Leadership, Time management"></div>
+
+</div><!-- /form-inner -->
+</div><!-- /form-side -->
+
+<!-- progress + generate -->
+<div class="form-bottom" style="padding:12px 24px 20px;border-right:1px solid var(--rule-dark);background:var(--card);">
+  <div class="progress-row">
+    <span id="pct-label">0%</span>
+    <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
+    <span>complete</span>
+  </div>
+  <button class="gen-btn" id="gen-btn" onclick="generate()">✒ &nbsp;Generate my CV</button>
 </div>
+</div><!-- /left column -->
 
+<!-- ═══ RIGHT: PREVIEW ═══ -->
+<div class="preview-side">
+  <div class="preview-toolbar">
+    <div class="tb-left"><span class="live-dot" id="live-dot"></span>Proof copy</div>
+    <div class="tb-actions">
+      <span class="score-tag" id="score-tag"><span id="score-val">—</span></span>
+      <button class="tbtn" id="copy-btn" disabled onclick="copyText()">Copy</button>
+      <button class="tbtn primary" id="dl-btn" disabled onclick="openPaywall()">Print PDF — Free</button>
+    </div>
+  </div>
+
+  <div class="paper-wrap">
+    <div class="paper" id="paper">
+      <!-- empty -->
+      <div class="empty-cv" id="empty-state">
+        <div class="empty-mark">AWAITING COPY</div>
+        <h3>Your CV will appear here</h3>
+        <p>Fill in your details and click Generate — AI formats it in KSA/ATS style instantly.</p>
+      </div>
+      <!-- cv content -->
+      <div class="cv-wrap" id="cv-content" style="display:none;">
+        <div class="cv-hdr">
+          <div class="cv-name" id="cv-name">—</div>
+          <div class="cv-contact-line" id="cv-line1">—</div>
+          <div class="cv-contact-line" id="cv-line2"></div>
+          <div class="cv-contact-line" id="cv-line3"></div>
+        </div>
+        <div class="cv-bd" id="cv-body"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="status-strip" id="status">Ready — fill in your details and generate.</div>
+</div>
+</div><!-- /app -->
+
+<!-- paywall modal -->
 <div class="overlay" id="modal">
   <div class="ticket">
     <div class="ticket-inner">
       <div class="ticket-eyebrow">Final proof</div>
-      <h2>Release the page</h2>
-      <p class="ticket-sub">Remove the specimen mark and print a clean copy.</p>
+      <h2>Download your CV</h2>
+      <p class="ticket-sub">Clean PDF, no watermark, ready to send.</p>
       <div class="price-stamp"><span class="amt">$2.99</span></div>
-      <div class="price-note">one print · editable 7 days</div>
+      <div class="price-note">one-time · edit for 7 days</div>
       <div class="ticket-feats">
-        <div>Clean PDF, no specimen mark</div>
-        <div>Edit and re-print for 7 days</div>
-        <div>Cover letter add-on, +$0.99</div>
+        <div>Watermark-free PDF</div>
+        <div>KSA / ATS formatted</div>
+        <div>Edit & re-download 7 days</div>
+        <div>Cover letter +$0.99</div>
       </div>
-      <button class="pay-btn" onclick="simulatePay()">Pay & release</button>
-      <button class="cancel-link" onclick="closePaywall()">Not yet</button>
+      <button class="pay-btn" onclick="simulatePay()">Pay & download</button>
+      <button class="cancel-link" onclick="closeModal()">Not yet</button>
     </div>
   </div>
 </div>
 
 <script>
-// Set to false once Stripe (or another processor) is wired up — this
-// single flag controls whether downloads are free or behind the paywall.
+// ── Free mode toggle ──
 const FREE_MODE = true;
 
-const SECTION_KEYS = ['PROFESSIONAL SUMMARY','WORK EXPERIENCE','EDUCATION','KEY SKILLS','PROJECTS','ACHIEVEMENTS & ADDITIONAL INFORMATION'];
-
-const REGIONS = [
-  {id:'global', label:'Global', instr:'Write in clear, international professional English. Avoid region-specific jargon.'},
-  {id:'uk', label:'UK / Europe', instr:'British English (colour, programme). List A-levels/GCSEs. No photo, age, or marital status.'},
-  {id:'gulf', label:'Gulf (KSA/UAE)', instr:'Format for Gulf employers. Mention nationality/visa status if relevant. Dates DD/MM/YYYY.'},
-  {id:'pk', label:'Pakistan', instr:'Pakistani English. List Matric/FSc/BSc credentials. Mention PEC/PMDC registrations if applicable.'},
-  {id:'us', label:'US / Canada', instr:'American English. No photo, age, or marital status (EEO). Quantify everything. One page if under 10 yrs experience.'}
+// ── Section keys for streaming parser ──
+const SECTION_KEYS = [
+  'SUMMARY','SKILLS','WORK EXPERIENCE','PROJECTS',
+  'EDUCATION','CERTIFICATIONS','ACHIEVEMENTS','LANGUAGES','SOFT SKILLS'
 ];
-let region = 'global';
 
+// ── Regions ──
+const REGIONS = [
+  { id:'gulf', label:'Gulf (KSA/UAE)', instr:'Format for Saudi Arabia / Gulf employers. Include nationality, Iqama number, DOB. Dates DD-Mon-YYYY. Section headings centred and bold. ATS friendly.' },
+  { id:'pk',   label:'Pakistan', instr:'Pakistani English. Include CNIC if provided. List Matric/FSc/BSc credentials. ATS friendly.' },
+  { id:'uk',   label:'UK / Europe', instr:'British English. No photo, age, or nationality. ATS friendly one-page format.' },
+  { id:'us',   label:'US / Canada', instr:'American English. No photo, age, nationality or DOB (EEO). Quantify everything. ATS friendly.' },
+  { id:'global',label:'Global', instr:'Clear international professional English. ATS optimised.' },
+];
+let region = 'gulf';
+
+// ── Sectors ──
 const SECTORS = [
-  ['it','IT / Software Engineering'],['medical','Medical / Healthcare'],['banking','Banking / Finance'],
-  ['engineering','Engineering'],['teaching','Teaching / Academia'],['bpo','Customer Service / BPO'],
+  ['it','IT / Software / Data'],['medical','Medical / Healthcare'],
+  ['banking','Banking / Finance'],['engineering','Engineering'],
+  ['teaching','Teaching / Academia'],['bpo','Customer Service / BPO'],
   ['government','Government / Public Sector'],['marketing','Marketing / Sales'],
-  ['accounting','Accounting / Finance (ACCA)'],['design','Design / Creative'],['general','General / Other']
+  ['accounting','Accounting / Finance'],['design','Design / Creative'],['general','General / Other']
 ];
 
 const SECTOR_CHIPS = {
-  it: ['JavaScript','Python','React','SQL','Git','Docker','AWS','TypeScript'],
-  medical: ['Patient care','Clinical assessment','EMR/HIS','Emergency response'],
-  banking: ['Financial modelling','Excel','AML/KYC','Risk management'],
-  engineering: ['AutoCAD','MATLAB','Project management','Safety (OSHA)'],
-  teaching: ['Curriculum design','LMS/Moodle','Assessment','Lesson planning'],
-  bpo: ['Customer service','CRM','Conflict resolution','KPI tracking'],
-  government: ['Policy analysis','Report writing','Public administration'],
-  marketing: ['SEO/SEM','Analytics','Content strategy','Brand management'],
-  accounting: ['QuickBooks','ACCA','Tax compliance','Financial reporting'],
-  design: ['Figma','Adobe CC','Prototyping','User research','Design systems'],
-  general: ['MS Office','Communication','Leadership','Time management']
+  it:['Python','SQL','Power BI','Excel','AWS','Azure','Linux','Networking','React','Node.js','Docker','Git','Tableau'],
+  medical:['Patient care','Clinical assessment','EMR/HIS','Emergency response','Medical ethics'],
+  banking:['Financial modelling','Excel','AML/KYC','Risk management','Bloomberg'],
+  engineering:['AutoCAD','MATLAB','Project management','Safety (OSHA)','BIM'],
+  teaching:['Curriculum design','LMS/Moodle','Assessment','Cambridge A-Level','Lesson planning'],
+  bpo:['CRM (Salesforce)','Customer service','Zendesk','KPI tracking','Conflict resolution'],
+  government:['Policy analysis','Report writing','Public administration','Stakeholder engagement'],
+  marketing:['SEO/SEM','Google Analytics','Meta Ads','Content strategy','Brand management'],
+  accounting:['QuickBooks','ACCA','Tax compliance','IFRS','Financial reporting'],
+  design:['Figma','Adobe CC','Prototyping','User research','SketchUp','3DCAD'],
+  general:['MS Office','Communication','Leadership','Time management','Problem solving']
 };
 
+// ── Init regions ──
 function buildRegions() {
   const row = document.getElementById('region-row');
   REGIONS.forEach(r => {
     const b = document.createElement('button');
-    b.className = 'stamp' + (r.id === region ? ' on' : '');
+    b.type = 'button';
+    b.className = 'chip' + (r.id === region ? ' on' : '');
     b.textContent = r.label;
-    b.onclick = () => { region = r.id; document.querySelectorAll('.stamp').forEach(s=>s.classList.remove('on')); b.classList.add('on'); };
+    b.onclick = () => { region = r.id; document.querySelectorAll('#region-row .chip').forEach(c=>c.classList.remove('on')); b.classList.add('on'); };
     row.appendChild(b);
   });
 }
 buildRegions();
 
+// ── Init sectors ──
 function buildSectors() {
   const sel = document.getElementById('sector');
-  SECTORS.forEach(([v,l]) => {
-    const o = document.createElement('option'); o.value=v; o.textContent=l; sel.appendChild(o);
-  });
+  SECTORS.forEach(([v,l]) => { const o = document.createElement('option'); o.value=v; o.textContent=l; sel.appendChild(o); });
 }
 buildSectors();
 
@@ -880,185 +403,309 @@ function updateChips() {
   const row = document.getElementById('chip-row');
   row.innerHTML = '';
   chips.forEach(c => {
-    const el = document.createElement('button');
-    el.className = 'chip';
-    el.textContent = c;
-    el.onclick = () => el.classList.toggle('on');
-    row.appendChild(el);
+    const el = document.createElement('button'); el.type='button'; el.className='chip';
+    el.textContent=c; el.onclick=()=>el.classList.toggle('on'); row.appendChild(el);
   });
 }
 updateChips();
 
-// ── Repeatable job rows ──
-let jobCounter = 0;
-function addJobRow(prefill) {
-  jobCounter++;
-  const id = jobCounter;
+// ── Skill categories ──
+let skillCatN = 0;
+function addSkillCat(cat='', val='') {
+  skillCatN++;
+  const id = skillCatN;
   const wrap = document.createElement('div');
-  wrap.className = 'job-row';
-  wrap.id = 'job-row-' + id;
+  wrap.id = 'skcat-' + id;
+  wrap.className = 'rep-row';
   wrap.innerHTML = `
-    <div class="job-row-head">
-      <span class="job-row-num">Job ${id}</span>
-      <button type="button" class="job-remove" onclick="removeJobRow(${id})">Remove</button>
-    </div>
-    <div class="frow2">
-      <input type="text" class="job-title" placeholder="Job title" oninput="updateProgress()">
-      <input type="text" class="job-company" placeholder="Company, City">
-    </div>
-    <input type="text" class="job-dates" placeholder="e.g. 2021–Present">
-    <textarea class="job-notes" rows="3" placeholder="Rough notes — what you did, results, numbers if you have them"></textarea>
-  `;
-  document.getElementById('job-list').appendChild(wrap);
-  renumberJobs();
+    <div class="rep-head"><span class="rep-num">Category ${id}</span><button type="button" class="rep-rm" onclick="document.getElementById('skcat-${id}').remove()">Remove</button></div>
+    <div class="skill-cat-row">
+      <input type="text" class="sk-cat" placeholder="e.g. Languages" value="${cat}">
+      <input type="text" class="sk-val" placeholder="Python, SQL, R, C++" value="${val}">
+    </div>`;
+  document.getElementById('skill-cat-list').appendChild(wrap);
 }
-function removeJobRow(id) {
-  const el = document.getElementById('job-row-' + id);
-  if (el) el.remove();
-  renumberJobs();
+// default 5 skill categories
+['Languages','Data Analysis / Visualization','Cloud','Network & Security','AI/ML Tools'].forEach(c => addSkillCat(c,''));
+
+// ── Jobs ──
+let jobN = 0;
+function addJob(t='', co='', loc='', d='', type='', notes='') {
+  jobN++;
+  const id = jobN;
+  const wrap = document.createElement('div');
+  wrap.id = 'job-' + id; wrap.className = 'rep-row';
+  wrap.innerHTML = `
+    <div class="rep-head"><span class="rep-num">Job ${id}</span><button type="button" class="rep-rm" onclick="removeRep('job-${id}','job-list','Job',jobN)">Remove</button></div>
+    <div class="f2"><input type="text" class="j-title" placeholder="Job title / Role" value="${t}"><input type="text" class="j-company" placeholder="Company name" value="${co}"></div>
+    <div class="f2"><input type="text" class="j-loc" placeholder="City, Country" value="${loc}"><input type="text" class="j-dates" placeholder="Jan 2026 – Present" value="${d}"></div>
+    <input type="text" class="j-type" placeholder="Full-time / Part-time / Internship / On-Site / Remote" value="${type}">
+    <textarea class="j-notes" rows="4" placeholder="• What you did&#10;• Key achievement with numbers&#10;• Tools or systems you used">${notes}</textarea>`;
+  document.getElementById('job-list').appendChild(wrap);
   updateProgress();
 }
-function renumberJobs() {
-  const rows = document.querySelectorAll('#job-list .job-row');
-  rows.forEach((row, i) => {
-    row.querySelector('.job-row-num').textContent = 'Job ' + (i + 1);
-  });
-}
-function getJobsText() {
-  const rows = document.querySelectorAll('#job-list .job-row');
-  const entries = [];
-  rows.forEach(row => {
-    const title = row.querySelector('.job-title').value.trim();
-    const company = row.querySelector('.job-company').value.trim();
-    const dates = row.querySelector('.job-dates').value.trim();
-    const notes = row.querySelector('.job-notes').value.trim();
-    if (!title && !company && !notes) return;
-    let block = [title, company].filter(Boolean).join(' — ');
-    if (dates) block += ` (${dates})`;
-    if (notes) block += '\n' + notes;
-    entries.push(block);
-  });
-  return entries.join('\n\n');
-}
-// Start with one empty job row visible
-addJobRow();
+addJob();
 
+// ── Projects ──
+let projN = 0;
+function addProject(name='', tools='', desc='') {
+  projN++;
+  const id = projN;
+  const wrap = document.createElement('div');
+  wrap.id = 'proj-' + id; wrap.className = 'rep-row';
+  wrap.innerHTML = `
+    <div class="rep-head"><span class="rep-num">Project ${id}</span><button type="button" class="rep-rm" onclick="document.getElementById('proj-${id}').remove()">Remove</button></div>
+    <input type="text" class="p-name" placeholder="Project name" value="${name}">
+    <input type="text" class="p-tools" placeholder="Tools: Python, React, Flask, TensorFlow..." value="${tools}">
+    <textarea class="p-desc" rows="3" placeholder="What you built, how it works, results or impact">${desc}</textarea>`;
+  document.getElementById('project-list').appendChild(wrap);
+}
+addProject();
+
+// ── Education ──
+let eduN = 0;
+function addEdu(deg='', inst='', loc='', dates='') {
+  eduN++;
+  const id = eduN;
+  const wrap = document.createElement('div');
+  wrap.id = 'edu-' + id; wrap.className = 'rep-row';
+  wrap.innerHTML = `
+    <div class="rep-head"><span class="rep-num">Qualification ${id}</span><button type="button" class="rep-rm" onclick="document.getElementById('edu-${id}').remove()">Remove</button></div>
+    <input type="text" class="e-deg" placeholder="Degree / Qualification (e.g. BSc Data Science)" value="${deg}">
+    <div class="f2"><input type="text" class="e-inst" placeholder="Institution" value="${inst}"><input type="text" class="e-loc" placeholder="City, Country" value="${loc}"></div>
+    <input type="text" class="e-dates" placeholder="Sep 2021 – Jun 2025" value="${dates}">`;
+  document.getElementById('edu-list').appendChild(wrap);
+  updateProgress();
+}
+addEdu();
+
+// ── Certifications ──
+let certN = 0;
+function addCert(name='', issuer='', date='') {
+  certN++;
+  const id = certN;
+  const wrap = document.createElement('div');
+  wrap.id = 'cert-' + id; wrap.className = 'rep-row';
+  wrap.innerHTML = `
+    <div class="rep-head"><span class="rep-num">Cert ${id}</span><button type="button" class="rep-rm" onclick="document.getElementById('cert-${id}').remove()">Remove</button></div>
+    <input type="text" class="c-name" placeholder="Certification name" value="${name}">
+    <div class="f2"><input type="text" class="c-issuer" placeholder="Issuer (e.g. Simplilearn)" value="${issuer}"><input type="text" class="c-date" placeholder="Jan 2026" value="${date}"></div>`;
+  document.getElementById('cert-list').appendChild(wrap);
+}
+addCert();
+
+// ── Languages ──
+let langN = 0;
+function addLang(lang='', level='') {
+  langN++;
+  const id = langN;
+  const levels = ['Native','Professional Working','Elementary','Basic'];
+  const opts = levels.map(l => `<option value="${l}" ${l===level?'selected':''}>${l}</option>`).join('');
+  const wrap = document.createElement('div');
+  wrap.id = 'lang-' + id; wrap.style.marginBottom = '6px';
+  wrap.innerHTML = `
+    <div class="f2">
+      <input type="text" class="l-lang" placeholder="Language (e.g. Urdu)" value="${lang}">
+      <select class="l-level"><option value="" disabled ${!level?'selected':''}>— Level —</option>${opts}</select>
+    </div>`;
+  document.getElementById('lang-list').appendChild(wrap);
+}
+// add 3 default language rows
+addLang('Urdu / Hindi','Native');
+addLang('English','Professional Working');
+addLang('Arabic','Elementary');
+
+function removeRep(id) {
+  const el = document.getElementById(id);
+  if (el) el.remove();
+  updateProgress();
+}
+
+// ── Progress ──
 function updateProgress() {
-  const hasJob = document.querySelectorAll('#job-list .job-row .job-title')
-    .length > 0 && [...document.querySelectorAll('#job-list .job-title')].some(i => i.value.trim());
-  const fields = ['fname','lname','email'];
-  let filled = fields.filter(id => document.getElementById(id)?.value.trim()).length;
-  if (hasJob) filled += 1;
-  const pct = Math.round((filled / (fields.length + 1)) * 100);
+  const has = id => { const el = document.getElementById(id); return el && el.value.trim(); };
+  let filled = 0, total = 4;
+  if (has('fname')) filled++;
+  if (has('email')) filled++;
+  if (document.querySelector('.j-title')?.value.trim()) filled++;
+  if (document.querySelector('.e-deg')?.value.trim()) filled++;
+  const pct = Math.round((filled / total) * 100);
   document.getElementById('prog-fill').style.width = pct + '%';
   document.getElementById('pct-label').textContent = pct + '%';
 }
 
+// ── Collect all data into prompt ──
 function buildPrompt() {
+  const v = id => (document.getElementById(id)?.value.trim() || '');
   const sector = document.getElementById('sector').selectedOptions[0].text;
-  const fname = document.getElementById('fname').value.trim();
-  const lname = document.getElementById('lname').value.trim();
-  const role = document.getElementById('target-role').value.trim();
-  const city = document.getElementById('city').value.trim();
-  const experience = getJobsText();
-  const education = document.getElementById('education').value.trim();
-  const skills = [
-    ...[...document.querySelectorAll('.chip.on')].map(c => c.textContent),
-    ...document.getElementById('skills-extra').value.split(',').map(s => s.trim()).filter(Boolean)
-  ];
-  const projects = document.getElementById('projects').value.trim();
-  const certifications = document.getElementById('certifications').value.trim();
-  const languages = document.getElementById('languages').value.trim();
-  const regionInstr = REGIONS.find(r => r.id === region).instr;
+  const regionInstr = REGIONS.find(r => r.id === region)?.instr || REGIONS[0].instr;
 
-  const extrasLines = [];
-  if (certifications) extrasLines.push('Certifications/Awards: ' + certifications);
-  if (languages) extrasLines.push('Languages: ' + languages);
-  const extrasText = extrasLines.join('\n') || 'None provided';
+  // personal
+  const fname = v('fname'), lname = v('lname');
+  const phone = v('phone'), city = v('city'), email = v('email');
+  const linkedin = v('linkedin'), github = v('github');
+  const dob = v('dob'), nationality = v('nationality');
+  const iqama = v('iqama'), iqamaStatus = v('iqama-status');
+  const targetRole = v('target-role');
 
-  return `You are an expert CV writer. ${regionInstr}
+  // summary
+  const summaryNotes = v('summary');
 
-RULES:
-- Strong action verbs, quantify achievements wherever possible
-- If experience is thin (fresh grad), emphasise education, projects, and potential
-- Concise, employers skim in 6 seconds
-- If PROJECTS data is empty, omit that section entirely from your output
-- Output ONLY these sections, headings in ALL CAPS on their own line:
+  // skills
+  const chipSkills = [...document.querySelectorAll('.chip.on')].map(c => c.textContent);
+  const skillCats = [...document.querySelectorAll('#skill-cat-list .rep-row')].map(r => {
+    const cat = r.querySelector('.sk-cat')?.value.trim();
+    const val = r.querySelector('.sk-val')?.value.trim();
+    return cat || val ? `${cat}: ${val}` : null;
+  }).filter(Boolean);
 
-PROFESSIONAL SUMMARY
-[2-3 sentences]
+  // jobs
+  const jobs = [...document.querySelectorAll('#job-list .rep-row')].map(r => {
+    const title = r.querySelector('.j-title')?.value.trim();
+    const company = r.querySelector('.j-company')?.value.trim();
+    const loc = r.querySelector('.j-loc')?.value.trim();
+    const dates = r.querySelector('.j-dates')?.value.trim();
+    const type = r.querySelector('.j-type')?.value.trim();
+    const notes = r.querySelector('.j-notes')?.value.trim();
+    if (!title && !company) return null;
+    return [title, company, loc, dates, type, notes].filter(Boolean).join(' | ');
+  }).filter(Boolean);
 
+  // projects
+  const projects = [...document.querySelectorAll('#project-list .rep-row')].map(r => {
+    const name = r.querySelector('.p-name')?.value.trim();
+    const tools = r.querySelector('.p-tools')?.value.trim();
+    const desc = r.querySelector('.p-desc')?.value.trim();
+    if (!name) return null;
+    return [name, tools ? `Tools: ${tools}` : '', desc].filter(Boolean).join('\n');
+  }).filter(Boolean);
+
+  // education
+  const edus = [...document.querySelectorAll('#edu-list .rep-row')].map(r => {
+    const deg = r.querySelector('.e-deg')?.value.trim();
+    const inst = r.querySelector('.e-inst')?.value.trim();
+    const loc = r.querySelector('.e-loc')?.value.trim();
+    const dates = r.querySelector('.e-dates')?.value.trim();
+    if (!deg) return null;
+    return [deg, inst, loc, dates].filter(Boolean).join(' | ');
+  }).filter(Boolean);
+
+  const coursework = v('coursework');
+
+  // certs
+  const certs = [...document.querySelectorAll('#cert-list .rep-row')].map(r => {
+    const name = r.querySelector('.c-name')?.value.trim();
+    const issuer = r.querySelector('.c-issuer')?.value.trim();
+    const date = r.querySelector('.c-date')?.value.trim();
+    if (!name) return null;
+    return [name, issuer, date].filter(Boolean).join(' — ');
+  }).filter(Boolean);
+
+  // achievements
+  const achievements = v('achievements');
+
+  // languages
+  const langs = [...document.querySelectorAll('#lang-list > div')].map(r => {
+    const lang = r.querySelector('.l-lang')?.value.trim();
+    const level = r.querySelector('.l-level')?.value.trim();
+    return lang ? `${lang} (${level || 'Not specified'})` : null;
+  }).filter(Boolean);
+
+  const softskills = v('softskills');
+
+  return `You are an expert CV writer for ${sector} roles. ${regionInstr}
+
+OUTPUT FORMAT RULES:
+- Output ONLY the CV body starting from SUMMARY section
+- Each section heading must be exactly as shown below, ALL CAPS
+- Under each heading write the content directly
+- For WORK EXPERIENCE: format each job as "Job Title\nCompany, Location\nDates | Employment Type\n• bullet\n• bullet"
+- For SKILLS: list each category as "Category Name: skill1, skill2, skill3"
+- For CERTIFICATIONS: one per line "Name — Issuer (Date)"
+- For ACHIEVEMENTS: numbered list
+- For LANGUAGES: each on its own line "Language (Level)"
+- For SOFT SKILLS: comma-separated list
+- If PROJECTS is empty, omit that section entirely
+- Use strong action verbs, quantify where possible
+- Make it ATS-friendly (no tables, no columns, clean text)
+
+SECTIONS IN ORDER:
+SUMMARY
+SKILLS
 WORK EXPERIENCE
-[Job Title — Company, City (Start–End)\\n• bullet\\n• bullet — repeat for each job provided, most recent first]
-
-EDUCATION
-[Degree — Institution, Year]
-
-KEY SKILLS
-[comma-separated, 8-12 skills]
-
 PROJECTS
-[Project name — one line description with impact/result, if any projects were provided. Omit this whole section if none provided.]
-
-ACHIEVEMENTS & ADDITIONAL INFORMATION
-[certifications, awards, languages — from the data provided]
+EDUCATION
+CERTIFICATIONS
+ACHIEVEMENTS
+LANGUAGES
+SOFT SKILLS
 
 CANDIDATE DATA:
 Name: ${fname} ${lname}
-Target Role: ${role || sector}
-Sector: ${sector}
-City: ${city}
-Work Experience (one or more jobs): ${experience || 'Fresh graduate / no experience listed'}
-Education: ${education || 'Not provided'}
-Skills: ${skills.join(', ') || 'Not specified'}
-Projects: ${projects || 'None provided'}
-${extrasText}`;
+Target Role: ${targetRole || sector}
+Phone: ${phone} | Email: ${email} | City: ${city}
+${linkedin ? 'LinkedIn: ' + linkedin : ''}
+${github ? 'GitHub: ' + github : ''}
+${dob ? 'DOB: ' + dob : ''}
+${nationality ? 'Nationality: ' + nationality : ''}
+${iqama ? 'Iqama: ' + iqama + (iqamaStatus ? ' (' + iqamaStatus + ')' : '') : ''}
+Summary notes: ${summaryNotes || 'Write a professional summary from the data below'}
+Skills (chips selected): ${chipSkills.join(', ') || 'See categories'}
+Skill categories: ${skillCats.join('\n') || 'Not provided'}
+Work experience: ${jobs.join('\n---\n') || 'Fresh graduate'}
+Projects: ${projects.join('\n---\n') || 'None'}
+Education: ${edus.join('\n') || 'Not provided'}
+Relevant coursework: ${coursework || 'None'}
+Certifications: ${certs.join('\n') || 'None'}
+Achievements: ${achievements || 'None'}
+Languages: ${langs.join(', ') || 'Not provided'}
+Soft skills: ${softskills || 'Not provided'}`;
 }
 
+// ── Generate ──
 async function generate() {
   const fname = document.getElementById('fname').value.trim();
-  if (!fname) { setStatus('First name is required before we can begin.', 'err'); return; }
+  if (!fname) { setStatus('Please enter your name first.', 'err'); return; }
 
   const btn = document.getElementById('gen-btn');
   btn.disabled = true;
-  btn.innerHTML = '<span class="spin"></span> Setting type…';
-  document.getElementById('live-dot').classList.add('active');
+  btn.innerHTML = '<span class="spin"></span>&nbsp; AI is writing your CV…';
 
+  const paper = document.getElementById('paper');
+  paper.classList.add('gen');
+  document.getElementById('live-dot').classList.add('on');
   document.getElementById('empty-state').style.display = 'none';
   document.getElementById('cv-content').style.display = 'block';
 
-  const lname = document.getElementById('lname').value.trim();
-  document.getElementById('cv-name').textContent = fname + (lname ? ' ' + lname : '');
-  document.getElementById('cv-role').textContent = document.getElementById('target-role').value || document.getElementById('sector').selectedOptions[0].text;
-  document.getElementById('cv-phone').textContent = document.getElementById('phone').value || '—';
-  document.getElementById('cv-email').textContent = document.getElementById('email').value || '—';
-  document.getElementById('cv-city').textContent = document.getElementById('city').value || '—';
-  const li = document.getElementById('linkedin').value.trim();
-  const liEl = document.getElementById('cv-linkedin');
-  if (li) { liEl.style.display = 'inline'; liEl.textContent = li; }
-  else { liEl.style.display = 'none'; liEl.textContent = '—'; }
+  // Fill header
+  const v = id => (document.getElementById(id)?.value.trim() || '');
+  const fname2 = v('fname'), lname = v('lname');
+  document.getElementById('cv-name').textContent = (fname2 + ' ' + lname).trim();
+  const phone = v('phone'), email = v('email'), city = v('city');
+  const dob = v('dob'), nationality = v('nationality');
+  const iqama = v('iqama'), iqamaStatus = v('iqama-status');
+  const linkedin = v('linkedin'), github = v('github');
+  document.getElementById('cv-line1').textContent =
+    [city, phone, email].filter(Boolean).join(' | ') + (dob ? ' | DOB: ' + dob : '');
+  document.getElementById('cv-line2').textContent =
+    [nationality ? 'Nationality: ' + nationality : '', iqama ? 'Iqama: ' + iqama + (iqamaStatus ? ' (' + iqamaStatus + ')' : '') : ''].filter(Boolean).join(' | ');
+  document.getElementById('cv-line3').textContent =
+    [linkedin ? 'LinkedIn: ' + linkedin : '', github ? 'GitHub: ' + github : ''].filter(Boolean).join(' | ');
 
   const body = document.getElementById('cv-body');
   body.innerHTML = '';
-  document.getElementById('status').innerHTML = '<span class="spin"></span> Composing your CV…';
-  document.getElementById('status').className = 'status-strip';
+  setStatus('', '');
+  document.getElementById('status').innerHTML = '<span class="spin"></span>&nbsp; AI is composing your CV…';
 
   try {
     const res = await fetch('/api/claude', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'gemini-2.5-flash',
-        max_tokens: 2000,
-        stream: true,
-        messages: [{ role: 'user', content: buildPrompt() }]
-      })
+      body: JSON.stringify({ model:'gemini-2.5-flash', max_tokens:2500, stream:true, messages:[{ role:'user', content:buildPrompt() }] })
     });
-
     if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e.error?.message || 'API error ' + res.status); }
 
-    const reader = res.body.getReader();
-    const dec = new TextDecoder();
+    const reader = res.body.getReader(), dec = new TextDecoder();
     let full = '', buf = '', currentEl = null;
 
     function getSection(title) {
@@ -1072,21 +719,18 @@ async function generate() {
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
-      buf += dec.decode(value, { stream: true });
+      buf += dec.decode(value, { stream:true });
       const lines = buf.split('\n'); buf = lines.pop();
       for (const line of lines) {
         if (!line.startsWith('data: ')) continue;
-        const d = line.slice(6);
-        if (d === '[DONE]') continue;
+        const d = line.slice(6); if (d==='[DONE]') continue;
         try {
           const p = JSON.parse(d);
-          if (p.type === 'content_block_delta' && p.delta?.text) {
+          if (p.type==='content_block_delta' && p.delta?.text) {
             full += p.delta.text;
             for (const l of p.delta.text.split('\n')) {
               let hit = false;
-              for (const k of SECTION_KEYS) {
-                if (l.trim().startsWith(k)) { currentEl = getSection(k); hit = true; break; }
-              }
+              for (const k of SECTION_KEYS) { if (l.trim()===k || l.trim().startsWith(k+'\n')) { currentEl=getSection(k); hit=true; break; } }
               if (!hit && currentEl) currentEl.textContent += (currentEl.textContent ? '\n' : '') + l;
             }
           }
@@ -1094,6 +738,7 @@ async function generate() {
       }
     }
 
+    // clean final render
     const sections = {};
     const rx = new RegExp('(' + SECTION_KEYS.join('|') + ')([\\s\\S]*?)(?=' + SECTION_KEYS.join('|') + '|$)', 'g');
     let m; while ((m = rx.exec(full)) !== null) sections[m[1]] = m[2].trim();
@@ -1105,156 +750,162 @@ async function generate() {
       body.appendChild(s);
     }
 
+    // score
+    const sc = Math.min(45 + (document.querySelector('.j-title')?.value.trim()?20:0) + (document.querySelector('.e-deg')?.value.trim()?10:0) + (document.querySelectorAll('.chip.on').length>0?10:0) + (v('achievements')?10:0) + (document.querySelector('.c-name')?.value.trim()?5:0), 100);
     document.getElementById('score-tag').style.display = 'flex';
-    document.getElementById('score-val').textContent = calcScore() + '/100';
+    document.getElementById('score-val').textContent = 'ATS Score: ' + sc + '/100';
     document.getElementById('copy-btn').disabled = false;
     document.getElementById('dl-btn').disabled = false;
-    if (FREE_MODE) {
-      document.getElementById('page').classList.remove('locked');
-      setStatus('Set in type — free while we\'re in beta. Review and print whenever you\'re ready.', 'ok');
-    } else {
-      setStatus('Set in type. Review the proof, then release it.', 'ok');
-    }
+    if (FREE_MODE) { paper.classList.remove('locked'); setStatus('CV generated — review and download free during beta.', 'ok'); }
+    else setStatus('CV generated — review the proof, then download.', 'ok');
 
   } catch (err) {
-    body.innerHTML = `<div style="font-size:13.5px;color:var(--ink-soft);">
-      <strong style="color:var(--red);display:block;margin-bottom:8px;">The page could not be set.</strong>
-      ${err.message.includes('401')||err.message.toLowerCase().includes('key') ? 'The server is missing a valid Gemini API key.' :
-        err.message.includes('fetch')||err.message.includes('Network') ? 'No proxy server responded. See the dev note below.' :
-        escHtml(err.message)}
-      <br><br><a href="#" onclick="showDemo();return false;" style="color:var(--red);">View a specimen instead →</a>
+    body.innerHTML = `<div style="padding:24px;font-size:13px;color:var(--ink-soft);">
+      <strong style="color:var(--red);display:block;margin-bottom:8px;">Could not connect to the AI service.</strong>
+      ${err.message.includes('fetch')||err.message.includes('Network') ? 'No proxy server found. Make sure server.js is running.' : escHtml(err.message)}
+      <br><br><a href="#" onclick="showDemo();return false;" style="color:var(--red);font-weight:600;">Load a demo CV instead →</a>
     </div>`;
-    setStatus('Could not reach the composing service.', 'err');
+    setStatus('Error — ' + err.message.slice(0,80), 'err');
   }
 
-  document.getElementById('live-dot').classList.remove('active');
+  paper.classList.remove('gen');
+  document.getElementById('live-dot').classList.remove('on');
   btn.disabled = false;
-  btn.innerHTML = '<span class="key">✒</span> Set again';
+  btn.innerHTML = '✒ &nbsp;Regenerate CV';
 }
 
 function setStatus(msg, type) {
   const s = document.getElementById('status');
   s.className = 'status-strip' + (type ? ' '+type : '');
-  s.textContent = msg;
+  s.textContent = msg || 'Ready.';
 }
 function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-function calcScore() {
-  let s = 45;
-  if (getJobsText().length > 60) s += 20;
-  if (document.getElementById('education').value.length > 20) s += 10;
-  if (document.querySelectorAll('.chip.on').length > 0) s += 10;
-  if (document.getElementById('certifications').value.trim() || document.getElementById('languages').value.trim() || document.getElementById('projects').value.trim()) s += 10;
-  if (document.getElementById('linkedin').value.trim()) s += 5;
-  return Math.min(s, 100);
-}
-
 function copyText() {
-  let t = document.getElementById('cv-name').textContent + '\n' + document.getElementById('cv-role').textContent + '\n\n';
-  for (const [k,v] of Object.entries(window.__cvSections || {})) t += k + '\n' + v + '\n\n';
+  let t = document.getElementById('cv-name').textContent + '\n\n';
+  for (const [k,v] of Object.entries(window.__cvSections||{})) t += k + '\n' + v + '\n\n';
   navigator.clipboard.writeText(t).then(() => {
-    const btn = document.getElementById('copy-btn'); const o = btn.textContent;
-    btn.textContent = 'Copied'; setTimeout(()=>btn.textContent=o, 1800);
+    const b = document.getElementById('copy-btn'); const o = b.textContent;
+    b.textContent = '✓ Copied'; setTimeout(()=>b.textContent=o, 1800);
   });
 }
 
 let isPaid = false;
-function openPaywall() {
-  if (FREE_MODE || isPaid) { downloadPDF(); return; }
-  document.getElementById('modal').classList.add('open');
-}
-function closePaywall() { document.getElementById('modal').classList.remove('open'); }
+function openPaywall() { if (FREE_MODE||isPaid) { downloadPDF(); return; } document.getElementById('modal').classList.add('open'); }
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
 function simulatePay() {
-  isPaid = true; closePaywall();
-  document.getElementById('page').classList.remove('locked');
-  const btn = document.getElementById('dl-btn');
-  btn.textContent = 'Print PDF'; btn.onclick = downloadPDF;
-  setStatus('Released. Printing your copy…', 'ok');
-  setTimeout(downloadPDF, 350);
+  isPaid = true; closeModal();
+  document.getElementById('paper').classList.remove('locked');
+  const b = document.getElementById('dl-btn'); b.textContent = 'Print PDF'; b.onclick = downloadPDF;
+  setTimeout(downloadPDF, 300);
 }
 
 function downloadPDF() {
   const name = document.getElementById('cv-name').textContent.trim();
-  const html = document.getElementById('cv-content').innerHTML;
-  const docTitle = (name || 'CV') + ' - CV';
-  const win = window.open('about:blank', '_blank');
-  if (!win) {
-    setStatus('Your browser blocked the new tab. Allow popups for this site and try again.', 'err');
-    return;
-  }
-  win.document.title = docTitle;
-  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${docTitle}</title>
+  const title = name + ' — CV';
+  const hdrHtml = document.getElementById('cv-content').querySelector('.cv-hdr').innerHTML;
+  const bodyHtml = document.getElementById('cv-body').innerHTML;
+  const win = window.open('about:blank','_blank');
+  if (!win) { setStatus('Allow popups and try again.','err'); return; }
+  win.document.title = title;
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${title}</title>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-@page { margin: 12mm; }
+@page{size:A4;margin:18mm 16mm;}
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Source Serif 4',serif;font-size:14px;color:#1C1B19;max-width:680px;margin:0 auto;}
-.cv-letterhead{padding:30px 38px 18px;border-bottom:1.5px solid #1C1B19;}
-.cv-name{font-weight:700;font-size:26px;letter-spacing:-.4px;}
-.cv-role{font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#A8341F;margin-top:5px;}
-.cv-contacts{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:12px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#57534A;}
-.cv-contacts span::before{content:'—  ';color:#C7C1B2;}
-.cv-body{padding:22px 38px 36px;}
-.cv-sec{margin-bottom:18px;}
-.cv-sec-title{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid #DDD8CC;}
-.cv-sec-body{font-size:13px;color:#57534A;line-height:1.7;white-space:pre-wrap;word-break:break-word;}
-@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}
-</style></head><body>${html}</body></html>`);
+body{font-family:'Source Serif 4',serif;font-size:11.5px;color:#1C1B19;line-height:1.65;}
+.cv-hdr{text-align:center;padding:18px 24px 12px;border-bottom:2px solid #1C1B19;}
+.cv-name{font-weight:700;font-size:22px;letter-spacing:-.3px;text-decoration:underline;text-underline-offset:3px;margin-bottom:5px;}
+.cv-contact-line{font-size:10.5px;color:#1C1B19;margin-bottom:2px;}
+.cv-bd{padding:12px 24px 24px;}
+.cv-sec{margin-bottom:13px;}
+.cv-sec-title{font-weight:700;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;text-align:center;border-bottom:1.5px solid #1C1B19;padding:2px 0;margin-bottom:7px;}
+.cv-sec-body{font-size:11px;color:#374151;line-height:1.65;white-space:pre-wrap;word-break:break-word;}
+@media print{html,body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}header,footer,thead{display:none!important;}}
+</style></head><body>
+<div class="cv-hdr">${hdrHtml}</div>
+<div class="cv-bd">${bodyHtml}</div>
+</body></html>`);
   win.document.close();
-  win.document.title = docTitle;
-
-  setStatus('In the print window: choose "Save as PDF" and untick "Headers and footers" for a clean page.', 'ok');
-
-  win.onload = () => {
-    win.document.title = docTitle;
-    setTimeout(() => {
-      win.focus();
-      win.print();
-    }, 200);
-  };
+  win.document.title = title;
+  setStatus('Print dialog opening — choose "Save as PDF". If you still see headers, untick "Headers and footers" in More settings.', 'ok');
+  win.onload = () => { win.document.title = title; setTimeout(()=>{ win.focus(); win.print(); }, 250); };
 }
 
+// ── Demo ──
 function showDemo() {
   document.getElementById('empty-state').style.display = 'none';
   document.getElementById('cv-content').style.display = 'block';
-  document.getElementById('cv-name').textContent = 'Amara Okafor';
-  document.getElementById('cv-role').textContent = 'Senior Product Designer';
-  document.getElementById('cv-phone').textContent = '+351 91 234 5678';
-  document.getElementById('cv-email').textContent = 'amara@email.com';
-  document.getElementById('cv-city').textContent = 'Lisbon, Portugal';
-  document.getElementById('cv-linkedin').style.display = 'inline';
-  document.getElementById('cv-linkedin').textContent = 'linkedin.com/in/amaraokafor';
+  document.getElementById('cv-name').textContent = 'JOHN SMITH';
+  document.getElementById('cv-line1').textContent = 'Riyadh, Saudi Arabia | john.smith@email.com';
+  document.getElementById('cv-line2').textContent = '';
+  document.getElementById('cv-line3').textContent = 'LinkedIn: linkedin.com/in/johnsmith | GitHub: github.com/johnsmith';
 
   const demo = {
-    'PROFESSIONAL SUMMARY': 'Product designer with 6 years shaping consumer fintech and travel platforms across Europe and West Africa. Led the redesign of a booking flow that lifted conversion 22% and shipped a design system now used by four product teams. Strong collaborator across research, engineering, and leadership.',
-    'WORK EXPERIENCE': `Senior Product Designer — Studio Nine, Lisbon  (2021–Present)
-• Led end-to-end redesign of the core booking flow, lifting conversion by 22%
-• Built and shipped a company-wide design system adopted by 4 product squads
-• Ran 30+ user interviews informing the 2023 product roadmap
-• Mentored two junior designers through promotion to mid-level
+    'SUMMARY': 'A Data Science graduate with 2 years of experience in IT Support and system administration, including strong hands-on work in data visualization and reporting. Quick to learn and adapt, with a solid background in networking, artificial intelligence, and modern tech tools. Highly skilled in Excel and Power BI for analysis, dashboards, and reports.',
+    'SKILLS': `Languages: Python, R, SQL, C++ (intermediate)
+Data Analysis / Visualization: Power BI, Tableau, Excel (PivotTables), IBM SPSS, SAS, Looker, QlikView
+Cloud: AWS (S3, Glue, QuickSight), Azure, Google Cloud Platform
+Database: MySQL, Oracle, SQLite, Access
+Operating System: Windows, MacOS, Linux (Ubuntu, Kali, Parrot), Android
+Network & Security: Switch Configuration, Firewall Management, LAN/WAN Setup, VPN Setup, Network Troubleshooting
+Microsoft 365: Word, Excel, PowerPoint, Outlook, Teams, OneDrive
+AI/ML Tools: ChatGPT, Gemini, Grok, Claude, Meta AI, Perplexity
+Management Tools: Jira, ServiceNow, Freshdesk, Zendesk
+Design & Visualization: 3DCAD, SketchUp, Canva`,
+    'WORK EXPERIENCE': `Multi-role Specialist
+Aran Cucine Riyadh | Riyadh, Saudi Arabia
+Jan 2026 – Present | Full-time · On-Site
+• Designed high-end Italian kitchen layouts and full interior visualizations using 3DCAD and SketchUp
+• Produced photorealistic 3D renders and client presentations to support the sales and approval process
+• Managed company social media accounts on Instagram and Facebook, handling content creation and engagement
+• Configured and maintained the office network, Wi-Fi infrastructure, and CCTV security systems
 
-Product Designer — Flux Travel, Lagos  (2018–2021)
-• Designed the mobile check-in flow used by 1.2M monthly travelers
-• Partnered with engineering to cut design-to-ship time from 6 weeks to 2`,
-    'EDUCATION': `BA Graphic Design — Central Saint Martins, London  (2014–2018)`,
-    'KEY SKILLS': `Figma, Design systems, Prototyping, User research, Adobe Creative Cloud, Accessibility (WCAG), Cross-functional leadership, Workshop facilitation`,
-    'PROJECTS': `Personal design portfolio — built in Webflow, averaging 2,000 monthly visitors and several inbound client leads`,
-    'ACHIEVEMENTS & ADDITIONAL INFORMATION': `• Speaker, Design Matters Lisbon 2023
-• Languages: English (native), Yoruba (native), Portuguese (conversational)
-• Adobe Certified Expert, 2022`
+IT Technical Support Engineer
+Sybrid Pvt Ltd – A Lakson Group Company | Lahore, Pakistan
+Aug 2025 – Nov 2025 | Full-time · On-Site
+• Provided L1 technical support for hardware, software, LAN, and WAN issues
+• Supervised and resolved help desk tickets ensuring SLA compliance
+• Ranked in top 4 out of 96 technical support employees for outstanding performance`,
+    'PROJECTS': `URL Analyzer for Malware Detection
+Tools: Flask, Scikit-learn, React.js, NumPy, Pandas, Matplotlib
+Developed a machine learning-based phishing detection tool using Random Forest to classify URLs as malicious or benign. Built a full-stack application with Flask and React.js with real-time URL scanning interface.
+
+Gesture Controlled Virtual Paint App
+Tools: OpenCV, MediaPipe, TensorFlow (CNN), Scikit-learn, Python
+Created a webcam-based virtual paint tool using hand gesture recognition. Integrated real-time drawing, erasing, and color selection via gestures. Enabled seamless switching between ML and CNN modes.`,
+    'EDUCATION': `Bachelor of Science in Data Science
+Government College University Faisalabad | Faisalabad, Punjab, Pakistan
+Sep 2021 – Jun 2025`,
+    'CERTIFICATIONS': `CCNA 200-301 Network Fundamentals — Simplilearn (Jan 2026)
+Analyzing and Visualizing Data with Microsoft Excel — Skillsoft (Jan 2025)
+Microsoft Office 365 — Edraak (Sep 2025)
+Artificial Intelligence — Simplilearn (Dec 2024)
+Symantec Certified Cyber Security Services I — Infosys (Jan 2025)
+Symantec Certified Cyber Security Services II — Simplilearn (Dec 2024)`,
+    'ACHIEVEMENTS': `1. Top Performer at Sybrid: Ranked among the Top 4 out of 96 technical support employees for outstanding performance and dedication.
+2. Digitized Patient Records at Kuwait Medical Complex, improving data accessibility and health information reliability.
+3. Technical Excellence in Networking: Hands-on experience configuring and managing network devices, Windows systems, and software security.
+4. Simultaneous Project Management at Aran Cucine: Delivered accurate 3D renders and presentation-ready layouts on time across multiple client accounts.`,
+    'LANGUAGES': `Urdu / Hindi (Native)
+English (Professional Working)
+Arabic (Elementary)`,
+    'SOFT SKILLS': 'Communication, Teamwork & Collaboration, Problem Solving, Time Management, Adaptability, Critical Thinking, Leadership, Creativity & Innovation, Conflict Resolution, Attention to Detail'
   };
+
   window.__cvSections = demo;
-  const body = document.getElementById('cv-body'); body.innerHTML = '';
+  const body = document.getElementById('cv-body');
+  body.innerHTML = '';
   for (const k of SECTION_KEYS) if (demo[k]) {
     const s = document.createElement('div'); s.className = 'cv-sec';
     s.innerHTML = `<div class="cv-sec-title">${k}</div><div class="cv-sec-body">${escHtml(demo[k])}</div>`;
     body.appendChild(s);
   }
   document.getElementById('score-tag').style.display = 'flex';
-  document.getElementById('score-val').textContent = '94/100';
+  document.getElementById('score-val').textContent = 'ATS Score: 96/100';
   document.getElementById('copy-btn').disabled = false;
   document.getElementById('dl-btn').disabled = false;
-  setStatus('Specimen loaded — this is how a finished page looks.', 'ok');
+  setStatus('Demo CV loaded — your actual CV will be generated from your form data.', 'ok');
 }
 </script>
 </body>
