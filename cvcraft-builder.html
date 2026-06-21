@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CvCraft — Build your CV</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lexend:wght@600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --indigo: #6C5CE7; --indigo-dark: #5B4BD6; --indigo-deep: #4F3FC9;
+  --violet-soft: #EDE9FE; --panel-violet: #F4F2FD;
+  --emerald: #10B981; --emerald-dark: #0EA371; --emerald-soft: #D7F5EA; --panel-emerald: #F0FBF6;
+  --ink: #1A1B2E; --ink-soft: #5B5D72; --ink-faint: #8A8CA0;
+  --line: #E7E6F0; --line-soft: #F0EFF8;
+  --paper: #FCFCFE; --card: #FFFFFF;
+  --rule: #E7E6F0; --rule-dark: #D7D5E8;
+  --red: #E0436B; --red-pale: #FDE3E8; --red-dim: #F08FA6;
+  --sage: #0EA371; --sage-pale: #D7F5EA;
+  --amber: #F59E0B; --amber-soft: #FEF1DA;
+  --shadow-card: 0 1px 2px rgba(26,27,46,0.04), 0 12px 28px -10px rgba(26,27,46,0.12), 0 2px 8px rgba(26,27,46,0.05);
+  --shadow-card-lg: 0 4px 8px rgba(26,27,46,0.04), 0 24px 48px -16px rgba(108,92,231,0.18), 0 2px 10px rgba(26,27,46,0.05);
+}
+body { font-family:'Inter',system-ui,sans-serif; background:var(--paper); color:var(--ink); min-height:100vh; font-size:14px; line-height:1.6; }
+h1, h2, h3, .masthead-title { font-family:'Lexend','Inter',sans-serif; }
+@keyframes fadeDown { from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+@keyframes popIn { from{opacity:0;transform:scale(0.94) translateY(10px)} to{opacity:1;transform:scale(1) translateY(0)} }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; }
+}
+/* masthead */
+.masthead { border-bottom:1px solid var(--line); padding:13px 28px; display:flex; align-items:center; justify-content:space-between; background:rgba(252,252,254,0.92); backdrop-filter:blur(8px); position:sticky; top:0; z-index:60; animation:fadeDown 0.5s cubic-bezier(.16,.8,.3,1) both; }
+.masthead-title { font-weight:700; font-size:20px; letter-spacing:-0.3px; display:flex; align-items:center; gap:10px; }
+.masthead-title::before { content:''; width:32px; height:32px; border-radius:9px; flex-shrink:0; background:linear-gradient(135deg,#7C6CF0 0%,var(--indigo) 55%,var(--indigo-dark) 100%); box-shadow:0 3px 10px rgba(108,92,231,0.32); display:inline-block; }
+.masthead-title .mark { color:var(--indigo); }
+.masthead-right { display:flex; align-items:center; gap:10px; }
+.back-link { font-size:13px; font-weight:600; color:var(--ink-soft); padding:7px 13px; border-radius:8px; text-decoration:none; display:flex; align-items:center; gap:5px; transition:background 0.15s,color 0.15s; }
+.back-link:hover { background:var(--violet-soft); color:var(--indigo-deep); }
+.beta-badge { font-size:11px; font-weight:600; letter-spacing:0.02em; color:var(--emerald-dark); border:1px solid var(--emerald-soft); background:var(--panel-emerald); padding:5px 12px; border-radius:999px; }
+.demo-link { font-size:13px; font-weight:600; letter-spacing:0.01em; padding:8px 15px; border-radius:9px; border:1px solid var(--line); background:#fff; color:var(--ink); cursor:pointer; transition:all 0.15s; }
+.demo-link:hover { background:var(--violet-soft); border-color:#D7D2F5; color:var(--indigo-deep); transform:translateY(-1px); }
+/* layout */
+.app { display:grid; grid-template-columns:440px 1fr; height:calc(100vh - 58px); overflow:hidden; }
+/* LEFT: form */
+.form-side { background:var(--card); border-right:1px solid var(--line); overflow-y:auto; scrollbar-width:thin; scrollbar-color:var(--rule-dark) transparent; }
+.form-inner { padding:24px 26px 36px; }
+.form-head { margin-bottom:20px; animation:fadeUp 0.5s cubic-bezier(.16,.8,.3,1) both 0.05s; }
+.form-eyebrow { font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--indigo-deep); margin-bottom:6px; display:inline-block; background:var(--violet-soft); padding:4px 11px; border-radius:999px; }
+.form-head h1 { font-size:21px; font-weight:700; letter-spacing:-0.4px; margin-top:6px; }
+.form-head p { font-size:13px; color:var(--ink-soft); margin-top:4px; }
+/* section dividers */
+.sec-div { display:flex; align-items:center; gap:9px; margin:24px 0 13px; }
+.sec-div .n { font-size:11px; font-weight:700; color:#fff; background:linear-gradient(135deg,#7C6CF0,var(--indigo-dark)); border:none; border-radius:7px; width:20px; height:20px; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 2px 6px rgba(108,92,231,0.3); }
+.sec-div .t { font-size:11.5px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; color:var(--ink); }
+.sec-div .l { flex:1; height:1px; background:var(--line); }
+/* fields */
+.f { margin-bottom:14px; }
+.f2 { display:grid; grid-template-columns:1fr 1fr; gap:11px; }
+.f3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:9px; }
+.flabel { font-size:11.5px; font-weight:600; letter-spacing:0.01em; color:var(--ink-soft); margin-bottom:5px; display:flex; justify-content:space-between; align-items:baseline; }
+.flabel .opt { text-transform:none; font-style:normal; font-weight:400; opacity:0.7; font-size:10.5px; }
+input, select, textarea { width:100%; background:var(--paper); border:1.5px solid var(--line); border-radius:9px; padding:9px 11px; font-family:'Inter',sans-serif; font-size:13.5px; color:var(--ink); outline:none; transition:border-color 0.15s, box-shadow 0.15s, background 0.15s; }
+input::placeholder, textarea::placeholder { color:var(--ink-faint); opacity:0.85; }
+input:focus, select:focus, textarea:focus { border-color:var(--indigo); box-shadow:0 0 0 3px rgba(108,92,231,0.14); background:#fff; }
+select { appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='none' viewBox='0 0 24 24'%3E%3Cpath stroke='%238A8CA0' stroke-width='2' d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 12px center; cursor:pointer; padding-right:30px; }
+select option { font-family:'Inter',sans-serif; }
+textarea { resize:vertical; min-height:68px; line-height:1.55; }
+/* repeatable rows */
+.rep-row { border:1.5px solid var(--line); background:var(--paper); border-radius:12px; padding:13px 14px 14px; margin-bottom:10px; transition:border-color 0.15s, box-shadow 0.15s; }
+.rep-row:hover { border-color:#D7D2F5; box-shadow:0 4px 14px -8px rgba(108,92,231,0.2); }
+.rep-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:9px; }
+.rep-num { font-size:10.5px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:var(--indigo-deep); background:var(--violet-soft); padding:3px 9px; border-radius:999px; }
+.rep-rm { font-size:11.5px; font-weight:600; color:var(--red); background:none; border:none; cursor:pointer; letter-spacing:0.01em; padding:3px 6px; border-radius:6px; transition:background 0.15s; }
+.rep-rm:hover { background:var(--red-pale); }
+.rep-row input, .rep-row textarea { margin-bottom:8px; background:#fff; }
+.rep-row textarea { min-height:56px; }
+.add-btn { width:100%; font-size:12.5px; font-weight:600; letter-spacing:0.01em; background:var(--panel-violet); border:1.5px dashed #C9C0F2; color:var(--indigo-deep); border-radius:10px; padding:10px; cursor:pointer; transition:all 0.15s; margin-bottom:14px; }
+.add-btn:hover { border-color:var(--indigo); background:var(--violet-soft); transform:translateY(-1px); }
+/* chips */
+.chip-row { display:flex; flex-wrap:wrap; gap:6px; margin:6px 0 9px; }
+.chip { font-size:12px; font-weight:600; padding:6px 13px; border:1.5px solid var(--line); border-radius:999px; background:#fff; color:var(--ink-soft); cursor:pointer; transition:all 0.15s; }
+.chip:hover { border-color:#C9C0F2; color:var(--indigo-deep); background:var(--violet-soft); }
+.chip.on { border-color:var(--indigo); background:var(--indigo); color:#fff; box-shadow:0 3px 8px rgba(108,92,231,0.3); }
+/* skill category rows */
+.skill-cat-row { display:grid; grid-template-columns:120px 1fr; gap:9px; margin-bottom:8px; align-items:start; }
+.skill-cat-row input:first-child { font-weight:600; font-size:12.5px; }
+/* progress + generate */
+.form-bottom { padding:14px 26px 22px; background:var(--card); border-right:1px solid var(--line); }
+.progress-row { display:flex; align-items:center; gap:9px; margin-bottom:12px; font-size:11.5px; font-weight:600; color:var(--ink-soft); }
+.prog-track { flex:1; height:6px; background:var(--line-soft); border-radius:999px; position:relative; overflow:hidden; }
+.prog-fill { position:absolute; top:0; left:0; height:100%; border-radius:999px; background:linear-gradient(90deg,var(--indigo),#8B7CF6); width:0%; transition:width 0.4s cubic-bezier(.16,.8,.3,1); }
+.gen-btn { width:100%; background:linear-gradient(135deg,#7C6CF0,var(--indigo-dark)); color:#fff; border:none; border-radius:12px; padding:14px; font-size:14.5px; font-weight:700; letter-spacing:0.01em; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:9px; box-shadow:0 10px 24px -8px rgba(108,92,231,0.45); transition:transform 0.15s, box-shadow 0.2s, filter 0.15s; position:relative; overflow:hidden; }
+.gen-btn::after { content:''; position:absolute; top:0; left:0; width:35%; height:100%; background:linear-gradient(120deg,transparent,rgba(255,255,255,0.45),transparent); transform:translateX(-130%) skewX(-12deg); }
+@keyframes shine { from{transform:translateX(-130%) skewX(-12deg)} to{transform:translateX(230%) skewX(-12deg)} }
+.gen-btn:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 14px 30px -8px rgba(108,92,231,0.55); }
+.gen-btn:hover:not(:disabled)::after { animation:shine 0.75s ease forwards; }
+.gen-btn:active:not(:disabled) { transform:translateY(0); }
+.gen-btn:disabled { background:var(--line); color:var(--ink-faint); cursor:not-allowed; box-shadow:none; }
+/* RIGHT: preview */
+.preview-side { background:var(--paper); display:flex; flex-direction:column; overflow:hidden; height:100%; }
+.preview-toolbar { background:var(--card); border-bottom:1px solid var(--line); padding:0 22px; height:52px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+.tb-left { display:flex; align-items:center; gap:9px; font-size:11.5px; font-weight:600; color:var(--ink-faint); text-transform:uppercase; letter-spacing:0.05em; }
+.live-dot { width:7px; height:7px; border-radius:50%; background:var(--line-soft); }
+.live-dot.on { background:var(--emerald); box-shadow:0 0 0 0 rgba(16,185,129,0.5); animation:pulse 1.4s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:1; box-shadow:0 0 0 0 rgba(16,185,129,0.45)} 50%{opacity:0.7; box-shadow:0 0 0 4px rgba(16,185,129,0)} }
+.score-tag { display:none; align-items:center; font-size:11.5px; font-weight:700; color:var(--emerald-dark); border:1.5px solid var(--emerald-soft); background:var(--panel-emerald); border-radius:999px; padding:4px 12px; }
+.tb-actions { display:flex; gap:8px; }
+.tbtn { font-size:12.5px; font-weight:600; letter-spacing:0.01em; padding:8px 15px; border-radius:9px; border:1.5px solid var(--line); background:#fff; color:var(--ink); cursor:pointer; transition:all 0.15s; }
+.tbtn:hover:not(:disabled) { border-color:#C9C0F2; background:var(--violet-soft); color:var(--indigo-deep); transform:translateY(-1px); }
+.tbtn:disabled { border-color:var(--line); color:var(--ink-faint); cursor:not-allowed; opacity:0.6; }
+.tbtn:disabled:hover { background:#fff; color:var(--ink-faint); transform:none; }
+.tbtn.primary { background:linear-gradient(135deg,#16C690,var(--emerald-dark)); border-color:transparent; color:#fff; box-shadow:0 6px 16px -4px rgba(16,185,129,0.4); }
+.tbtn.primary:hover:not(:disabled) { filter:brightness(1.06); transform:translateY(-1px); box-shadow:0 8px 20px -4px rgba(16,185,129,0.5); }
+.tbtn.primary:disabled { background:var(--line); border-color:var(--line); box-shadow:none; }
+/* paper */
+.paper-wrap { flex:1; overflow-y:auto; padding:26px; display:flex; justify-content:center; align-items:flex-start; scrollbar-width:thin; scrollbar-color:var(--rule-dark) transparent; }
+.paper { background:var(--card); width:100%; max-width:640px; min-height:calc(100vh - 130px); border-radius:16px; box-shadow:var(--shadow-card); position:relative; transition:box-shadow 0.3s; animation:fadeUp 0.5s cubic-bezier(.16,.8,.3,1) both 0.1s; }
+.paper::before { display:none; }
+.paper.gen { box-shadow:var(--shadow-card-lg); }
+/* CV content */
+.cv-wrap { padding-top:0; }
+/* KSA format header */
+.cv-hdr { padding:24px 36px 16px; border-bottom:2px solid var(--ink); text-align:center; border-radius:16px 16px 0 0; }
+.cv-name { font-family:'Source Serif 4',serif; font-weight:700; font-size:26px; letter-spacing:-0.3px; margin-bottom:4px; color:var(--ink); }
+.cv-contact-line { font-size:11.5px; color:var(--ink-soft); margin-bottom:1px; line-height:1.5; }
+.cv-contact-line strong { font-weight:600; color:var(--ink); }
+/* CV body sections */
+.cv-bd { padding:18px 36px 36px; }
+.cv-sec { margin-bottom:17px; }
+.cv-sec-title { font-family:'Lexend','Inter',sans-serif; font-weight:700; font-size:11.5px; text-transform:uppercase; letter-spacing:0.07em; text-align:left; color:var(--indigo-deep); border-bottom:2px solid var(--violet-soft); padding:3px 0 6px; margin-bottom:10px; }
+.cv-sec-body { font-size:12px; color:var(--ink-soft); line-height:1.7; word-break:break-word; text-align:left; }
+.cv-sec-body .line-bold { font-weight:700; color:var(--ink); display:block; }
+.cv-skill-row { display:table; width:100%; margin-bottom:3px; }
+.cv-skill-row .cv-skill-cat { display:table-cell; font-weight:700; color:var(--ink); white-space:nowrap; padding-right:8px; width:28%; vertical-align:top; }
+.cv-skill-row .cv-skill-val { display:table-cell; color:var(--ink-soft); text-align:left; vertical-align:top; }
+.cv-soft-col { display:table-cell; width:50%; color:var(--ink-soft); padding-right:6px; vertical-align:top; }
+.cv-job-block { margin-bottom:0; }
+.cv-line { display:block; }
+.cv-bullet { display:block; padding-left:16px; text-indent:-16px; text-align:left; color:var(--ink-soft); }
+.cv-bullet::marker { color: var(--indigo); }
+.cv-achieve { display:block; padding-left:22px; text-indent:-22px; text-align:left; margin-bottom:4px; color:var(--ink-soft); }
+/* empty state */
+.empty-cv { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:calc(100vh - 160px); text-align:center; padding:40px; color:var(--ink-faint); }
+.empty-mark { font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--indigo-deep); background:var(--violet-soft); border-radius:999px; padding:8px 18px; margin-bottom:16px; }
+.empty-cv h3 { font-size:17px; font-weight:700; color:var(--ink); margin-bottom:6px; }
+.empty-cv p { font-size:13px; max-width:240px; line-height:1.6; }
+/* status */
+.status-strip { background:var(--card); border-top:1px solid var(--line); padding:9px 20px; font-size:11.5px; font-weight:500; color:var(--ink-faint); min-height:34px; display:flex; align-items:center; gap:7px; flex-shrink:0; }
+.status-strip.ok { color:var(--emerald-dark); }
+.status-strip.err { color:var(--red); }
+@keyframes spin { to{transform:rotate(360deg)} }
+.spin { width:11px; height:11px; border:1.8px solid var(--line); border-top-color:var(--indigo); border-radius:50%; animation:spin 0.7s linear infinite; flex-shrink:0; }
+/* paywall modal */
+.overlay { display:none; position:fixed; inset:0; background:rgba(26,27,46,0.5); backdrop-filter:blur(4px); z-index:200; align-items:center; justify-content:center; opacity:0; transition:opacity 0.2s; }
+.overlay.open { display:flex; opacity:1; }
+.ticket { background:#fff; width:92%; max-width:380px; border-radius:18px; box-shadow:var(--shadow-card-lg); position:relative; overflow:hidden; animation:popIn 0.25s cubic-bezier(.16,.8,.3,1); }
+.ticket::before { content:''; position:absolute; top:0; left:0; right:0; height:5px; background:linear-gradient(90deg,var(--indigo),#8B7CF6,var(--emerald)); }
+.ticket-inner { padding:34px 30px 26px; text-align:center; }
+.ticket-eyebrow { font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--indigo-deep); background:var(--violet-soft); display:inline-block; padding:4px 12px; border-radius:999px; margin-bottom:12px; }
+.ticket h2 { font-size:21px; font-weight:700; margin-bottom:6px; letter-spacing:-0.3px; }
+.ticket-sub { font-size:13.5px; color:var(--ink-soft); margin-bottom:18px; line-height:1.5; }
+.price-stamp { display:inline-block; background:linear-gradient(135deg,var(--panel-violet),var(--panel-emerald)); border:1.5px solid var(--line); border-radius:14px; padding:10px 26px; margin-bottom:6px; }
+.price-stamp .amt { font-size:28px; font-weight:800; font-family:'Lexend',sans-serif; background:linear-gradient(135deg,var(--indigo-dark),var(--emerald-dark)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.price-note { font-size:11px; color:var(--ink-faint); margin:7px 0 20px; font-weight:500; }
+.ticket-feats { text-align:left; background:var(--paper); border-radius:12px; padding:14px 16px; margin-bottom:20px; font-size:13px; color:var(--ink-soft); line-height:2; }
+.ticket-feats div::before { content:'✓  '; color:var(--emerald); font-weight:700; }
+.pay-btn { width:100%; background:linear-gradient(135deg,#7C6CF0,var(--indigo-dark)); color:#fff; border:none; border-radius:11px; padding:13px; font-size:13.5px; font-weight:700; letter-spacing:0.01em; cursor:pointer; margin-bottom:12px; box-shadow:0 10px 22px -8px rgba(108,92,231,0.45); transition:transform 0.15s, box-shadow 0.2s; }
+.pay-btn:hover { transform:translateY(-2px); box-shadow:0 14px 26px -8px rgba(108,92,231,0.55); }
+.pay-btn:active { transform:translateY(0); }
+.cancel-link { background:none; border:none; color:var(--ink-faint); font-size:12px; font-weight:600; cursor:pointer; padding:6px; transition:color 0.15s; }
+.cancel-link:hover { color:var(--ink); }
+@media (max-width:900px) {
+  .app { grid-template-columns:1fr; height:auto; overflow:visible; }
+  .form-side,.form-bottom { border-right:none; }
+  .preview-side { min-height:600px; }
+}
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div class="masthead-title">Cv<span class="mark">Craft</span></div>
+  <div class="masthead-right">
+    <a href="index.html" class="back-link">← Home</a>
+    <span class="beta-badge">Free · Beta</span>
+    <button class="demo-link" onclick="showDemo()">View specimen</button>
+  </div>
+</div>
+
+<div class="app">
+<!-- ═══ LEFT: FORM ═══ -->
+<div style="display:flex;flex-direction:column;overflow:hidden;background:var(--card);border-right:1px solid var(--line);">
+<div class="form-side" style="flex:1;overflow-y:auto;">
+<div class="form-inner">
+
+  <div class="form-head">
+
+    <div class="form-eyebrow">KSA / ATS Format</div>
+    <h1>Build your CV</h1>
+    <p>Fill in your details — AI writes and formats it instantly.</p>
+  </div>
+
+  <!-- Region -->
+  <div class="f">
+    <div class="flabel">Format for region</div>
+    <div class="chip-row" id="region-row"></div>
+  </div>
+
+  <!-- Sector -->
+  <div class="f">
+    <div class="flabel">Target sector</div>
+    <select id="sector" onchange="updateChips()"></select>
+  </div>
+
+  <!-- ── 1. PERSONAL ── -->
+  <div class="sec-div"><div class="n">1</div><div class="t">Personal</div><div class="l"></div></div>
+
+  <div class="f2">
+    <div class="f"><div class="flabel">First name</div><input type="text" id="fname" placeholder="John" oninput="updateProgress()"></div>
+    <div class="f"><div class="flabel">Last name</div><input type="text" id="lname" placeholder="Smith" oninput="updateProgress()"></div>
+  </div>
+  <div class="f"><div class="flabel">Target job title</div><input type="text" id="target-role" placeholder="IT Support Engineer / Data Analyst" oninput="updateProgress()"></div>
+  <div class="f2">
+    <div class="f"><div class="flabel">Phone</div><input type="text" id="phone" placeholder="+966 5X XXX XXXX"></div>
+    <div class="f"><div class="flabel">City, Country</div><input type="text" id="city" placeholder="Riyadh, Saudi Arabia"></div>
+  </div>
+  <div class="f"><div class="flabel">Email</div><input type="email" id="email" placeholder="you@email.com" oninput="updateProgress()"></div>
+  <div class="f2">
+    <div class="f"><div class="flabel">LinkedIn <span class="opt">optional</span></div><input type="text" id="linkedin" placeholder="linkedin.com/in/yourname"></div>
+    <div class="f"><div class="flabel">GitHub <span class="opt">optional</span></div><input type="text" id="github" placeholder="github.com/yourusername"></div>
+  </div>
+  <!-- KSA specific fields — shown only for Gulf region -->
+  <div id="ksa-fields">
+  <div class="f2">
+    <div class="f"><div class="flabel">Date of birth <span class="opt">KSA format</span></div><input type="text" id="dob" placeholder="01-Jan-1995"></div>
+    <div class="f"><div class="flabel">Nationality</div><input type="text" id="nationality" placeholder="Your nationality"></div>
+  </div>
+  <div class="f2">
+    <div class="f"><div class="flabel">Iqama number <span class="opt">optional</span></div><input type="text" id="iqama" placeholder="XXXXXXXXXX"></div>
+    <div class="f"><div class="flabel">Iqama status <span class="opt">optional</span></div><input type="text" id="iqama-status" placeholder="Transferable"></div>
+  </div>
+  </div>
+
+  <!-- ── 2. SUMMARY ── -->
+  <div class="sec-div"><div class="n">2</div><div class="t">Summary</div><div class="l"></div></div>
+  <div class="f"><div class="flabel">Professional summary <span class="opt">rough notes are fine — AI will rewrite</span></div>
+  <textarea id="summary" rows="4" placeholder="e.g. Results-driven professional with 3 years experience in... (rough notes are fine, AI will rewrite)"></textarea></div>
+
+  <!-- ── 3. SKILLS ── -->
+  <div class="sec-div"><div class="n">3</div><div class="t">Skills</div><div class="l"></div></div>
+  <div class="f"><div class="flabel">Quick add <span class="opt">tap to toggle</span></div><div class="chip-row" id="chip-row"></div></div>
+  <div class="f"><div class="flabel">Skill categories <span class="opt">Category → skills (add as many rows as needed)</span></div>
+    <div id="skill-cat-list"></div>
+    <button type="button" class="add-btn" onclick="addSkillCat()">+ Add skill category</button>
+  </div>
+
+  <!-- ── 4. EXPERIENCE ── -->
+  <div class="sec-div"><div class="n">4</div><div class="t">Work experience</div><div class="l"></div></div>
+  <div class="f"><div id="job-list"></div>
+    <button type="button" class="add-btn" onclick="addJob()">+ Add another job</button>
+  </div>
+
+  <!-- ── 5. PROJECTS ── -->
+  <div class="sec-div"><div class="n">5</div><div class="t">Projects <span style="font-size:9.5px;font-weight:400;opacity:0.7;"> — optional</span></div><div class="l"></div></div>
+  <div class="f"><div id="project-list"></div>
+    <button type="button" class="add-btn" onclick="addProject()">+ Add project</button>
+  </div>
+
+  <!-- ── 6. EDUCATION ── -->
+  <div class="sec-div"><div class="n">6</div><div class="t">Education</div><div class="l"></div></div>
+  <div class="f"><div id="edu-list"></div>
+    <button type="button" class="add-btn" onclick="addEdu()">+ Add qualification</button>
+  </div>
+  <div class="f"><div class="flabel">Relevant coursework <span class="opt">optional</span></div>
+  <textarea id="coursework" rows="2" placeholder="e.g. Machine Learning, Data Structures, Computer Networks, Database Systems"></textarea></div>
+
+  <!-- ── 7. CERTIFICATIONS ── -->
+  <div class="sec-div"><div class="n">7</div><div class="t">Certifications <span style="font-size:9.5px;font-weight:400;opacity:0.7;"> — optional</span></div><div class="l"></div></div>
+  <div class="f"><div id="cert-list"></div>
+    <button type="button" class="add-btn" onclick="addCert()">+ Add certification</button>
+  </div>
+
+  <!-- ── 8. ACHIEVEMENTS ── -->
+  <div class="sec-div"><div class="n">8</div><div class="t">Achievements <span style="font-size:9.5px;font-weight:400;opacity:0.7;"> — optional</span></div><div class="l"></div></div>
+  <div class="f"><div class="flabel">One achievement per line</div>
+  <textarea id="achievements" rows="3" placeholder="Top performer in team for Q3 2024&#10;Led project that reduced costs by 20%&#10;Published research paper on machine learning"></textarea></div>
+
+  <!-- ── 9. LANGUAGES ── -->
+  <div class="sec-div"><div class="n">9</div><div class="t">Languages</div><div class="l"></div></div>
+  <div class="f" id="lang-list"></div>
+  <button type="button" class="add-btn" onclick="addLang()">+ Add language</button>
+
+  <!-- ── 10. SOFT SKILLS ── -->
+  <div class="sec-div"><div class="n">10</div><div class="t">Soft skills <span style="font-size:9.5px;font-weight:400;opacity:0.7;"> — optional</span></div><div class="l"></div></div>
+  <div class="f"><div class="flabel">Comma separated</div>
+  <input type="text" id="softskills" placeholder="Communication, Problem solving, Teamwork, Leadership, Time management"></div>
+
+</div><!-- /form-inner -->
+</div><!-- /form-side -->
+
+<!-- progress + generate -->
+<div class="form-bottom" style="padding:14px 26px 22px;border-right:1px solid var(--line);background:var(--card);">
+  <div class="progress-row">
+    <span id="pct-label">0%</span>
+    <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
+    <span>complete</span>
+  </div>
+  <button class="gen-btn" id="gen-btn" onclick="generate()">✒ &nbsp;Generate my CV</button>
+</div>
+</div><!-- /left column -->
+
+<!-- ═══ RIGHT: PREVIEW ═══ -->
+<div class="preview-side">
+  <div class="preview-toolbar">
+    <div class="tb-left"><span class="live-dot" id="live-dot"></span>Proof copy</div>
+    <div class="tb-actions">
+      <span class="score-tag" id="score-tag"><span id="score-val">—</span></span>
+      <button class="tbtn" id="copy-btn" disabled onclick="copyText()">Copy</button>
+      <button class="tbtn primary" id="dl-btn" disabled onclick="openPaywall()">Print PDF — Free</button>
+    </div>
+  </div>
+
+  <div class="paper-wrap">
+    <div class="paper" id="paper">
+      <!-- empty -->
+      <div class="empty-cv" id="empty-state">
+        <div class="empty-mark">AWAITING COPY</div>
+        <h3>Your CV will appear here</h3>
+        <p>Fill in your details and click Generate — AI formats it in KSA/ATS style instantly.</p>
+      </div>
+      <!-- cv content -->
+      <div class="cv-wrap" id="cv-content" style="display:none;">
+        <div class="cv-hdr">
+          <div class="cv-name" id="cv-name">—</div>
+          <div class="cv-contact-line" id="cv-line1">—</div>
+          <div class="cv-contact-line" id="cv-line2"></div>
+          <div class="cv-contact-line" id="cv-line3"></div>
+        </div>
+        <div class="cv-bd" id="cv-body"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="status-strip" id="status">Ready — fill in your details and generate.</div>
+</div>
+</div><!-- /app -->
+
+<!-- paywall modal -->
+<div class="overlay" id="modal">
+  <div class="ticket">
+    <div class="ticket-inner">
+      <div class="ticket-eyebrow">Final proof</div>
+      <h2>Download your CV</h2>
+      <p class="ticket-sub">Clean PDF, no watermark, ready to send.</p>
+      <div class="price-stamp"><span class="amt">$2.99</span></div>
+      <div class="price-note">one-time · edit for 7 days</div>
+      <div class="ticket-feats">
+        <div>Watermark-free PDF</div>
+        <div>KSA / ATS formatted</div>
+        <div>Edit & re-download 7 days</div>
+        <div>Cover letter +$0.99</div>
+      </div>
+      <button class="pay-btn" onclick="simulatePay()">Pay & download</button>
+      <button class="cancel-link" onclick="closeModal()">Not yet</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Free mode toggle ──
+const FREE_MODE = true;
+
+// ── Section keys for streaming parser ──
+const SECTION_KEYS = [
+  'SUMMARY','SKILLS','WORK EXPERIENCE','PROJECTS',
+  'EDUCATION','CERTIFICATIONS','ACHIEVEMENTS','LANGUAGES','SOFT SKILLS'
+];
+
+// ── Regions ──
+const REGIONS = [
+  { id:'gulf', label:'Gulf (KSA/UAE)', instr:'Format for Saudi Arabia / Gulf employers. Include nationality, Iqama number, DOB. Dates DD-Mon-YYYY. Section headings centred and bold. ATS friendly.' },
+  { id:'pk',   label:'Pakistan', instr:'Pakistani English. Include CNIC if provided. List Matric/FSc/BSc credentials. ATS friendly.' },
+  { id:'uk',   label:'UK / Europe', instr:'British English. No photo, age, or nationality. ATS friendly one-page format.' },
+  { id:'us',   label:'US / Canada', instr:'American English. No photo, age, nationality or DOB (EEO). Quantify everything. ATS friendly.' },
+  { id:'global',label:'Global', instr:'Clear international professional English. ATS optimised.' },
+];
+let region = 'gulf';
+
+// ── Sectors ──
+const SECTORS = [
+  ['it','IT / Software / Data'],['medical','Medical / Healthcare'],
+  ['banking','Banking / Finance'],['engineering','Engineering'],
+  ['teaching','Teaching / Academia'],['bpo','Customer Service / BPO'],
+  ['government','Government / Public Sector'],['marketing','Marketing / Sales'],
+  ['accounting','Accounting / Finance'],['design','Design / Creative'],['general','General / Other']
+];
+
+const SECTOR_CHIPS = {
+  it:['Python','SQL','Power BI','Excel','AWS','Azure','Linux','Networking','React','Node.js','Docker','Git','Tableau'],
+  medical:['Patient care','Clinical assessment','EMR/HIS','Emergency response','Medical ethics'],
+  banking:['Financial modelling','Excel','AML/KYC','Risk management','Bloomberg'],
+  engineering:['AutoCAD','MATLAB','Project management','Safety (OSHA)','BIM'],
+  teaching:['Curriculum design','LMS/Moodle','Assessment','Cambridge A-Level','Lesson planning'],
+  bpo:['CRM (Salesforce)','Customer service','Zendesk','KPI tracking','Conflict resolution'],
+  government:['Policy analysis','Report writing','Public administration','Stakeholder engagement'],
+  marketing:['SEO/SEM','Google Analytics','Meta Ads','Content strategy','Brand management'],
+  accounting:['QuickBooks','ACCA','Tax compliance','IFRS','Financial reporting'],
+  design:['Figma','Adobe CC','Prototyping','User research','SketchUp','3DCAD'],
+  general:['MS Office','Communication','Leadership','Time management','Problem solving']
+};
+
+// ── Init regions ──
+function buildRegions() {
+  const row = document.getElementById('region-row');
+  REGIONS.forEach(r => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'chip' + (r.id === region ? ' on' : '');
+    b.textContent = r.label;
+    b.onclick = () => {
+      region = r.id;
+      document.querySelectorAll('#region-row .chip').forEach(c=>c.classList.remove('on'));
+      b.classList.add('on');
+      document.getElementById('ksa-fields').style.display = (r.id === 'gulf') ? 'block' : 'none';
+    };
+    row.appendChild(b);
+  });
+}
+buildRegions();
+
+// ── Init sectors ──
+function buildSectors() {
+  const sel = document.getElementById('sector');
+  SECTORS.forEach(([v,l]) => { const o = document.createElement('option'); o.value=v; o.textContent=l; sel.appendChild(o); });
+}
+buildSectors();
+
+function updateChips() {
+  const sector = document.getElementById('sector').value;
+  const chips = SECTOR_CHIPS[sector] || SECTOR_CHIPS.general;
+  const row = document.getElementById('chip-row');
+  row.innerHTML = '';
+  chips.forEach(c => {
+    const el = document.createElement('button'); el.type='button'; el.className='chip';
+    el.textContent=c; el.onclick=()=>el.classList.toggle('on'); row.appendChild(el);
+  });
+}
+updateChips();
+
+// ── Skill categories ──
+let skillCatN = 0;
+function addSkillCat(cat='', val='') {
+  skillCatN++;
+  const id = skillCatN;
+  const wrap = document.createElement('div');
+  wrap.id = 'skcat-' + id;
+  wrap.className = 'rep-row';
+  wrap.innerHTML = `
+    <div class="rep-head"><span class="rep-num">Category ${id}</span><button type="button" class="rep-rm" onclick="document.getElementById('skcat-${id}').remove()">Remove</button></div>
+    <div class="skill-cat-row">
+      <input type="text" class="sk-cat" placeholder="e.g. Languages" value="${cat}">
+      <input type="text" class="sk-val" placeholder="Python, SQL, R, C++" value="${val}">
+    </div>`;
+  document.getElementById('skill-cat-list').appendChild(wrap);
+}
+// default 5 skill categories
+['',''].forEach(() => addSkillCat('',''));
+
+// ── Jobs ──
+let jobN = 0;
+function addJob(t='', co='', loc='', d='', type='', notes='') {
+  jobN++;
+  const id = jobN;
+  const wrap = document.createElement('div');
+  wrap.id = 'job-' + id; wrap.className = 'rep-row';
+  wrap.innerHTML = `
+    <div class="rep-head"><span class="rep-num">Job ${id}</span><button type="button" class="rep-rm" onclick="removeRep('job-${id}','job-list','Job',jobN)">Remove</button></div>
+    <div class="f2"><input type="text" class="j-title" placeholder="Job title / Role" value="${t}"><input type="text" class="j-company" placeholder="Company name" value="${co}"></div>
+    <div class="f2"><input type="text" class="j-loc" placeholder="City, Country" value="${loc}"><input type="text" class="j-dates" placeholder="Jan 2026 – Present" value="${d}"></div>
+    <input type="text" class="j-type" placeholder="Full-time / Part-time / Internship / On-Site / Remote" value="${type}">
+    <textarea class="j-notes" rows="4" placeholder="• What you did&#10;• Key achievement with numbers&#10;• Tools or systems you used">${notes}</textarea>`;
+  document.getElementById('job-list').appendChild(wrap);
+  updateProgress();
+}
+addJob();
+
+// ── Projects ──
+let projN = 0;
+function addProject(name='', tools='', desc='') {
+  projN++;
+  const id = projN;
+  const wrap = document.createElement('div');
+  wrap.id = 'proj-' + id; wrap.className = 'rep-row';
+  wrap.innerHTML = `
+    <div class="rep-head"><span class="rep-num">Project ${id}</span><button type="button" class="rep-rm" onclick="document.getElementById('proj-${id}').remove()">Remove</button></div>
+    <input type="text" class="p-name" placeholder="Project name" value="${name}">
+    <input type="text" class="p-tools" placeholder="Tools: Python, React, Flask, TensorFlow..." value="${tools}">
+    <textarea class="p-desc" rows="3" placeholder="What you built, how it works, results or impact">${desc}</textarea>`;
+  document.getElementById('project-list').appendChild(wrap);
+}
+addProject();
+
+// ── Education ──
+let eduN = 0;
+function addEdu(deg='', inst='', loc='', dates='') {
+  eduN++;
+  const id = eduN;
+  const wrap = document.createElement('div');
+  wrap.id = 'edu-' + id; wrap.className = 'rep-row';
+  wrap.innerHTML = `
+    <div class="rep-head"><span class="rep-num">Qualification ${id}</span><button type="button" class="rep-rm" onclick="document.getElementById('edu-${id}').remove()">Remove</button></div>
+    <input type="text" class="e-deg" placeholder="Degree / Qualification (e.g. BSc Data Science)" value="${deg}">
+    <div class="f2"><input type="text" class="e-inst" placeholder="Institution" value="${inst}"><input type="text" class="e-loc" placeholder="City, Country" value="${loc}"></div>
+    <input type="text" class="e-dates" placeholder="Sep 2021 – Jun 2025" value="${dates}">`;
+  document.getElementById('edu-list').appendChild(wrap);
+  updateProgress();
+}
+addEdu();
+
+// ── Certifications ──
+let certN = 0;
+function addCert(name='', issuer='', date='') {
+  certN++;
+  const id = certN;
+  const wrap = document.createElement('div');
+  wrap.id = 'cert-' + id; wrap.className = 'rep-row';
+  wrap.innerHTML = `
+    <div class="rep-head"><span class="rep-num">Cert ${id}</span><button type="button" class="rep-rm" onclick="document.getElementById('cert-${id}').remove()">Remove</button></div>
+    <input type="text" class="c-name" placeholder="Certification name" value="${name}">
+    <div class="f2"><input type="text" class="c-issuer" placeholder="Issuer (e.g. Simplilearn)" value="${issuer}"><input type="text" class="c-date" placeholder="Jan 2026" value="${date}"></div>`;
+  document.getElementById('cert-list').appendChild(wrap);
+}
+addCert();
+
+// ── Languages ──
+let langN = 0;
+function addLang(lang='', level='') {
+  langN++;
+  const id = langN;
+  const levels = ['Native','Professional Working','Elementary','Basic'];
+  const opts = levels.map(l => `<option value="${l}" ${l===level?'selected':''}>${l}</option>`).join('');
+  const wrap = document.createElement('div');
+  wrap.id = 'lang-' + id; wrap.style.marginBottom = '6px';
+  wrap.innerHTML = `
+    <div class="f2">
+      <input type="text" class="l-lang" placeholder="Language (e.g. Urdu)" value="${lang}">
+      <select class="l-level"><option value="" disabled ${!level?'selected':''}>— Level —</option>${opts}</select>
+    </div>`;
+  document.getElementById('lang-list').appendChild(wrap);
+}
+// add 3 default language rows
+addLang('','');
+addLang('','');
+
+function removeRep(id) {
+  const el = document.getElementById(id);
+  if (el) el.remove();
+  updateProgress();
+}
+
+// ── Progress ──
+function updateProgress() {
+  const has = id => { const el = document.getElementById(id); return el && el.value.trim(); };
+  let filled = 0, total = 4;
+  if (has('fname')) filled++;
+  if (has('email')) filled++;
+  if (document.querySelector('.j-title')?.value.trim()) filled++;
+  if (document.querySelector('.e-deg')?.value.trim()) filled++;
+  const pct = Math.round((filled / total) * 100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('pct-label').textContent = pct + '%';
+}
+
+// ── Collect all data into prompt ──
+function buildPrompt() {
+  const v = id => (document.getElementById(id)?.value.trim() || '');
+  const sector = document.getElementById('sector').selectedOptions[0].text;
+  const regionInstr = REGIONS.find(r => r.id === region)?.instr || REGIONS[0].instr;
+
+  // personal
+  const fname = v('fname'), lname = v('lname');
+  const phone = v('phone'), city = v('city'), email = v('email');
+  const linkedin = v('linkedin'), github = v('github');
+  const dob = v('dob'), nationality = v('nationality');
+  const iqama = v('iqama'), iqamaStatus = v('iqama-status');
+  const targetRole = v('target-role');
+
+  // summary
+  const summaryNotes = v('summary');
+
+  // skills
+  const chipSkills = [...document.querySelectorAll('.chip.on')].map(c => c.textContent);
+  const skillCats = [...document.querySelectorAll('#skill-cat-list .rep-row')].map(r => {
+    const cat = r.querySelector('.sk-cat')?.value.trim();
+    const val = r.querySelector('.sk-val')?.value.trim();
+    return cat || val ? `${cat}: ${val}` : null;
+  }).filter(Boolean);
+
+  // jobs
+  const jobs = [...document.querySelectorAll('#job-list .rep-row')].map(r => {
+    const title = r.querySelector('.j-title')?.value.trim();
+    const company = r.querySelector('.j-company')?.value.trim();
+    const loc = r.querySelector('.j-loc')?.value.trim();
+    const dates = r.querySelector('.j-dates')?.value.trim();
+    const type = r.querySelector('.j-type')?.value.trim();
+    const notes = r.querySelector('.j-notes')?.value.trim();
+    if (!title && !company) return null;
+    return [title, company, loc, dates, type, notes].filter(Boolean).join(' | ');
+  }).filter(Boolean);
+
+  // projects
+  const projects = [...document.querySelectorAll('#project-list .rep-row')].map(r => {
+    const name = r.querySelector('.p-name')?.value.trim();
+    const tools = r.querySelector('.p-tools')?.value.trim();
+    const desc = r.querySelector('.p-desc')?.value.trim();
+    if (!name) return null;
+    return [name, tools ? `Tools: ${tools}` : '', desc].filter(Boolean).join('\n');
+  }).filter(Boolean);
+
+  // education
+  const edus = [...document.querySelectorAll('#edu-list .rep-row')].map(r => {
+    const deg = r.querySelector('.e-deg')?.value.trim();
+    const inst = r.querySelector('.e-inst')?.value.trim();
+    const loc = r.querySelector('.e-loc')?.value.trim();
+    const dates = r.querySelector('.e-dates')?.value.trim();
+    if (!deg) return null;
+    return [deg, inst, loc, dates].filter(Boolean).join(' | ');
+  }).filter(Boolean);
+
+  const coursework = v('coursework');
+
+  // certs
+  const certs = [...document.querySelectorAll('#cert-list .rep-row')].map(r => {
+    const name = r.querySelector('.c-name')?.value.trim();
+    const issuer = r.querySelector('.c-issuer')?.value.trim();
+    const date = r.querySelector('.c-date')?.value.trim();
+    if (!name) return null;
+    return [name, issuer, date].filter(Boolean).join(' — ');
+  }).filter(Boolean);
+
+  // achievements
+  const achievements = v('achievements');
+
+  // languages
+  const langs = [...document.querySelectorAll('#lang-list > div')].map(r => {
+    const lang = r.querySelector('.l-lang')?.value.trim();
+    const level = r.querySelector('.l-level')?.value.trim();
+    return lang ? `${lang} (${level || 'Not specified'})` : null;
+  }).filter(Boolean);
+
+  const softskills = v('softskills');
+
+  return `You are an expert CV writer for ${sector} roles. ${regionInstr}
+
+OUTPUT FORMAT RULES:
+- Output ONLY the CV body starting from SUMMARY section
+- Each section heading must be exactly as shown below, ALL CAPS
+- Under each heading write the content directly
+- For WORK EXPERIENCE: separate each job with a BLANK LINE. Format: "Job Title\nCompany, Location\nDates | Employment Type\n• bullet\n• bullet"
+- For PROJECTS: separate each project with a BLANK LINE. Format: "Project Name\nTools: ...\nDescription paragraph"
+- For EDUCATION: separate each qualification with a BLANK LINE. Format: "Degree / Qualification\nInstitution, Location\nDates"
+- For CERTIFICATIONS: one per line "Name — Issuer (Date)"
+- For ACHIEVEMENTS: numbered list, one per line "1. Title: description"
+- For LANGUAGES: one per line "Language (Level)"
+- For SOFT SKILLS: comma-separated on ONE line
+- For SKILLS: list each category as "Category Name: skill1, skill2, skill3"
+- If PROJECTS is empty, omit that section entirely
+- Use strong action verbs, quantify where possible
+- Make it ATS-friendly (no tables, no columns, clean text)
+
+SECTIONS IN ORDER:
+SUMMARY
+SKILLS
+WORK EXPERIENCE
+PROJECTS
+EDUCATION
+CERTIFICATIONS
+ACHIEVEMENTS
+LANGUAGES
+SOFT SKILLS
+
+CANDIDATE DATA:
+Name: ${fname} ${lname}
+Target Role: ${targetRole || sector}
+Phone: ${phone} | Email: ${email} | City: ${city}
+${linkedin ? 'LinkedIn: ' + linkedin : ''}
+${github ? 'GitHub: ' + github : ''}
+${dob ? 'DOB: ' + dob : ''}
+${nationality ? 'Nationality: ' + nationality : ''}
+${iqama ? 'Iqama: ' + iqama + (iqamaStatus ? ' (' + iqamaStatus + ')' : '') : ''}
+Summary notes: ${summaryNotes || 'Write a professional summary from the data below'}
+Skills (chips selected): ${chipSkills.join(', ') || 'See categories'}
+Skill categories: ${skillCats.join('\n') || 'Not provided'}
+Work experience: ${jobs.join('\n---\n') || 'Fresh graduate'}
+Projects: ${projects.join('\n---\n') || 'None'}
+Education: ${edus.join('\n') || 'Not provided'}
+Relevant coursework: ${coursework || 'None'}
+Certifications: ${certs.join('\n') || 'None'}
+Achievements: ${achievements || 'None'}
+Languages: ${langs.join(', ') || 'Not provided'}
+Soft skills: ${softskills || 'Not provided'}`;
+}
+
+// ── Generate ──
+async function generate() {
+  const fname = document.getElementById('fname').value.trim();
+  if (!fname) { setStatus('Please enter your name first.', 'err'); return; }
+
+  const btn = document.getElementById('gen-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span>&nbsp; AI is writing your CV…';
+
+  const paper = document.getElementById('paper');
+  paper.classList.add('gen');
+  document.getElementById('live-dot').classList.add('on');
+  document.getElementById('empty-state').style.display = 'none';
+  document.getElementById('cv-content').style.display = 'block';
+
+  // Fill header
+  const v = id => (document.getElementById(id)?.value.trim() || '');
+  const fname2 = v('fname'), lname = v('lname');
+  document.getElementById('cv-name').textContent = (fname2 + ' ' + lname).trim();
+  const phone = v('phone'), email = v('email'), city = v('city');
+  const dob = v('dob'), nationality = v('nationality');
+  const iqama = v('iqama'), iqamaStatus = v('iqama-status');
+  const linkedin = v('linkedin'), github = v('github');
+  document.getElementById('cv-line1').textContent =
+    [city, phone, email].filter(Boolean).join(' | ') + (dob ? ' | DOB: ' + dob : '');
+  document.getElementById('cv-line2').textContent =
+    [nationality ? 'Nationality: ' + nationality : '', iqama ? 'Iqama: ' + iqama + (iqamaStatus ? ' (' + iqamaStatus + ')' : '') : ''].filter(Boolean).join(' | ');
+  document.getElementById('cv-line3').textContent =
+    [linkedin ? 'LinkedIn: ' + linkedin : '', github ? 'GitHub: ' + github : ''].filter(Boolean).join(' | ');
+
+  const body = document.getElementById('cv-body');
+  body.innerHTML = '';
+  setStatus('', '');
+  document.getElementById('status').innerHTML = '<span class="spin"></span>&nbsp; AI is composing your CV…';
+
+  try {
+    const res = await fetch('/api/claude', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model:'gemini-2.5-flash', max_tokens:2500, stream:true, messages:[{ role:'user', content:buildPrompt() }] })
+    });
+    if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e.error?.message || 'API error ' + res.status); }
+
+    const reader = res.body.getReader(), dec = new TextDecoder();
+    let full = '', buf = '', currentEl = null;
+
+    function getSection(title) {
+      const sec = document.createElement('div'); sec.className = 'cv-sec';
+      const h = document.createElement('div'); h.className = 'cv-sec-title'; h.textContent = title;
+      const c = document.createElement('div'); c.className = 'cv-sec-body';
+      sec.appendChild(h); sec.appendChild(c); body.appendChild(sec);
+      return c;
+    }
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buf += dec.decode(value, { stream:true });
+      const lines = buf.split('\n'); buf = lines.pop();
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        const d = line.slice(6); if (d==='[DONE]') continue;
+        try {
+          const p = JSON.parse(d);
+          if (p.type==='content_block_delta' && p.delta?.text) {
+            full += p.delta.text;
+            for (const l of p.delta.text.split('\n')) {
+              let hit = false;
+              for (const k of SECTION_KEYS) { if (l.trim()===k || l.trim().startsWith(k+'\n')) { currentEl=getSection(k); hit=true; break; } }
+              if (!hit && currentEl) currentEl.textContent += (currentEl.textContent ? '\n' : '') + l;
+            }
+          }
+        } catch {}
+      }
+    }
+
+    // clean final render
+    const sections = {};
+    const rx = new RegExp('(' + SECTION_KEYS.join('|') + ')([\\s\\S]*?)(?=' + SECTION_KEYS.join('|') + '|$)', 'g');
+    let m; while ((m = rx.exec(full)) !== null) sections[m[1]] = m[2].trim();
+    window.__cvSections = sections;
+    body.innerHTML = '';
+    for (const k of SECTION_KEYS) if (sections[k]) {
+      const s = document.createElement('div'); s.className = 'cv-sec';
+      const titleEl = document.createElement('div'); titleEl.className = 'cv-sec-title'; titleEl.textContent = k;
+      const bodyEl = document.createElement('div'); bodyEl.className = 'cv-sec-body';
+      bodyEl.innerHTML = renderSectionBody(sections[k], k);
+      s.appendChild(titleEl); s.appendChild(bodyEl);
+      body.appendChild(s);
+    }
+
+    // score
+    const sc = Math.min(45 + (document.querySelector('.j-title')?.value.trim()?20:0) + (document.querySelector('.e-deg')?.value.trim()?10:0) + (document.querySelectorAll('.chip.on').length>0?10:0) + (v('achievements')?10:0) + (document.querySelector('.c-name')?.value.trim()?5:0), 100);
+    document.getElementById('score-tag').style.display = 'flex';
+    document.getElementById('score-val').textContent = 'ATS Score: ' + sc + '/100';
+    document.getElementById('copy-btn').disabled = false;
+    document.getElementById('dl-btn').disabled = false;
+    if (FREE_MODE) { paper.classList.remove('locked'); setStatus('CV generated — review and download free during beta.', 'ok'); }
+    else setStatus('CV generated — review the proof, then download.', 'ok');
+
+  } catch (err) {
+    body.innerHTML = `<div style="padding:24px;font-size:13px;color:var(--ink-soft);">
+      <strong style="color:var(--red);display:block;margin-bottom:8px;">Could not connect to the AI service.</strong>
+      ${err.message.includes('fetch')||err.message.includes('Network') ? 'No proxy server found. Make sure server.js is running.' : escHtml(err.message)}
+      <br><br><a href="#" onclick="showDemo();return false;" style="color:var(--red);font-weight:600;">Load a demo CV instead →</a>
+    </div>`;
+    setStatus('Error — ' + err.message.slice(0,80), 'err');
+  }
+
+  paper.classList.remove('gen');
+  document.getElementById('live-dot').classList.remove('on');
+  btn.disabled = false;
+  btn.innerHTML = '✒ &nbsp;Regenerate CV';
+}
+
+function setStatus(msg, type) {
+  const s = document.getElementById('status');
+  s.className = 'status-strip' + (type ? ' '+type : '');
+  s.textContent = msg || 'Ready.';
+}
+function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// Renders section body text with bold headings:
+// - Lines ending with ":" (skill categories like "Languages:", "Cloud:")
+// - Lines that look like job titles or project names (no bullet, not indented, not empty, short-ish)
+function renderSectionBody(text, sectionKey) {
+  if (!text) return '';
+
+  // Split into blocks (separated by blank lines), then lines within each block
+  const blocks = text.split(/\n\s*\n/).map(b => b.split('\n').map(l => l.trim()).filter(l => l));
+
+  // ── SKILLS: "Category: values" → two-column table row
+  if (sectionKey === 'SKILLS') {
+    const lines = blocks.flat();
+    return lines.map(line => {
+      const ci = line.indexOf(':');
+      if (ci > 0) {
+        const cat = escHtml(line.slice(0, ci));
+        const val = escHtml(line.slice(ci + 1).trim());
+        return `<div class="cv-skill-row"><span class="cv-skill-cat">${cat}:</span><span class="cv-skill-val">${val}</span></div>`;
+      }
+      return `<div class="cv-line">${escHtml(line)}</div>`;
+    }).join('');
+  }
+
+  // ── SOFT SKILLS: comma-separated → two equal columns
+  if (sectionKey === 'SOFT SKILLS') {
+    const skills = text.split(',').map(s => s.trim()).filter(Boolean);
+    const mid = Math.ceil(skills.length / 2);
+    const col1 = skills.slice(0, mid);
+    const col2 = skills.slice(mid);
+    let rows = '';
+    for (let i = 0; i < col1.length; i++) {
+      rows += `<div class="cv-skill-row"><span class="cv-soft-col">${escHtml(col1[i])}</span><span class="cv-soft-col">${escHtml(col2[i] || '')}</span></div>`;
+    }
+    return rows;
+  }
+
+  // ── CERTIFICATIONS: "Name — Issuer (Date)" — name bold, rest plain
+  if (sectionKey === 'CERTIFICATIONS') {
+    const lines = blocks.flat();
+    return lines.map(line => {
+      const di = line.indexOf(' — ');
+      if (di > 0) {
+        const name = escHtml(line.slice(0, di));
+        const rest = escHtml(line.slice(di + 3));
+        return `<div class="cv-line"><strong style="font-weight:700;color:var(--ink);">${name}</strong><span style="color:var(--ink-soft);"> — ${rest}</span></div>`;
+      }
+      return `<div class="cv-line">${escHtml(line)}</div>`;
+    }).join('');
+  }
+
+  // ── LANGUAGES: plain, no bold
+  if (sectionKey === 'LANGUAGES') {
+    const lines = blocks.flat();
+    return lines.map(line => `<div class="cv-line">${escHtml(line)}</div>`).join('');
+  }
+
+  // ── ACHIEVEMENTS: hanging indent — number flush left, text wraps indented
+  if (sectionKey === 'ACHIEVEMENTS') {
+    const lines = blocks.flat();
+    return lines.map(line =>
+      `<div class="cv-achieve">${escHtml(line)}</div>`
+    ).join('');
+  }
+
+  // ── PROJECTS: each block = one project
+  // Line 0 = project name (BOLD ONLY)
+  // Line 1 = Tools: ... (italic, plain)
+  // Lines 2+ = description (plain, justified)
+  if (sectionKey === 'PROJECTS') {
+    return blocks.map((block, bi) => {
+      if (!block.length) return '';
+      let html = `<div style="${bi > 0 ? 'margin-top:8px;' : ''}">`;
+      html += `<strong style="font-weight:700;color:var(--ink);">${escHtml(block[0])}</strong>`;
+      for (let i = 1; i < block.length; i++) {
+        if (block[i].startsWith('Tools:')) {
+          html += `<div class="cv-line" style="font-style:italic;color:var(--ink-soft);">${escHtml(block[i])}</div>`;
+        } else {
+          html += `<div class="cv-line" style="text-align:justify;">${escHtml(block[i])}</div>`;
+        }
+      }
+      html += `</div>`;
+      return html;
+    }).join('');
+  }
+
+  // ── WORK EXPERIENCE: each block = one job
+  // Line 0 = job title (BOLD ONLY)
+  // Lines 1,2,3 = company / location / dates / type (plain)
+  // Lines with • = bullets (indented, aligned)
+  if (sectionKey === 'WORK EXPERIENCE') {
+    return blocks.map((block, bi) => {
+      if (!block.length) return '';
+      let html = `<div style="${bi > 0 ? 'margin-top:9px;' : ''}">`;
+      html += `<strong style="font-weight:700;color:var(--ink);display:block;">${escHtml(block[0])}</strong>`;
+      for (let i = 1; i < block.length; i++) {
+        const line = block[i];
+        if (line.startsWith('•') || line.startsWith('-') || line.startsWith('✓')) {
+          html += `<div class="cv-bullet">${escHtml(line)}</div>`;
+        } else {
+          html += `<div class="cv-line" style="color:var(--ink-soft);">${escHtml(line)}</div>`;
+        }
+      }
+      html += `</div>`;
+      return html;
+    }).join('');
+  }
+
+  // ── EDUCATION: each block = one qualification
+  // Line 0 = degree/qualification (BOLD ONLY)
+  // Lines 1+ = institution, location, dates (plain)
+  if (sectionKey === 'EDUCATION') {
+    return blocks.map((block, bi) => {
+      if (!block.length) return '';
+      let html = `<div style="${bi > 0 ? 'margin-top:8px;' : ''}">`;
+      html += `<strong style="font-weight:700;color:var(--ink);display:block;">${escHtml(block[0])}</strong>`;
+      for (let i = 1; i < block.length; i++) {
+        html += `<div class="cv-line" style="color:var(--ink-soft);">${escHtml(block[i])}</div>`;
+      }
+      html += `</div>`;
+      return html;
+    }).join('');
+  }
+
+  // ── DEFAULT (SUMMARY etc): plain justified
+  return blocks.flat().map(line =>
+    `<div class="cv-line" style="text-align:justify;">${escHtml(line)}</div>`
+  ).join('');
+}
+
+function copyText() {
+  let t = document.getElementById('cv-name').textContent + '\n\n';
+  for (const [k,v] of Object.entries(window.__cvSections||{})) t += k + '\n' + v + '\n\n';
+  navigator.clipboard.writeText(t).then(() => {
+    const b = document.getElementById('copy-btn'); const o = b.textContent;
+    b.textContent = '✓ Copied'; setTimeout(()=>b.textContent=o, 1800);
+  });
+}
+
+let isPaid = false;
+function openPaywall() { if (FREE_MODE||isPaid) { downloadPDF(); return; } document.getElementById('modal').classList.add('open'); }
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+function simulatePay() {
+  isPaid = true; closeModal();
+  document.getElementById('paper').classList.remove('locked');
+  const b = document.getElementById('dl-btn'); b.textContent = 'Print PDF'; b.onclick = downloadPDF;
+  setTimeout(downloadPDF, 300);
+}
+
+function downloadPDF() {
+  const name = document.getElementById('cv-name').textContent.trim();
+  const title = name + ' — CV';
+  const hdrHtml = document.getElementById('cv-content').querySelector('.cv-hdr').innerHTML;
+  const bodyHtml = document.getElementById('cv-body').innerHTML;
+  const win = window.open('about:blank','_blank');
+  if (!win) { setStatus('Allow popups and try again.','err'); return; }
+  win.document.title = title;
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${title}</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+@page{size:A4;margin:18mm 16mm;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Source Serif 4',serif;font-size:11.5px;color:#1C1B19;line-height:1.65;}
+.cv-hdr{text-align:center;padding:12px 24px 10px;border-bottom:2px solid #1C1B19;}
+.cv-name{font-weight:700;font-size:22px;letter-spacing:-.3px;text-decoration:underline;text-underline-offset:3px;margin-bottom:3px;}
+.cv-contact-line{font-size:10.5px;color:#1C1B19;margin-bottom:1px;line-height:1.5;}
+.cv-bd{padding:12px 24px 24px;}
+.cv-sec{margin-bottom:13px;}
+.cv-sec-title{font-weight:700;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;text-align:center;border-bottom:1.5px solid #1C1B19;padding:2px 0;margin-bottom:7px;}
+.cv-sec-body{font-size:11px;color:#374151;line-height:1.65;word-break:break-word;}
+.cv-skill-row{display:table;width:100%;margin-bottom:2px;}
+.cv-skill-cat{display:table-cell;font-weight:700;color:#1C1B19;white-space:nowrap;padding-right:8px;width:28%;vertical-align:top;}
+.cv-skill-val{display:table-cell;color:#374151;text-align:left;vertical-align:top;}
+.cv-soft-col{display:table-cell;width:50%;color:#374151;padding-right:6px;vertical-align:top;}
+.cv-job-block{margin-bottom:0;}
+.cv-line{display:block;}
+.cv-bullet{display:block;padding-left:16px;text-indent:-16px;text-align:left;}
+.cv-achieve{display:block;padding-left:22px;text-indent:-22px;text-align:justify;margin-bottom:3px;}
+@media print{html,body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}header,footer,thead{display:none!important;}}
+</style></head><body>
+<div class="cv-hdr">${hdrHtml}</div>
+<div class="cv-bd">${bodyHtml}</div>
+</body></html>`);
+  win.document.close();
+  win.document.title = title;
+  setStatus('Print dialog opening — choose "Save as PDF". If you still see headers, untick "Headers and footers" in More settings.', 'ok');
+  win.onload = () => { win.document.title = title; setTimeout(()=>{ win.focus(); win.print(); }, 250); };
+}
+
+// ── Demo ──
+function showDemo() {
+  document.getElementById('empty-state').style.display = 'none';
+  document.getElementById('cv-content').style.display = 'block';
+  document.getElementById('cv-name').textContent = 'JOHN SMITH';
+  document.getElementById('cv-line1').textContent = 'Riyadh, Saudi Arabia | john.smith@email.com';
+  document.getElementById('cv-line2').textContent = '';
+  document.getElementById('cv-line3').textContent = 'LinkedIn: linkedin.com/in/johnsmith | GitHub: github.com/johnsmith';
+
+  const demo = {
+    'SUMMARY': 'Results-driven IT professional with 3+ years of experience in technical support and system administration. Proven ability to troubleshoot complex network and software issues, manage infrastructure, and deliver high-quality service in fast-paced environments. Strong communicator with a track record of improving operational efficiency.',
+    'SKILLS': `Languages: Python, SQL, JavaScript
+Data Analysis: Power BI, Excel (PivotTables), Tableau
+Cloud: AWS, Azure, Google Cloud Platform
+Database: MySQL, Oracle, SQLite
+Network & Security: LAN/WAN Setup, Firewall Management, VPN, Switch Configuration
+Microsoft 365: Word, Excel, PowerPoint, Outlook, Teams`,
+    'WORK EXPERIENCE': `Senior IT Support Engineer
+Tech Solutions Ltd | Dubai, UAE
+Jan 2023 – Present | Full-time · On-Site
+• Managed IT infrastructure for 200+ users across 3 office locations
+• Reduced average ticket resolution time by 35% through process improvements
+• Led migration of on-premise systems to AWS cloud environment
+• Configured and maintained network switches, firewalls, and VPN systems
+
+IT Support Specialist
+Global Services Co. | Riyadh, Saudi Arabia
+Jun 2021 – Dec 2022 | Full-time · On-Site
+• Provided L1/L2 technical support for hardware, software, and network issues
+• Maintained 98% SLA compliance across all support tickets
+• Deployed and configured 50+ workstations and managed Active Directory`,
+    'PROJECTS': `Network Monitoring Dashboard
+Tools: Python, Grafana, Prometheus, MySQL
+Built a real-time network monitoring dashboard tracking uptime and performance across 15 servers. Reduced incident detection time by 60% compared to manual monitoring.
+
+Automated Backup System
+Tools: Python, Bash, AWS S3
+Developed an automated backup solution for critical business data with scheduled transfers to AWS S3. Reduced data recovery time from hours to minutes.`,
+    'EDUCATION': `Bachelor of Science in Computer Science
+State University | New York, USA
+Sep 2018 – Jun 2022`,
+    'CERTIFICATIONS': `AWS Certified Solutions Architect — Amazon (Jan 2023)
+Project Management Professional (PMP) — PMI (Mar 2022)
+Google Data Analytics Certificate — Google (Nov 2021)`,
+    'ACHIEVEMENTS': `1. Top Performer: Ranked in top 5% of team for two consecutive years based on KPI results.
+2. Cost Reduction: Led initiative that reduced operational costs by 18% through process automation.
+3. Client Growth: Expanded key account portfolio by 30% within first year in role.`,
+    'LANGUAGES': `English (Professional Working)
+Arabic (Elementary)`,
+    'SOFT SKILLS': 'Communication, Teamwork & Collaboration, Problem Solving, Time Management, Adaptability, Critical Thinking, Leadership, Creativity & Innovation, Conflict Resolution, Attention to Detail'
+  };
+
+  window.__cvSections = demo;
+  const body = document.getElementById('cv-body');
+  body.innerHTML = '';
+  for (const k of SECTION_KEYS) if (demo[k]) {
+    const s = document.createElement('div'); s.className = 'cv-sec';
+    s.innerHTML = `<div class="cv-sec-title">${k}</div><div class="cv-sec-body">${renderSectionBody(demo[k], k)}</div>`;
+    body.appendChild(s);
+  }
+  document.getElementById('score-tag').style.display = 'flex';
+  document.getElementById('score-val').textContent = 'ATS Score: 96/100';
+  document.getElementById('copy-btn').disabled = false;
+  document.getElementById('dl-btn').disabled = false;
+  setStatus('Demo CV loaded — your actual CV will be generated from your form data.', 'ok');
+}
+</script>
+</body>
+</html>
