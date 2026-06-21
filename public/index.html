@@ -113,11 +113,13 @@ textarea:focus { border-color:var(--red); }
 .cv-sec-body { font-size:12px; color:var(--ink-soft); line-height:1.7; word-break:break-word; text-align:justify; }
 .cv-sec-body .line-bold { font-weight:700; color:var(--ink); display:block; }
 .cv-skill-row { display:table; width:100%; margin-bottom:2px; }
-.cv-skill-row .cv-skill-cat { display:table-cell; font-weight:700; color:var(--ink); white-space:nowrap; padding-right:8px; width:28%; }
-.cv-skill-row .cv-skill-val { display:table-cell; color:var(--ink-soft); text-align:left; }
-.cv-job-block { margin-bottom:10px; }
-.cv-job-block:last-child { margin-bottom:0; }
+.cv-skill-row .cv-skill-cat { display:table-cell; font-weight:700; color:var(--ink); white-space:nowrap; padding-right:8px; width:28%; vertical-align:top; }
+.cv-skill-row .cv-skill-val { display:table-cell; color:var(--ink-soft); text-align:left; vertical-align:top; }
+.cv-soft-col { display:table-cell; width:50%; color:var(--ink-soft); padding-right:6px; vertical-align:top; }
+.cv-job-block { margin-bottom:0; }
 .cv-line { display:block; }
+.cv-bullet { display:block; padding-left:16px; text-indent:-16px; text-align:left; color:var(--ink-soft); }
+.cv-achieve { display:block; padding-left:22px; text-indent:-22px; text-align:justify; margin-bottom:3px; color:var(--ink-soft); }
 /* empty state */
 .empty-cv { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:calc(100vh - 140px); text-align:center; padding:40px; color:var(--ink-faint); }
 .empty-mark { font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.1em; border:1px dashed var(--rule-dark); padding:14px 22px; margin-bottom:14px; }
@@ -220,7 +222,7 @@ textarea:focus { border-color:var(--red); }
   <!-- ── 2. SUMMARY ── -->
   <div class="sec-div"><div class="n">2</div><div class="t">Summary</div><div class="l"></div></div>
   <div class="f"><div class="flabel">Professional summary <span class="opt">rough notes are fine — AI will rewrite</span></div>
-  <textarea id="summary" rows="4" placeholder="Data Science graduate, 2 years IT Support/System admin, strong in data visualization, Excel, Power BI, networking, AI tools..."></textarea></div>
+  <textarea id="summary" rows="4" placeholder="e.g. Results-driven professional with 3 years experience in... (rough notes are fine, AI will rewrite)"></textarea></div>
 
   <!-- ── 3. SKILLS ── -->
   <div class="sec-div"><div class="n">3</div><div class="t">Skills</div><div class="l"></div></div>
@@ -248,7 +250,7 @@ textarea:focus { border-color:var(--red); }
     <button type="button" class="add-btn" onclick="addEdu()">+ Add qualification</button>
   </div>
   <div class="f"><div class="flabel">Relevant coursework <span class="opt">optional</span></div>
-  <textarea id="coursework" rows="2" placeholder="Machine Learning, Data Visualization, Computer Networks, Database Systems..."></textarea></div>
+  <textarea id="coursework" rows="2" placeholder="e.g. Machine Learning, Data Structures, Computer Networks, Database Systems"></textarea></div>
 
   <!-- ── 7. CERTIFICATIONS ── -->
   <div class="sec-div"><div class="n">7</div><div class="t">Certifications <span style="font-size:9.5px;font-weight:400;opacity:0.7;"> — optional</span></div><div class="l"></div></div>
@@ -259,7 +261,7 @@ textarea:focus { border-color:var(--red); }
   <!-- ── 8. ACHIEVEMENTS ── -->
   <div class="sec-div"><div class="n">8</div><div class="t">Achievements <span style="font-size:9.5px;font-weight:400;opacity:0.7;"> — optional</span></div><div class="l"></div></div>
   <div class="f"><div class="flabel">One achievement per line</div>
-  <textarea id="achievements" rows="3" placeholder="Top 4 out of 96 employees at Sybrid for outstanding performance&#10;Digitized patient records at Kuwait Medical Complex"></textarea></div>
+  <textarea id="achievements" rows="3" placeholder="Top performer in team for Q3 2024&#10;Led project that reduced costs by 20%&#10;Published research paper on machine learning"></textarea></div>
 
   <!-- ── 9. LANGUAGES ── -->
   <div class="sec-div"><div class="n">9</div><div class="t">Languages</div><div class="l"></div></div>
@@ -440,7 +442,7 @@ function addSkillCat(cat='', val='') {
   document.getElementById('skill-cat-list').appendChild(wrap);
 }
 // default 5 skill categories
-['Languages','Data Analysis / Visualization','Cloud','Network & Security','AI/ML Tools'].forEach(c => addSkillCat(c,''));
+['',''].forEach(() => addSkillCat('',''));
 
 // ── Jobs ──
 let jobN = 0;
@@ -525,9 +527,8 @@ function addLang(lang='', level='') {
   document.getElementById('lang-list').appendChild(wrap);
 }
 // add 3 default language rows
-addLang('Urdu / Hindi','Native');
-addLang('English','Professional Working');
-addLang('Arabic','Elementary');
+addLang('','');
+addLang('','');
 
 function removeRep(id) {
   const el = document.getElementById(id);
@@ -633,12 +634,14 @@ OUTPUT FORMAT RULES:
 - Output ONLY the CV body starting from SUMMARY section
 - Each section heading must be exactly as shown below, ALL CAPS
 - Under each heading write the content directly
-- For WORK EXPERIENCE: format each job as "Job Title\nCompany, Location\nDates | Employment Type\n• bullet\n• bullet"
-- For SKILLS: list each category as "Category Name: skill1, skill2, skill3"
+- For WORK EXPERIENCE: separate each job with a BLANK LINE. Format: "Job Title\nCompany, Location\nDates | Employment Type\n• bullet\n• bullet"
+- For PROJECTS: separate each project with a BLANK LINE. Format: "Project Name\nTools: ...\nDescription paragraph"
+- For EDUCATION: separate each qualification with a BLANK LINE. Format: "Degree / Qualification\nInstitution, Location\nDates"
 - For CERTIFICATIONS: one per line "Name — Issuer (Date)"
-- For ACHIEVEMENTS: numbered list
-- For LANGUAGES: each on its own line "Language (Level)"
-- For SOFT SKILLS: comma-separated list
+- For ACHIEVEMENTS: numbered list, one per line "1. Title: description"
+- For LANGUAGES: one per line "Language (Level)"
+- For SOFT SKILLS: comma-separated on ONE line
+- For SKILLS: list each category as "Category Name: skill1, skill2, skill3"
 - If PROJECTS is empty, omit that section entirely
 - Use strong action verbs, quantify where possible
 - Make it ATS-friendly (no tables, no columns, clean text)
@@ -966,12 +969,15 @@ body{font-family:'Source Serif 4',serif;font-size:11.5px;color:#1C1B19;line-heig
 .cv-bd{padding:12px 24px 24px;}
 .cv-sec{margin-bottom:13px;}
 .cv-sec-title{font-weight:700;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;text-align:center;border-bottom:1.5px solid #1C1B19;padding:2px 0;margin-bottom:7px;}
-.cv-sec-body{font-size:11px;color:#374151;line-height:1.65;word-break:break-word;text-align:justify;}
+.cv-sec-body{font-size:11px;color:#374151;line-height:1.65;word-break:break-word;}
 .cv-skill-row{display:table;width:100%;margin-bottom:2px;}
-.cv-skill-cat{display:table-cell;font-weight:700;color:#1C1B19;white-space:nowrap;padding-right:8px;width:28%;}
-.cv-skill-val{display:table-cell;color:#374151;text-align:left;}
-.cv-job-block{margin-bottom:8px;}
+.cv-skill-cat{display:table-cell;font-weight:700;color:#1C1B19;white-space:nowrap;padding-right:8px;width:28%;vertical-align:top;}
+.cv-skill-val{display:table-cell;color:#374151;text-align:left;vertical-align:top;}
+.cv-soft-col{display:table-cell;width:50%;color:#374151;padding-right:6px;vertical-align:top;}
+.cv-job-block{margin-bottom:0;}
 .cv-line{display:block;}
+.cv-bullet{display:block;padding-left:16px;text-indent:-16px;text-align:left;}
+.cv-achieve{display:block;padding-left:22px;text-indent:-22px;text-align:justify;margin-bottom:3px;}
 @media print{html,body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}header,footer,thead{display:none!important;}}
 </style></head><body>
 <div class="cv-hdr">${hdrHtml}</div>
@@ -993,53 +999,44 @@ function showDemo() {
   document.getElementById('cv-line3').textContent = 'LinkedIn: linkedin.com/in/johnsmith | GitHub: github.com/johnsmith';
 
   const demo = {
-    'SUMMARY': 'A Data Science graduate with 2 years of experience in IT Support and system administration, including strong hands-on work in data visualization and reporting. Quick to learn and adapt, with a solid background in networking, artificial intelligence, and modern tech tools. Highly skilled in Excel and Power BI for analysis, dashboards, and reports.',
-    'SKILLS': `Languages: Python, R, SQL, C++ (intermediate)
-Data Analysis / Visualization: Power BI, Tableau, Excel (PivotTables), IBM SPSS, SAS, Looker, QlikView
-Cloud: AWS (S3, Glue, QuickSight), Azure, Google Cloud Platform
-Database: MySQL, Oracle, SQLite, Access
-Operating System: Windows, MacOS, Linux (Ubuntu, Kali, Parrot), Android
-Network & Security: Switch Configuration, Firewall Management, LAN/WAN Setup, VPN Setup, Network Troubleshooting
-Microsoft 365: Word, Excel, PowerPoint, Outlook, Teams, OneDrive
-AI/ML Tools: ChatGPT, Gemini, Grok, Claude, Meta AI, Perplexity
-Management Tools: Jira, ServiceNow, Freshdesk, Zendesk
-Design & Visualization: 3DCAD, SketchUp, Canva`,
-    'WORK EXPERIENCE': `Multi-role Specialist
-Aran Cucine Riyadh | Riyadh, Saudi Arabia
-Jan 2026 – Present | Full-time · On-Site
-• Designed high-end Italian kitchen layouts and full interior visualizations using 3DCAD and SketchUp
-• Produced photorealistic 3D renders and client presentations to support the sales and approval process
-• Managed company social media accounts on Instagram and Facebook, handling content creation and engagement
-• Configured and maintained the office network, Wi-Fi infrastructure, and CCTV security systems
+    'SUMMARY': 'Results-driven IT professional with 3+ years of experience in technical support and system administration. Proven ability to troubleshoot complex network and software issues, manage infrastructure, and deliver high-quality service in fast-paced environments. Strong communicator with a track record of improving operational efficiency.',
+    'SKILLS': `Languages: Python, SQL, JavaScript
+Data Analysis: Power BI, Excel (PivotTables), Tableau
+Cloud: AWS, Azure, Google Cloud Platform
+Database: MySQL, Oracle, SQLite
+Network & Security: LAN/WAN Setup, Firewall Management, VPN, Switch Configuration
+Microsoft 365: Word, Excel, PowerPoint, Outlook, Teams`,
+    'WORK EXPERIENCE': `Senior IT Support Engineer
+Tech Solutions Ltd | Dubai, UAE
+Jan 2023 – Present | Full-time · On-Site
+• Managed IT infrastructure for 200+ users across 3 office locations
+• Reduced average ticket resolution time by 35% through process improvements
+• Led migration of on-premise systems to AWS cloud environment
+• Configured and maintained network switches, firewalls, and VPN systems
 
-IT Technical Support Engineer
-Sybrid Pvt Ltd – A Lakson Group Company | Lahore, Pakistan
-Aug 2025 – Nov 2025 | Full-time · On-Site
-• Provided L1 technical support for hardware, software, LAN, and WAN issues
-• Supervised and resolved help desk tickets ensuring SLA compliance
-• Ranked in top 4 out of 96 technical support employees for outstanding performance`,
-    'PROJECTS': `URL Analyzer for Malware Detection
-Tools: Flask, Scikit-learn, React.js, NumPy, Pandas, Matplotlib
-Developed a machine learning-based phishing detection tool using Random Forest to classify URLs as malicious or benign. Built a full-stack application with Flask and React.js with real-time URL scanning interface.
+IT Support Specialist
+Global Services Co. | Riyadh, Saudi Arabia
+Jun 2021 – Dec 2022 | Full-time · On-Site
+• Provided L1/L2 technical support for hardware, software, and network issues
+• Maintained 98% SLA compliance across all support tickets
+• Deployed and configured 50+ workstations and managed Active Directory`,
+    'PROJECTS': `Network Monitoring Dashboard
+Tools: Python, Grafana, Prometheus, MySQL
+Built a real-time network monitoring dashboard tracking uptime and performance across 15 servers. Reduced incident detection time by 60% compared to manual monitoring.
 
-Gesture Controlled Virtual Paint App
-Tools: OpenCV, MediaPipe, TensorFlow (CNN), Scikit-learn, Python
-Created a webcam-based virtual paint tool using hand gesture recognition. Integrated real-time drawing, erasing, and color selection via gestures. Enabled seamless switching between ML and CNN modes.`,
-    'EDUCATION': `Bachelor of Science in Data Science
-Government College University Faisalabad | Faisalabad, Punjab, Pakistan
-Sep 2021 – Jun 2025`,
-    'CERTIFICATIONS': `CCNA 200-301 Network Fundamentals — Simplilearn (Jan 2026)
-Analyzing and Visualizing Data with Microsoft Excel — Skillsoft (Jan 2025)
-Microsoft Office 365 — Edraak (Sep 2025)
-Artificial Intelligence — Simplilearn (Dec 2024)
-Symantec Certified Cyber Security Services I — Infosys (Jan 2025)
-Symantec Certified Cyber Security Services II — Simplilearn (Dec 2024)`,
-    'ACHIEVEMENTS': `1. Top Performer at Sybrid: Ranked among the Top 4 out of 96 technical support employees for outstanding performance and dedication.
-2. Digitized Patient Records at Kuwait Medical Complex, improving data accessibility and health information reliability.
-3. Technical Excellence in Networking: Hands-on experience configuring and managing network devices, Windows systems, and software security.
-4. Simultaneous Project Management at Aran Cucine: Delivered accurate 3D renders and presentation-ready layouts on time across multiple client accounts.`,
-    'LANGUAGES': `Urdu / Hindi (Native)
-English (Professional Working)
+Automated Backup System
+Tools: Python, Bash, AWS S3
+Developed an automated backup solution for critical business data with scheduled transfers to AWS S3. Reduced data recovery time from hours to minutes.`,
+    'EDUCATION': `Bachelor of Science in Computer Science
+State University | New York, USA
+Sep 2018 – Jun 2022`,
+    'CERTIFICATIONS': `AWS Certified Solutions Architect — Amazon (Jan 2023)
+Project Management Professional (PMP) — PMI (Mar 2022)
+Google Data Analytics Certificate — Google (Nov 2021)`,
+    'ACHIEVEMENTS': `1. Top Performer: Ranked in top 5% of team for two consecutive years based on KPI results.
+2. Cost Reduction: Led initiative that reduced operational costs by 18% through process automation.
+3. Client Growth: Expanded key account portfolio by 30% within first year in role.`,
+    'LANGUAGES': `English (Professional Working)
 Arabic (Elementary)`,
     'SOFT SKILLS': 'Communication, Teamwork & Collaboration, Problem Solving, Time Management, Adaptability, Critical Thinking, Leadership, Creativity & Innovation, Conflict Resolution, Attention to Detail'
   };
