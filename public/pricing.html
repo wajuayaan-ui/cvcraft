@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pricing — CvCraft</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lexend:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --indigo: #6C5CE7;
+    --indigo-dark: #5B4BD6;
+    --indigo-deep: #4F3FC9;
+    --violet-soft: #EDE9FE;
+    --emerald: #10B981;
+    --emerald-dark: #0EA371;
+    --emerald-soft: #D7F5EA;
+    --ink: #1A1B2E;
+    --ink-soft: #5B5D72;
+    --ink-faint: #8A8CA0;
+    --line: #E7E6F0;
+    --bg: #FCFCFE;
+    --panel-violet: #F4F2FD;
+    --panel-emerald: #F0FBF6;
+    --amber: #F59E0B;
+    --amber-soft: #FEF1DA;
+    --rose: #F43F5E;
+    --rose-soft: #FDE3E8;
+    --sky-soft: #E3F0FE;
+    --sky: #3B82F6;
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg); color: var(--ink);
+    min-height: 100vh; line-height: 1.5; overflow-x: hidden;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(22px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.92) translateY(16px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  @keyframes floatY {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-9px); }
+  }
+  @keyframes spinSlow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  @keyframes spinSlowReverse { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
+  @keyframes drift {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(-10px, 14px); }
+  }
+  @keyframes shimmerDot {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+  @keyframes shine {
+    from { transform: translateX(-130%) skewX(-12deg); }
+    to   { transform: translateX(230%) skewX(-12deg); }
+  }
+  @keyframes pulseRing {
+    0% { box-shadow: 0 0 0 0 rgba(108,92,231,0.35); }
+    70% { box-shadow: 0 0 0 10px rgba(108,92,231,0); }
+    100% { box-shadow: 0 0 0 0 rgba(108,92,231,0); }
+  }
+  @keyframes badgePulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(16,185,129,0.4); }
+    50% { box-shadow: 0 0 0 6px rgba(16,185,129,0); }
+  }
+  @keyframes checkPop {
+    0% { opacity: 0; transform: scale(0) rotate(-10deg); }
+    60% { transform: scale(1.2) rotate(3deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0); }
+  }
+  @keyframes lockFloat {
+    0%, 100% { transform: translateY(0) rotate(-2deg); }
+    50% { transform: translateY(-8px) rotate(2deg); }
+  }
+  @keyframes comingSoonGlow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(108,92,231,0.2); }
+    50% { box-shadow: 0 0 24px 4px rgba(108,92,231,0.12); }
+  }
+
+  .reveal {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.7s cubic-bezier(.16,.8,.3,1), transform 0.7s cubic-bezier(.16,.8,.3,1);
+  }
+  .reveal.in-view { opacity: 1; transform: translateY(0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+    .reveal { opacity: 1 !important; transform: none !important; }
+  }
+
+  h1, h2, h3, h4, .brand-name { font-family: 'Lexend', 'Inter', sans-serif; }
+  a { text-decoration: none; color: inherit; }
+  button { font-family: inherit; cursor: pointer; }
+
+  /* ── Nav ── */
+  .nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 48px; border-bottom: 1px solid var(--line);
+    background: rgba(252,252,254,0.9); backdrop-filter: blur(8px);
+    position: sticky; top: 0; z-index: 50;
+    animation: fadeDown 0.6s cubic-bezier(.16,.8,.3,1) both;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand-mark {
+    width: 38px; height: 38px; border-radius: 11px;
+    background: linear-gradient(135deg, #7C6CF0 0%, #6C5CE7 55%, #5B4BD6 100%);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 12px rgba(108,92,231,0.35); flex-shrink: 0;
+    transition: transform 0.35s cubic-bezier(.34,1.56,.64,1), box-shadow 0.3s;
+  }
+  .brand:hover .brand-mark { transform: rotate(-8deg) scale(1.08); box-shadow: 0 6px 18px rgba(108,92,231,0.45); }
+  .brand-name { font-weight: 700; font-size: 21px; letter-spacing: -0.3px; }
+  .brand-name b { color: var(--indigo); font-weight: 800; }
+
+  .nav-links { display: flex; align-items: center; gap: 34px; }
+  .nav-links a {
+    font-size: 14.5px; font-weight: 500; color: var(--ink-soft);
+    position: relative; padding-bottom: 6px; transition: color 0.2s;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; left: 0; right: 100%; bottom: -2px;
+    height: 2px; background: var(--indigo); border-radius: 2px;
+    transition: right 0.28s cubic-bezier(.16,.8,.3,1);
+  }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-links a:hover::after { right: 0; }
+  .nav-links a.active { color: var(--indigo); font-weight: 600; }
+  .nav-links a.active::after { right: 0; }
+
+  .nav-right { display: flex; align-items: center; gap: 12px; }
+  .theme-btn {
+    width: 38px; height: 38px; border-radius: 50%; border: none; background: #F2F1FA;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--ink-soft);
+    transition: background 0.15s, transform 0.4s cubic-bezier(.34,1.56,.64,1);
+  }
+  .theme-btn:hover { background: #E7E5F5; transform: rotate(50deg); }
+  .btn-login {
+    font-size: 14px; font-weight: 600; color: var(--ink);
+    padding: 9px 18px; border-radius: 9px; border: 1px solid var(--line);
+    background: #fff; cursor: pointer;
+    transition: border-color 0.15s, background 0.15s, transform 0.15s;
+  }
+  .btn-login:hover { border-color: #C9C7E0; background: #FAFAFD; transform: translateY(-1px); }
+  .btn-signup {
+    font-size: 14px; font-weight: 600; color: #fff;
+    padding: 10px 20px; border-radius: 9px; border: none;
+    background: var(--indigo); cursor: pointer;
+    box-shadow: 0 4px 12px rgba(108,92,231,0.3);
+    transition: background 0.15s, transform 0.15s, box-shadow 0.2s;
+    position: relative; overflow: hidden;
+  }
+  .btn-signup::after {
+    content: ''; position: absolute; top: 0; left: 0; width: 40%; height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.45), transparent);
+    transform: translateX(-130%) skewX(-12deg);
+  }
+  .btn-signup:hover { background: var(--indigo-dark); transform: translateY(-1px); box-shadow: 0 8px 18px rgba(108,92,231,0.4); }
+  .btn-signup:hover::after { animation: shine 0.7s ease forwards; }
+
+  /* ── Page Hero ── */
+  .page-hero {
+    position: relative; text-align: center;
+    padding: 72px 24px 52px; overflow: hidden;
+  }
+  .hero-bg-ring {
+    position: absolute; border-radius: 50%;
+    border: 1px solid rgba(108,92,231,0.10); pointer-events: none;
+  }
+  .ring-1 { width: 560px; height: 560px; top: -220px; right: -100px; animation: spinSlow 70s linear infinite; }
+  .ring-2 { width: 380px; height: 380px; top: -80px; right: -30px; animation: spinSlowReverse 50s linear infinite; }
+  .hero-dots {
+    position: absolute; left: 60px; top: 100px; width: 130px; height: 130px;
+    background-image: radial-gradient(circle, rgba(108,92,231,0.24) 1.4px, transparent 1.4px);
+    background-size: 16px 16px; pointer-events: none;
+    -webkit-mask-image: radial-gradient(circle, #000 0%, transparent 75%);
+    mask-image: radial-gradient(circle, #000 0%, transparent 75%);
+    animation: drift 9s ease-in-out infinite, shimmerDot 4s ease-in-out infinite;
+  }
+
+  .page-eyebrow {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-size: 13.5px; font-weight: 600; color: var(--indigo-deep);
+    background: var(--violet-soft); padding: 7px 18px; border-radius: 999px;
+    margin-bottom: 22px;
+    animation: popIn 0.6s cubic-bezier(.16,.8,.3,1) both 0.05s;
+  }
+  .page-eyebrow .spark { display: inline-block; animation: floatY 2.6s ease-in-out infinite; }
+
+  .page-hero h1 {
+    font-size: 48px; font-weight: 800; letter-spacing: -1.4px;
+    line-height: 1.12; color: var(--ink); max-width: 640px; margin: 0 auto;
+    animation: fadeUp 0.7s cubic-bezier(.16,.8,.3,1) both 0.15s;
+  }
+  .page-hero h1 .accent { color: var(--indigo); }
+
+  .page-hero-sub {
+    font-size: 17px; color: var(--ink-soft); max-width: 480px;
+    margin: 20px auto 0; line-height: 1.6;
+    animation: fadeUp 0.7s cubic-bezier(.16,.8,.3,1) both 0.28s;
+  }
+
+  /* ── Testing banner ── */
+  .testing-banner {
+    display: inline-flex; align-items: center; gap: 8px;
+    margin-top: 28px;
+    background: linear-gradient(135deg, #D7F5EA, #C9F2E1);
+    border: 1px solid #A7E8CF; border-radius: 999px;
+    padding: 8px 20px; font-size: 13.5px; font-weight: 600; color: #0A7A54;
+    animation: fadeUp 0.7s cubic-bezier(.16,.8,.3,1) both 0.4s;
+  }
+  .testing-dot {
+    width: 8px; height: 8px; border-radius: 50%; background: var(--emerald);
+    animation: badgePulse 2s ease-in-out infinite;
+  }
+
+  /* ── Pricing Cards ── */
+  .pricing-section {
+    max-width: 1100px; margin: 0 auto; padding: 0 24px 80px;
+  }
+
+  .pricing-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+    align-items: start;
+  }
+
+  .plan-card {
+    border-radius: 22px; border: 1px solid var(--line);
+    background: #fff; padding: 36px 32px;
+    position: relative; overflow: hidden;
+    transition: transform 0.3s cubic-bezier(.16,.8,.3,1), box-shadow 0.3s;
+  }
+  .plan-card:hover { transform: translateY(-6px); box-shadow: 0 20px 48px -16px rgba(26,27,46,0.14); }
+
+  /* Free card — featured */
+  .plan-card.featured {
+    border: 2px solid var(--indigo);
+    background: linear-gradient(160deg, #F6F4FE 0%, #fff 60%);
+    box-shadow: 0 8px 32px rgba(108,92,231,0.12);
+    transform: translateY(-8px);
+    animation: comingSoonGlow 3s ease-in-out infinite;
+  }
+  .plan-card.featured:hover { transform: translateY(-14px); box-shadow: 0 24px 52px rgba(108,92,231,0.2); }
+
+  /* Coming soon cards */
+  .plan-card.locked {
+    background: #FAFAF8;
+    border-color: #ECEAF6;
+  }
+  .plan-card.locked:hover { transform: translateY(-4px); box-shadow: 0 14px 32px -14px rgba(26,27,46,0.1); }
+
+  .plan-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11.5px; font-weight: 700; padding: 4px 12px;
+    border-radius: 999px; margin-bottom: 20px;
+  }
+  .badge-free { background: var(--emerald); color: #fff; box-shadow: 0 3px 8px rgba(16,185,129,0.35); }
+  .badge-soon { background: #F0EFFA; color: var(--ink-faint); border: 1px solid var(--line); }
+  .badge-popular-tag { background: var(--indigo); color: #fff; box-shadow: 0 3px 8px rgba(108,92,231,0.3); }
+
+  .plan-name { font-size: 22px; font-weight: 800; letter-spacing: -0.4px; margin-bottom: 6px; }
+  .plan-desc { font-size: 14px; color: var(--ink-soft); line-height: 1.55; margin-bottom: 28px; }
+
+  .plan-price {
+    display: flex; align-items: flex-end; gap: 4px; margin-bottom: 28px;
+  }
+  .price-amount {
+    font-family: 'Lexend', sans-serif;
+    font-size: 52px; font-weight: 800; letter-spacing: -2px; line-height: 1; color: var(--ink);
+  }
+  .price-amount.free { color: var(--emerald); }
+  .price-period { font-size: 14px; color: var(--ink-faint); font-weight: 500; padding-bottom: 6px; }
+
+  .price-blur {
+    font-family: 'Lexend', sans-serif;
+    font-size: 52px; font-weight: 800; letter-spacing: -2px; line-height: 1;
+    color: var(--ink-faint); filter: blur(6px); user-select: none;
+    opacity: 0.4;
+  }
+
+  /* Feature list */
+  .feature-list { list-style: none; margin-bottom: 32px; display: flex; flex-direction: column; gap: 12px; }
+  .feature-list li {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 14px; color: var(--ink-soft); line-height: 1.45;
+  }
+  .check-icon {
+    width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 0px;
+  }
+  .check-icon.yes { background: var(--emerald-soft); color: var(--emerald-dark); }
+  .check-icon.locked-icon { background: #F0EFFA; color: var(--ink-faint); }
+  .feature-list li.active-feat { color: var(--ink); font-weight: 500; }
+
+  /* CTA buttons */
+  .btn-plan-free {
+    width: 100%; padding: 14px; border-radius: 12px; border: none;
+    font-size: 15px; font-weight: 700; color: #fff;
+    background: linear-gradient(135deg, #16C690, var(--emerald-dark));
+    box-shadow: 0 8px 20px rgba(16,185,129,0.32);
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: filter 0.15s, transform 0.15s, box-shadow 0.15s;
+    position: relative; overflow: hidden;
+  }
+  .btn-plan-free::after {
+    content: ''; position: absolute; top: 0; left: 0; width: 35%; height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.45), transparent);
+    transform: translateX(-130%) skewX(-12deg);
+  }
+  .btn-plan-free:hover { filter: brightness(1.05); transform: translateY(-2px); box-shadow: 0 12px 28px rgba(16,185,129,0.4); }
+  .btn-plan-free:hover::after { animation: shine 0.75s ease forwards; }
+  .btn-plan-free:active { transform: scale(0.98); }
+
+  .btn-plan-locked {
+    width: 100%; padding: 14px; border-radius: 12px;
+    font-size: 14.5px; font-weight: 700;
+    border: 1.5px solid var(--line); background: #fff; color: var(--ink-faint);
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    cursor: not-allowed; opacity: 0.8;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .btn-plan-locked:hover { border-color: var(--indigo); color: var(--indigo); opacity: 1; }
+
+  /* Lock illustration */
+  .lock-wrap {
+    position: absolute; top: 20px; right: 20px;
+    width: 36px; height: 36px; border-radius: 10px;
+    background: #F0EFFA; display: flex; align-items: center; justify-content: center;
+    color: var(--ink-faint);
+    animation: lockFloat 4s ease-in-out infinite;
+  }
+
+  /* Divider */
+  .plan-divider {
+    height: 1px; background: var(--line); margin: 22px 0;
+  }
+
+  /* ── Coming Soon ribbon ── */
+  .coming-soon-label {
+    text-align: center; margin-bottom: 12px;
+    font-size: 12px; font-weight: 600; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--ink-faint);
+  }
+
+  /* ── FAQ / Info strip ── */
+  .info-strip {
+    max-width: 780px; margin: 0 auto 80px; padding: 0 24px;
+  }
+  .info-inner {
+    background: var(--panel-violet); border: 1px solid #E5E1F7;
+    border-radius: 20px; padding: 36px 44px;
+    display: grid; grid-template-columns: repeat(3,1fr); gap: 28px;
+    text-align: center;
+  }
+  .info-item {}
+  .info-icon {
+    width: 46px; height: 46px; border-radius: 13px; margin: 0 auto 12px;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.35s cubic-bezier(.34,1.56,.64,1);
+  }
+  .info-item:hover .info-icon { transform: translateY(-4px) scale(1.08); }
+  .info-icon.v { background: var(--violet-soft); color: var(--indigo); }
+  .info-icon.e { background: var(--emerald-soft); color: var(--emerald-dark); }
+  .info-icon.a { background: var(--amber-soft); color: var(--amber); }
+  .info-item h4 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+  .info-item p { font-size: 13px; color: var(--ink-soft); line-height: 1.5; }
+
+  /* ── CTA ── */
+  .cta-banner { max-width: 1100px; margin: 0 auto 80px; padding: 0 24px; }
+  .cta-inner {
+    border-radius: 24px;
+    background: linear-gradient(135deg, #1A2744 0%, #0F1629 60%, #1A1B2E 100%);
+    padding: 48px 56px;
+    display: flex; align-items: center; justify-content: space-between; gap: 32px;
+    position: relative; overflow: hidden;
+  }
+  .cta-inner::before {
+    content: ''; position: absolute;
+    width: 300px; height: 300px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(108,92,231,0.25) 0%, transparent 70%);
+    top: -80px; right: 100px; pointer-events: none;
+  }
+  .cta-inner::after {
+    content: ''; position: absolute;
+    width: 200px; height: 200px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(16,185,129,0.15) 0%, transparent 70%);
+    bottom: -60px; left: 200px; pointer-events: none;
+  }
+  .cta-left { position: relative; z-index: 1; }
+  .cta-left h2 { font-size: 26px; font-weight: 800; color: #fff; letter-spacing: -0.5px; margin-bottom: 6px; }
+  .cta-left p { font-size: 14.5px; color: rgba(255,255,255,0.5); }
+  .cta-right { display: flex; gap: 12px; flex-shrink: 0; position: relative; z-index: 1; }
+  .btn-cta-prim {
+    padding: 13px 26px; border-radius: 11px; border: none;
+    background: var(--emerald); color: #fff;
+    font-size: 14px; font-weight: 700;
+    box-shadow: 0 6px 20px rgba(16,185,129,0.4);
+    display: flex; align-items: center; gap: 8px;
+    transition: transform 0.15s, filter 0.15s;
+    position: relative; overflow: hidden;
+  }
+  .btn-cta-prim::after {
+    content: ''; position: absolute; top: 0; left: 0; width: 35%; height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent);
+    transform: translateX(-130%) skewX(-12deg);
+  }
+  .btn-cta-prim:hover { filter: brightness(1.07); transform: translateY(-2px); }
+  .btn-cta-prim:hover::after { animation: shine 0.7s ease forwards; }
+
+  /* ── Responsive ── */
+  @media (max-width: 900px) {
+    .pricing-grid { grid-template-columns: 1fr; max-width: 420px; margin: 0 auto; }
+    .plan-card.featured { transform: none; }
+    .info-inner { grid-template-columns: 1fr; text-align: left; }
+    .info-icon { margin: 0 0 10px; }
+    .cta-inner { flex-direction: column; padding: 36px 28px; }
+  }
+  @media (max-width: 980px) {
+    .nav-links { display: none; }
+    .page-hero h1 { font-size: 36px; }
+  }
+  @media (max-width: 540px) {
+    .nav { padding: 14px 18px; }
+    .page-hero h1 { font-size: 30px; }
+    .hero-dots { display: none; }
+    .info-inner { padding: 24px 20px; }
+    .cta-inner { padding: 28px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Nav ── -->
+<nav class="nav">
+  <a href="index.html" class="brand">
+    <div class="brand-mark">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <path d="M6 2.5h8l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1z" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/>
+        <path d="M14 2.5v5h5" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/>
+        <circle cx="10.5" cy="15.5" r="2.5" fill="#fff"/>
+        <path d="M9.6 15.6l.6.6 1.4-1.4" stroke="#6C5CE7" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="brand-name">Cv<b>Craft</b></div>
+  </a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="templates.html">Templates</a>
+    <a href="#">Examples</a>
+    <a href="pricing.html" class="active">Pricing</a>
+    <a href="about.html">About</a>
+  </div>
+  <div class="nav-right">
+    <button class="theme-btn" id="theme-toggle" aria-label="Toggle theme">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.4M12 19.1v2.4M21.5 12h-2.4M4.9 12H2.5M18.5 5.5l-1.7 1.7M7.2 16.8l-1.7 1.7M18.5 18.5l-1.7-1.7M7.2 7.2L5.5 5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <button class="btn-login">Log in</button>
+    <button class="btn-signup">Sign up free</button>
+  </div>
+</nav>
+
+<!-- ── Hero ── -->
+<section class="page-hero">
+  <div class="hero-bg-ring ring-1"></div>
+  <div class="hero-bg-ring ring-2"></div>
+  <div class="hero-dots"></div>
+
+  <div class="page-eyebrow"><span class="spark">💸</span> Simple, honest pricing</div>
+  <h1>100% Free <span class="accent">while we're testing</span></h1>
+  <p class="page-hero-sub">CvCraft is completely free during our testing phase. No credit card, no catch — just build your CV.</p>
+  <div class="testing-banner">
+    <div class="testing-dot"></div>
+    Currently in Testing Phase — Everything is Free
+  </div>
+</section>
+
+<!-- ── Pricing Cards ── -->
+<section class="pricing-section">
+
+  <div class="pricing-grid reveal">
+
+    <!-- Pro card — coming soon -->
+    <div class="plan-card locked">
+      <div class="lock-wrap">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </div>
+      <span class="plan-badge badge-soon">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M12 2v10l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/></svg>
+        Coming Soon
+      </span>
+      <div class="plan-name">Pro</div>
+      <div class="plan-desc">For professionals who want priority features, more templates, and advanced customization.</div>
+      <div class="plan-price">
+        <div class="price-blur">$9</div>
+        <div class="price-period">/month</div>
+      </div>
+      <ul class="feature-list">
+        <li><span class="check-icon locked-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="currentColor" stroke-width="2"/></svg></span>Unlimited CV downloads</li>
+        <li><span class="check-icon locked-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="currentColor" stroke-width="2"/></svg></span>All premium templates</li>
+        <li><span class="check-icon locked-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="currentColor" stroke-width="2"/></svg></span>AI content suggestions</li>
+        <li><span class="check-icon locked-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="currentColor" stroke-width="2"/></svg></span>Priority email support</li>
+        <li><span class="check-icon locked-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="currentColor" stroke-width="2"/></svg></span>Custom colour themes</li>
+      </ul>
+      <button class="btn-plan-locked" disabled>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="currentColor" stroke-width="2"/></svg>
+        Coming Soon
+      </button>
+    </div>
+
+    <!-- Free card — featured/active -->
+    <div class="plan-card featured">
+      <span class="plan-badge badge-free">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6L12 2z" fill="#fff"/></svg>
+        Free — Testing Phase
+      </span>
+      <div class="plan-name">Free</div>
+      <div class="plan-desc">Everything you need to build a great CV, completely free while CvCraft is in testing.</div>
+      <div class="plan-price">
+        <div class="price-amount free">$0</div>
+        <div class="price-period">/ forever (for now)</div>
+      </div>
+      <ul class="feature-list">
+        <li class="active-feat">
+          <span class="check-icon yes">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          All 5 CV templates — free
+        </li>
+        <li class="active-feat">
+          <span class="check-icon yes">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          Unlimited CV downloads (PDF)
+        </li>
+        <li class="active-feat">
+          <span class="check-icon yes">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          Upload & enhance existing CV
+        </li>
+        <li class="active-feat">
+          <span class="check-icon yes">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          ATS-friendly formatting
+        </li>
+        <li class="active-feat">
+          <span class="check-icon yes">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          No account required
+        </li>
+        <li class="active-feat">
+          <span class="check-icon yes">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          No watermarks
+        </li>
+      </ul>
+      <button class="btn-plan-free" onclick="window.location.href='cvcraft-builder.html'">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Start Building Free
+      </button>
+    </div>
+
+    <!-- Business card — coming soon -->
+    <div class="plan-card locked">
+      <div class="lock-wrap">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </div>
+      <span class="plan-badge badge-popular-tag">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6L12 2z" fill="#fff"/></svg>
+        Coming Soon
+      </span>
+      <div class="plan-name">Business</div>
+      <div class="plan-desc">For teams, recruiters, and agencies who need bulk CV creation and team collaboration.</div>
+      <div class="plan-price">
+        <div class="price-blur">$29</div>
+        <div class="price-period">/month</div>
+      </div>
+      <ul class="feature-list">
+        <li><span class="check-icon locked-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="currentColor" stroke-width="2"/></svg></span>Everything in Pro</li>
+        <li><span class="check-icon locked-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="currentColor" stroke-width="2"/></svg></span>Team workspace (5 seats)</li>
+        <li><span class="check-icon locked-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="currentColor" stroke-width="2"/></svg></span>Bulk CV export</li>
+        <li><span class="check-icon locked-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="currentColor" stroke-width="2"/></svg></span>White-label branding</li>
+        <li><span class="check-icon locked-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="currentColor" stroke-width="2"/></svg></span>Dedicated account manager</li>
+      </ul>
+      <button class="btn-plan-locked" disabled>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="currentColor" stroke-width="2"/></svg>
+        Coming Soon
+      </button>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── Info Strip ── -->
+<div class="info-strip reveal">
+  <div class="info-inner">
+    <div class="info-item">
+      <div class="info-icon v">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v6c0 4.6-3 8-7 9-4-1-7-4.4-7-9V6l7-3z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <h4>No credit card needed</h4>
+      <p>Sign up and start building instantly. Zero payment info required during testing.</p>
+    </div>
+    <div class="info-item">
+      <div class="info-icon e">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6L12 2z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </div>
+      <h4>Free forever notice</h4>
+      <p>We'll give you plenty of heads-up before any paid plans go live. No surprises.</p>
+    </div>
+    <div class="info-item">
+      <div class="info-icon a">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </div>
+      <h4>Got feedback?</h4>
+      <p>We're building this for you. Share what features matter most and shape what comes next.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ── CTA ── -->
+<div class="cta-banner reveal">
+  <div class="cta-inner">
+    <div class="cta-left">
+      <h2>It's free — what are you waiting for?</h2>
+      <p>Build a professional CV in minutes, no account needed.</p>
+    </div>
+    <div class="cta-right">
+      <button class="btn-cta-prim" onclick="window.location.href='cvcraft-builder.html'">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Start Building Free
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Theme toggle
+  const themeBtn = document.getElementById('theme-toggle');
+  let isDark = false;
+  themeBtn.addEventListener('click', () => {
+    isDark = !isDark;
+    document.body.style.filter = isDark ? 'invert(1) hue-rotate(180deg)' : 'none';
+  });
+
+  // Scroll reveal
+  if ('IntersectionObserver' in window) {
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in-view'); obs.unobserve(e.target); } });
+    }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+  } else {
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('in-view'));
+  }
+
+  // Animate check icons on scroll
+  const checks = document.querySelectorAll('.check-icon.yes');
+  if ('IntersectionObserver' in window) {
+    const checkObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const idx = Array.from(checks).indexOf(e.target);
+          e.target.style.animation = `checkPop 0.4s cubic-bezier(.34,1.56,.64,1) ${idx * 60}ms both`;
+          checkObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.5 });
+    checks.forEach(c => checkObs.observe(c));
+  }
+</script>
+</body>
+</html>
