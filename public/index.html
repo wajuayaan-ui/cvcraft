@@ -79,7 +79,7 @@ textarea:focus { border-color:var(--red); }
 .gen-btn:hover { background:var(--red); }
 .gen-btn:disabled { background:var(--rule-dark); color:var(--ink-faint); cursor:not-allowed; }
 /* RIGHT: preview */
-.preview-side { background:var(--paper); display:flex; flex-direction:column; overflow:hidden; }
+.preview-side { background:var(--paper); display:flex; flex-direction:column; overflow:hidden; height:100%; }
 .preview-toolbar { background:var(--card); border-bottom:1px solid var(--rule-dark); padding:0 20px; height:46px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
 .tb-left { display:flex; align-items:center; gap:10px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:0.07em; }
 .live-dot { width:6px; height:6px; border-radius:50%; background:var(--rule-dark); }
@@ -95,24 +95,31 @@ textarea:focus { border-color:var(--red); }
 .tbtn.primary:hover { background:#8B2A18; border-color:#8B2A18; }
 .tbtn.primary:disabled { background:var(--rule-dark); border-color:var(--rule-dark); }
 /* paper */
-.paper-wrap { flex:1; overflow-y:auto; padding:20px; display:flex; justify-content:center; scrollbar-width:thin; scrollbar-color:var(--rule) transparent; }
-.paper { background:var(--card); width:100%; max-width:640px; min-height:800px; box-shadow:var(--shadow-paper); position:relative; transition:box-shadow 0.3s; }
-.paper::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; background:repeating-linear-gradient(90deg,var(--red) 0 12px,transparent 12px 20px); }
+.paper-wrap { flex:1; overflow-y:auto; padding:20px; display:flex; justify-content:center; align-items:flex-start; scrollbar-width:thin; scrollbar-color:var(--rule) transparent; }
+.paper { background:var(--card); width:100%; max-width:640px; min-height:calc(100vh - 100px); box-shadow:var(--shadow-paper); position:relative; transition:box-shadow 0.3s; }
+.paper::before { display:none; }
 .paper.gen { box-shadow:0 2px 4px rgba(168,52,31,0.08),0 8px 32px rgba(168,52,31,0.12),0 0 0 2px rgba(168,52,31,0.15); }
 /* CV content */
-.cv-wrap { padding-top:4px; }
+.cv-wrap { padding-top:0; }
 /* KSA format header */
-.cv-hdr { padding:22px 32px 16px; border-bottom:2px solid var(--ink); text-align:center; }
-.cv-name { font-family:'Source Serif 4',serif; font-weight:700; font-size:26px; letter-spacing:-0.3px; text-decoration:underline; text-underline-offset:3px; margin-bottom:5px; }
-.cv-contact-line { font-size:11.5px; color:var(--ink); margin-bottom:3px; line-height:1.8; }
+.cv-hdr { padding:16px 32px 12px; border-bottom:2px solid var(--ink); text-align:center; }
+.cv-name { font-family:'Source Serif 4',serif; font-weight:700; font-size:26px; letter-spacing:-0.3px; text-decoration:underline; text-underline-offset:3px; margin-bottom:3px; }
+.cv-contact-line { font-size:11.5px; color:var(--ink); margin-bottom:1px; line-height:1.5; }
 .cv-contact-line strong { font-weight:600; }
 /* CV body sections */
 .cv-bd { padding:16px 32px 32px; }
 .cv-sec { margin-bottom:16px; }
 .cv-sec-title { font-family:'Source Serif 4',serif; font-weight:700; font-size:12px; text-transform:uppercase; letter-spacing:0.06em; text-align:center; border-bottom:1.5px solid var(--ink); padding:3px 0; margin-bottom:9px; }
-.cv-sec-body { font-size:12px; color:var(--ink-soft); line-height:1.7; white-space:pre-wrap; word-break:break-word; }
+.cv-sec-body { font-size:12px; color:var(--ink-soft); line-height:1.7; word-break:break-word; text-align:justify; }
+.cv-sec-body .line-bold { font-weight:700; color:var(--ink); display:block; }
+.cv-skill-row { display:table; width:100%; margin-bottom:2px; }
+.cv-skill-row .cv-skill-cat { display:table-cell; font-weight:700; color:var(--ink); white-space:nowrap; padding-right:8px; width:28%; }
+.cv-skill-row .cv-skill-val { display:table-cell; color:var(--ink-soft); text-align:left; }
+.cv-job-block { margin-bottom:10px; }
+.cv-job-block:last-child { margin-bottom:0; }
+.cv-line { display:block; }
 /* empty state */
-.empty-cv { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:700px; text-align:center; padding:40px; color:var(--ink-faint); }
+.empty-cv { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:calc(100vh - 140px); text-align:center; padding:40px; color:var(--ink-faint); }
 .empty-mark { font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.1em; border:1px dashed var(--rule-dark); padding:14px 22px; margin-bottom:14px; }
 .empty-cv h3 { font-size:16px; font-weight:600; color:var(--ink-soft); margin-bottom:5px; }
 .empty-cv p { font-size:12.5px; max-width:230px; line-height:1.6; }
@@ -198,7 +205,8 @@ textarea:focus { border-color:var(--red); }
     <div class="f"><div class="flabel">LinkedIn <span class="opt">optional</span></div><input type="text" id="linkedin" placeholder="linkedin.com/in/yourname"></div>
     <div class="f"><div class="flabel">GitHub <span class="opt">optional</span></div><input type="text" id="github" placeholder="github.com/yourusername"></div>
   </div>
-  <!-- KSA specific fields -->
+  <!-- KSA specific fields — shown only for Gulf region -->
+  <div id="ksa-fields">
   <div class="f2">
     <div class="f"><div class="flabel">Date of birth <span class="opt">KSA format</span></div><input type="text" id="dob" placeholder="01-Jan-1995"></div>
     <div class="f"><div class="flabel">Nationality</div><input type="text" id="nationality" placeholder="Your nationality"></div>
@@ -206,6 +214,7 @@ textarea:focus { border-color:var(--red); }
   <div class="f2">
     <div class="f"><div class="flabel">Iqama number <span class="opt">optional</span></div><input type="text" id="iqama" placeholder="XXXXXXXXXX"></div>
     <div class="f"><div class="flabel">Iqama status <span class="opt">optional</span></div><input type="text" id="iqama-status" placeholder="Transferable"></div>
+  </div>
   </div>
 
   <!-- ── 2. SUMMARY ── -->
@@ -384,7 +393,12 @@ function buildRegions() {
     b.type = 'button';
     b.className = 'chip' + (r.id === region ? ' on' : '');
     b.textContent = r.label;
-    b.onclick = () => { region = r.id; document.querySelectorAll('#region-row .chip').forEach(c=>c.classList.remove('on')); b.classList.add('on'); };
+    b.onclick = () => {
+      region = r.id;
+      document.querySelectorAll('#region-row .chip').forEach(c=>c.classList.remove('on'));
+      b.classList.add('on');
+      document.getElementById('ksa-fields').style.display = (r.id === 'gulf') ? 'block' : 'none';
+    };
     row.appendChild(b);
   });
 }
@@ -746,7 +760,10 @@ async function generate() {
     body.innerHTML = '';
     for (const k of SECTION_KEYS) if (sections[k]) {
       const s = document.createElement('div'); s.className = 'cv-sec';
-      s.innerHTML = `<div class="cv-sec-title">${k}</div><div class="cv-sec-body">${escHtml(sections[k])}</div>`;
+      const titleEl = document.createElement('div'); titleEl.className = 'cv-sec-title'; titleEl.textContent = k;
+      const bodyEl = document.createElement('div'); bodyEl.className = 'cv-sec-body';
+      bodyEl.innerHTML = renderSectionBody(sections[k], k);
+      s.appendChild(titleEl); s.appendChild(bodyEl);
       body.appendChild(s);
     }
 
@@ -781,6 +798,135 @@ function setStatus(msg, type) {
 }
 function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
+// Renders section body text with bold headings:
+// - Lines ending with ":" (skill categories like "Languages:", "Cloud:")
+// - Lines that look like job titles or project names (no bullet, not indented, not empty, short-ish)
+function renderSectionBody(text, sectionKey) {
+  if (!text) return '';
+
+  // Split into blocks (separated by blank lines), then lines within each block
+  const blocks = text.split(/\n\s*\n/).map(b => b.split('\n').map(l => l.trim()).filter(l => l));
+
+  // ── SKILLS: "Category: values" → two-column table row
+  if (sectionKey === 'SKILLS') {
+    const lines = blocks.flat();
+    return lines.map(line => {
+      const ci = line.indexOf(':');
+      if (ci > 0) {
+        const cat = escHtml(line.slice(0, ci));
+        const val = escHtml(line.slice(ci + 1).trim());
+        return `<div class="cv-skill-row"><span class="cv-skill-cat">${cat}:</span><span class="cv-skill-val">${val}</span></div>`;
+      }
+      return `<div class="cv-line">${escHtml(line)}</div>`;
+    }).join('');
+  }
+
+  // ── SOFT SKILLS: comma-separated → two equal columns
+  if (sectionKey === 'SOFT SKILLS') {
+    const skills = text.split(',').map(s => s.trim()).filter(Boolean);
+    const mid = Math.ceil(skills.length / 2);
+    const col1 = skills.slice(0, mid);
+    const col2 = skills.slice(mid);
+    let rows = '';
+    for (let i = 0; i < col1.length; i++) {
+      rows += `<div class="cv-skill-row"><span class="cv-soft-col">${escHtml(col1[i])}</span><span class="cv-soft-col">${escHtml(col2[i] || '')}</span></div>`;
+    }
+    return rows;
+  }
+
+  // ── CERTIFICATIONS: "Name — Issuer (Date)" — name bold, rest plain
+  if (sectionKey === 'CERTIFICATIONS') {
+    const lines = blocks.flat();
+    return lines.map(line => {
+      const di = line.indexOf(' — ');
+      if (di > 0) {
+        const name = escHtml(line.slice(0, di));
+        const rest = escHtml(line.slice(di + 3));
+        return `<div class="cv-line"><strong style="font-weight:700;color:var(--ink);">${name}</strong><span style="color:var(--ink-soft);"> — ${rest}</span></div>`;
+      }
+      return `<div class="cv-line">${escHtml(line)}</div>`;
+    }).join('');
+  }
+
+  // ── LANGUAGES: plain, no bold
+  if (sectionKey === 'LANGUAGES') {
+    const lines = blocks.flat();
+    return lines.map(line => `<div class="cv-line">${escHtml(line)}</div>`).join('');
+  }
+
+  // ── ACHIEVEMENTS: hanging indent — number flush left, text wraps indented
+  if (sectionKey === 'ACHIEVEMENTS') {
+    const lines = blocks.flat();
+    return lines.map(line =>
+      `<div class="cv-achieve">${escHtml(line)}</div>`
+    ).join('');
+  }
+
+  // ── PROJECTS: each block = one project
+  // Line 0 = project name (BOLD ONLY)
+  // Line 1 = Tools: ... (italic, plain)
+  // Lines 2+ = description (plain, justified)
+  if (sectionKey === 'PROJECTS') {
+    return blocks.map((block, bi) => {
+      if (!block.length) return '';
+      let html = `<div style="${bi > 0 ? 'margin-top:8px;' : ''}">`;
+      html += `<strong style="font-weight:700;color:var(--ink);">${escHtml(block[0])}</strong>`;
+      for (let i = 1; i < block.length; i++) {
+        if (block[i].startsWith('Tools:')) {
+          html += `<div class="cv-line" style="font-style:italic;color:var(--ink-soft);">${escHtml(block[i])}</div>`;
+        } else {
+          html += `<div class="cv-line" style="text-align:justify;">${escHtml(block[i])}</div>`;
+        }
+      }
+      html += `</div>`;
+      return html;
+    }).join('');
+  }
+
+  // ── WORK EXPERIENCE: each block = one job
+  // Line 0 = job title (BOLD ONLY)
+  // Lines 1,2,3 = company / location / dates / type (plain)
+  // Lines with • = bullets (indented, aligned)
+  if (sectionKey === 'WORK EXPERIENCE') {
+    return blocks.map((block, bi) => {
+      if (!block.length) return '';
+      let html = `<div style="${bi > 0 ? 'margin-top:9px;' : ''}">`;
+      html += `<strong style="font-weight:700;color:var(--ink);display:block;">${escHtml(block[0])}</strong>`;
+      for (let i = 1; i < block.length; i++) {
+        const line = block[i];
+        if (line.startsWith('•') || line.startsWith('-') || line.startsWith('✓')) {
+          html += `<div class="cv-bullet">${escHtml(line)}</div>`;
+        } else {
+          html += `<div class="cv-line" style="color:var(--ink-soft);">${escHtml(line)}</div>`;
+        }
+      }
+      html += `</div>`;
+      return html;
+    }).join('');
+  }
+
+  // ── EDUCATION: each block = one qualification
+  // Line 0 = degree/qualification (BOLD ONLY)
+  // Lines 1+ = institution, location, dates (plain)
+  if (sectionKey === 'EDUCATION') {
+    return blocks.map((block, bi) => {
+      if (!block.length) return '';
+      let html = `<div style="${bi > 0 ? 'margin-top:8px;' : ''}">`;
+      html += `<strong style="font-weight:700;color:var(--ink);display:block;">${escHtml(block[0])}</strong>`;
+      for (let i = 1; i < block.length; i++) {
+        html += `<div class="cv-line" style="color:var(--ink-soft);">${escHtml(block[i])}</div>`;
+      }
+      html += `</div>`;
+      return html;
+    }).join('');
+  }
+
+  // ── DEFAULT (SUMMARY etc): plain justified
+  return blocks.flat().map(line =>
+    `<div class="cv-line" style="text-align:justify;">${escHtml(line)}</div>`
+  ).join('');
+}
+
 function copyText() {
   let t = document.getElementById('cv-name').textContent + '\n\n';
   for (const [k,v] of Object.entries(window.__cvSections||{})) t += k + '\n' + v + '\n\n';
@@ -814,13 +960,18 @@ function downloadPDF() {
 @page{size:A4;margin:18mm 16mm;}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Source Serif 4',serif;font-size:11.5px;color:#1C1B19;line-height:1.65;}
-.cv-hdr{text-align:center;padding:18px 24px 12px;border-bottom:2px solid #1C1B19;}
-.cv-name{font-weight:700;font-size:22px;letter-spacing:-.3px;text-decoration:underline;text-underline-offset:3px;margin-bottom:5px;}
-.cv-contact-line{font-size:10.5px;color:#1C1B19;margin-bottom:2px;}
+.cv-hdr{text-align:center;padding:12px 24px 10px;border-bottom:2px solid #1C1B19;}
+.cv-name{font-weight:700;font-size:22px;letter-spacing:-.3px;text-decoration:underline;text-underline-offset:3px;margin-bottom:3px;}
+.cv-contact-line{font-size:10.5px;color:#1C1B19;margin-bottom:1px;line-height:1.5;}
 .cv-bd{padding:12px 24px 24px;}
 .cv-sec{margin-bottom:13px;}
 .cv-sec-title{font-weight:700;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;text-align:center;border-bottom:1.5px solid #1C1B19;padding:2px 0;margin-bottom:7px;}
-.cv-sec-body{font-size:11px;color:#374151;line-height:1.65;white-space:pre-wrap;word-break:break-word;}
+.cv-sec-body{font-size:11px;color:#374151;line-height:1.65;word-break:break-word;text-align:justify;}
+.cv-skill-row{display:table;width:100%;margin-bottom:2px;}
+.cv-skill-cat{display:table-cell;font-weight:700;color:#1C1B19;white-space:nowrap;padding-right:8px;width:28%;}
+.cv-skill-val{display:table-cell;color:#374151;text-align:left;}
+.cv-job-block{margin-bottom:8px;}
+.cv-line{display:block;}
 @media print{html,body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}header,footer,thead{display:none!important;}}
 </style></head><body>
 <div class="cv-hdr">${hdrHtml}</div>
@@ -898,7 +1049,7 @@ Arabic (Elementary)`,
   body.innerHTML = '';
   for (const k of SECTION_KEYS) if (demo[k]) {
     const s = document.createElement('div'); s.className = 'cv-sec';
-    s.innerHTML = `<div class="cv-sec-title">${k}</div><div class="cv-sec-body">${escHtml(demo[k])}</div>`;
+    s.innerHTML = `<div class="cv-sec-title">${k}</div><div class="cv-sec-body">${renderSectionBody(demo[k], k)}</div>`;
     body.appendChild(s);
   }
   document.getElementById('score-tag').style.display = 'flex';
