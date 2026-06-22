@@ -185,17 +185,10 @@ button{ font-family:inherit; }
   animation:fadeDown .6s cubic-bezier(.16,.8,.3,1) both;
   transition:background .4s, border-color .4s;
 }
-.brand{ display:flex; align-items:center; gap:10px; cursor:pointer; }
-.brand-mark{
-  width:38px; height:38px; border-radius:11px;
-  background:linear-gradient(135deg,#7C6CF0 0%,#6C5CE7 55%,#5B4BD6 100%);
-  display:flex; align-items:center; justify-content:center;
-  box-shadow:0 4px 14px rgba(108,92,231,.4); flex-shrink:0;
-  transition:transform .35s cubic-bezier(.34,1.56,.64,1), box-shadow .3s;
-}
-.brand:hover .brand-mark{ transform:rotate(-10deg) scale(1.1); box-shadow:0 6px 22px rgba(108,92,231,.55); }
-.brand-name{ font-weight:700; font-size:21px; letter-spacing:-.3px; color:var(--ink); transition:color .3s; }
-.brand-name b{ color:var(--indigo); font-weight:800; }
+.brand{ display:flex; align-items:center; cursor:pointer; }
+.brand-logo{ height:42px; width:auto; display:block; transition:transform .3s cubic-bezier(.34,1.56,.64,1), opacity .2s; }
+.brand:hover .brand-logo{ transform:scale(1.04); opacity:.9; }
+body.dark .brand-logo{ filter:brightness(1.15); }
 
 .nav-links{ display:flex; align-items:center; gap:34px; }
 .nav-links a{
@@ -695,7 +688,7 @@ body:not(.dark) .bg-star{ display:none; }
 
 @media(max-width:540px){
   .nav{ padding:13px 16px; }
-  .brand-name{ font-size:18px; }
+  .brand-logo{ height:34px; }
   .hero{ padding:40px 14px 0; }
   .hero h1{ font-size:28px; letter-spacing:-.8px; line-height:1.18; }
   .hero-sub{ font-size:14.5px; max-width:100%; margin:16px auto 0; }
@@ -733,16 +726,8 @@ body:not(.dark) .bg-star{ display:none; }
 
 <!-- ─── NAV ─── -->
 <nav class="nav">
-  <div class="brand">
-    <div class="brand-mark">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-        <path d="M6 2.5h8l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1z" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/>
-        <path d="M14 2.5v5h5" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/>
-        <circle cx="10.5" cy="15.5" r="2.5" fill="#fff"/>
-        <path d="M9.6 15.6l.6.6 1.4-1.4" stroke="#6C5CE7" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </div>
-    <div class="brand-name">Cv<b>Craft</b></div>
+  <div class="brand" onclick="location.href='index.html'" style="cursor:pointer;">
+    <img src="cvcraft-logo.png" alt="CvCraft.ai" class="brand-logo">
   </div>
 
   <div class="nav-links">
@@ -1014,7 +999,7 @@ fileInput.addEventListener('change', () => {
 });
 modalCancel.addEventListener('click', () => { modal.classList.remove('show'); fileInput.value = ''; });
 modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('show'); });
-modalContinue.addEventListener('click', () => { window.location.href = 'cvcraft-builder.html?source=upload'; });
+modalContinue.addEventListener('click', () => { window.location.href = 'cv-import.html'; });
 
 /* ── Scroll-reveal + count-up ── */
 const prefersReduced = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
