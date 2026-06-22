@@ -857,7 +857,8 @@ async function generate() {
             full += p.delta.text;
             for (const l of p.delta.text.split('\n')) {
               let hit = false;
-              for (const k of SECTION_KEYS) { if (l.trim()===k || l.trim().startsWith(k+'\n')) { currentEl=getSection(k); hit=true; break; } }
+              const sortedK = [...SECTION_KEYS].sort((a,b) => b.length - a.length);
+              for (const k of sortedK) { if (l.trim()===k) { currentEl=getSection(k); hit=true; break; } }
               if (!hit && currentEl) currentEl.textContent += (currentEl.textContent ? '\n' : '') + l;
             }
           }
@@ -865,9 +866,11 @@ async function generate() {
       }
     }
 
-    // clean final render
+    // clean final render — sort keys longest-first so "SOFT SKILLS" matches before "SKILLS"
+    // and "WORK EXPERIENCE" matches before bare words; anchor each key to start of line
     const sections = {};
-    const rx = new RegExp('(' + SECTION_KEYS.join('|') + ')([\\s\\S]*?)(?=' + SECTION_KEYS.join('|') + '|$)', 'g');
+    const sortedKeys = [...SECTION_KEYS].sort((a, b) => b.length - a.length);
+    const rx = new RegExp('(?:^|\\n)(' + sortedKeys.map(k => k.replace(/ /g, '\\ ')).join('|') + ')[ \\t]*\\n([\\s\\S]*?)(?=(?:^|\\n)(?:' + sortedKeys.map(k => k.replace(/ /g, '\\ ')).join('|') + ')[ \\t]*\\n|$)', 'g');
     let m; while ((m = rx.exec(full)) !== null) sections[m[1]] = m[2].trim();
     window.__cvSections = sections;
     body.innerHTML = '';
