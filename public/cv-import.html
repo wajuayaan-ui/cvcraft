@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CvCraft — Import your CV</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lexend:wght@600;700;800&display=swap" rel="stylesheet">
+<!-- PDF.js for in-browser PDF text extraction -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --indigo: #6C5CE7; --indigo-dark: #5B4BD6; --indigo-deep: #4F3FC9;
+  --violet-soft: #EDE9FE; --panel-violet: #F4F2FD;
+  --emerald: #10B981; --emerald-dark: #0EA371; --emerald-soft: #D7F5EA; --panel-emerald: #F0FBF6;
+  --ink: #1A1B2E; --ink-soft: #5B5D72; --ink-faint: #8A8CA0;
+  --line: #E7E6F0; --bg: #FCFCFE; --card: #FFFFFF;
+  --red: #E0436B; --red-pale: #FDE3E8;
+  --amber: #F59E0B; --amber-soft: #FEF1DA;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg); color: var(--ink);
+  min-height: 100vh; line-height: 1.6; overflow-x: hidden;
+}
+h1, h2, h3, .brand-name { font-family: 'Lexend', 'Inter', sans-serif; }
+a { text-decoration: none; color: inherit; }
+
+/* ── Keyframes ── */
+@keyframes fadeDown { from{opacity:0;transform:translateY(-12px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeUp   { from{opacity:0;transform:translateY(20px)}  to{opacity:1;transform:translateY(0)} }
+@keyframes popIn    { from{opacity:0;transform:scale(0.9) translateY(14px)} to{opacity:1;transform:scale(1) translateY(0)} }
+@keyframes spin     { to{transform:rotate(360deg)} }
+@keyframes pulse    { 0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(16,185,129,.45)} 50%{opacity:.7;box-shadow:0 0 0 5px rgba(16,185,129,0)} }
+@keyframes shimmer  { 0%{background-position:200% center} 100%{background-position:-200% center} }
+@keyframes checkPop { 0%{transform:scale(0)} 60%{transform:scale(1.2)} 100%{transform:scale(1)} }
+@keyframes barFill  { from{width:0} to{width:var(--target)} }
+@keyframes floatOrb { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-14px) scale(1.04)} }
+
+@media (prefers-reduced-motion:reduce) {
+  *,*::before,*::after { animation-duration:.001ms !important; transition-duration:.001ms !important; }
+}
+
+/* ── Nav ── */
+.nav {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:15px 40px; border-bottom:1px solid var(--line);
+  background:rgba(252,252,254,0.94); backdrop-filter:blur(12px);
+  position:sticky; top:0; z-index:100;
+  animation:fadeDown .5s cubic-bezier(.16,.8,.3,1) both;
+}
+.brand { display:flex; align-items:center; gap:9px; cursor:pointer; }
+.brand-mark {
+  width:34px; height:34px; border-radius:10px; flex-shrink:0;
+  background:linear-gradient(135deg,#7C6CF0 0%,#6C5CE7 55%,#5B4BD6 100%);
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 4px 12px rgba(108,92,231,.38);
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+}
+.brand:hover .brand-mark { transform:rotate(-10deg) scale(1.1); }
+.brand-name { font-weight:700; font-size:19px; letter-spacing:-.3px; }
+.brand-name b { color:var(--indigo); font-weight:800; }
+
+.back-link {
+  font-size:13px; font-weight:600; color:var(--ink-soft);
+  padding:8px 14px; border-radius:8px; border:1px solid var(--line);
+  background:#fff; display:flex; align-items:center; gap:5px;
+  transition:background .15s, color .15s, border-color .15s;
+}
+.back-link:hover { background:var(--violet-soft); color:var(--indigo-deep); border-color:#D7D2F5; }
+.back-link svg { flex-shrink:0; }
+
+/* ── Main layout ── */
+.page-wrap {
+  max-width:780px; margin:0 auto; padding:56px 24px 80px;
+  animation:fadeUp .6s cubic-bezier(.16,.8,.3,1) both .08s;
+}
+
+/* ── Hero ── */
+.page-eyebrow {
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+  color:var(--indigo-deep); background:var(--violet-soft);
+  padding:5px 14px; border-radius:999px; margin-bottom:18px;
+  border:1px solid rgba(108,92,231,.15);
+}
+.page-title {
+  font-size:36px; font-weight:800; letter-spacing:-1px; line-height:1.15;
+  margin-bottom:10px;
+}
+.page-title .accent {
+  background:linear-gradient(90deg,#6C5CE7,#9D8FFF,#6C5CE7);
+  background-size:300% auto;
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:shimmer 5s linear infinite;
+}
+.page-sub {
+  font-size:15px; color:var(--ink-soft); line-height:1.65; max-width:560px;
+  margin-bottom:40px;
+}
+
+/* ── Upload zone ── */
+.upload-zone {
+  border:2px dashed var(--line); border-radius:20px;
+  background:#fff; padding:52px 32px; text-align:center;
+  cursor:pointer; position:relative; overflow:hidden;
+  transition:border-color .25s, background .25s, box-shadow .25s;
+}
+.upload-zone:hover, .upload-zone.drag-over {
+  border-color:var(--indigo); background:var(--panel-violet);
+  box-shadow:0 0 0 4px rgba(108,92,231,.09);
+}
+.upload-zone.drag-over { border-style:solid; }
+.upload-zone input { position:absolute; inset:0; opacity:0; cursor:pointer; }
+
+.uz-icon {
+  width:64px; height:64px; border-radius:18px; margin:0 auto 18px;
+  background:var(--violet-soft); display:flex; align-items:center; justify-content:center;
+  animation:floatOrb 4s ease-in-out infinite;
+  box-shadow:0 8px 24px rgba(108,92,231,.2);
+}
+.uz-title { font-size:18px; font-weight:700; margin-bottom:6px; }
+.uz-sub { font-size:13.5px; color:var(--ink-soft); line-height:1.55; }
+.uz-sub b { color:var(--indigo); font-weight:600; }
+.uz-note { font-size:11.5px; color:var(--ink-faint); margin-top:12px; }
+
+/* ── Progress / states ── */
+.state-box {
+  display:none; border-radius:20px; border:1px solid var(--line);
+  background:#fff; overflow:hidden;
+  animation:popIn .35s cubic-bezier(.16,.8,.3,1) both;
+}
+.state-box.active { display:block; }
+
+/* Reading state */
+.reading-box { padding:40px 36px; text-align:center; }
+.reading-spinner {
+  width:48px; height:48px; border-radius:50%; margin:0 auto 20px;
+  border:3px solid var(--line); border-top-color:var(--indigo);
+  animation:spin .8s linear infinite;
+}
+.reading-label { font-size:15px; font-weight:600; color:var(--ink); margin-bottom:6px; }
+.reading-sub { font-size:13px; color:var(--ink-soft); }
+
+.progress-bar-wrap { background:var(--bg); border-radius:999px; height:6px; margin:20px 0 0; overflow:hidden; }
+.progress-bar { height:100%; border-radius:999px; background:linear-gradient(90deg,var(--indigo),#8B7CF6); width:0; transition:width .4s cubic-bezier(.16,.8,.3,1); }
+
+/* AI parsing state */
+.parsing-steps { padding:36px; }
+.step-title { font-size:11px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--indigo-deep); background:var(--violet-soft); display:inline-block; padding:4px 12px; border-radius:999px; margin-bottom:20px; }
+.step-list { list-style:none; display:flex; flex-direction:column; gap:10px; }
+.step-item {
+  display:flex; align-items:center; gap:12px;
+  font-size:13.5px; font-weight:500; color:var(--ink-faint);
+  padding:11px 14px; border-radius:12px; border:1.5px solid var(--line);
+  transition:all .3s ease;
+}
+.step-item.active {
+  color:var(--ink); border-color:#D7D2F5;
+  background:var(--panel-violet); box-shadow:0 4px 14px rgba(108,92,231,.08);
+}
+.step-item.done { color:var(--emerald-dark); border-color:var(--emerald-soft); background:var(--panel-emerald); }
+.step-icon {
+  width:28px; height:28px; border-radius:8px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  background:var(--line); transition:all .3s;
+}
+.step-item.active .step-icon { background:var(--indigo); animation:pulse .9s ease-in-out infinite; }
+.step-item.done .step-icon { background:var(--emerald); animation:none; }
+.step-item.done .step-icon svg { animation:checkPop .35s cubic-bezier(.34,1.56,.64,1) both; }
+.step-dot { width:8px; height:8px; border-radius:50%; background:#fff; flex-shrink:0; }
+.step-spin { width:14px; height:14px; border-radius:50%; border:2px solid rgba(255,255,255,.3); border-top-color:#fff; animation:spin .65s linear infinite; flex-shrink:0; }
+
+/* Result state */
+.result-box { padding:36px; }
+.result-header { display:flex; align-items:center; gap:14px; margin-bottom:24px; }
+.result-check {
+  width:48px; height:48px; border-radius:14px; flex-shrink:0;
+  background:linear-gradient(135deg,#16C690,var(--emerald-dark));
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 6px 18px rgba(16,185,129,.35);
+  animation:checkPop .4s cubic-bezier(.34,1.56,.64,1) both;
+}
+.result-header h2 { font-size:20px; font-weight:700; letter-spacing:-.3px; margin-bottom:3px; }
+.result-header p  { font-size:13px; color:var(--ink-soft); }
+
+/* Extracted field preview */
+.fields-grid {
+  display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:24px;
+}
+.field-chip {
+  border:1.5px solid var(--line); border-radius:10px;
+  padding:10px 14px; background:var(--bg);
+  animation:fadeUp .4s cubic-bezier(.16,.8,.3,1) both;
+}
+.field-chip.filled { border-color:#D7D2F5; background:var(--panel-violet); }
+.field-chip.filled .fc-val { color:var(--ink); }
+.fc-label { font-size:10.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:3px; }
+.fc-val { font-size:13px; font-weight:500; color:var(--ink-faint); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.fc-val.found { color:var(--ink); }
+
+/* Sections found */
+.sections-found { margin-bottom:24px; }
+.sf-title { font-size:12px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:10px; }
+.sf-tags { display:flex; flex-wrap:wrap; gap:7px; }
+.sf-tag {
+  font-size:12px; font-weight:600; padding:5px 13px; border-radius:999px;
+  border:1.5px solid var(--emerald-soft); background:var(--panel-emerald); color:var(--emerald-dark);
+  animation:popIn .3s cubic-bezier(.16,.8,.3,1) both;
+}
+.sf-tag.missing { border-color:var(--line); background:var(--bg); color:var(--ink-faint); }
+
+/* Action buttons */
+.action-row { display:flex; gap:10px; }
+.btn-continue {
+  flex:1; font-size:14.5px; font-weight:700; color:#fff; border:none; border-radius:12px;
+  padding:15px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;
+  background:linear-gradient(135deg,#7C6CF0,var(--indigo-dark));
+  box-shadow:0 10px 24px -8px rgba(108,92,231,.45);
+  transition:transform .15s, box-shadow .2s, filter .15s;
+}
+.btn-continue:hover { transform:translateY(-2px); box-shadow:0 14px 30px -8px rgba(108,92,231,.55); filter:brightness(1.06); }
+.btn-continue:active { transform:translateY(0); }
+.btn-restart {
+  font-size:13px; font-weight:600; color:var(--ink-soft); border:1.5px solid var(--line);
+  background:#fff; border-radius:12px; padding:14px 20px; cursor:pointer;
+  transition:background .15s, color .15s, border-color .15s;
+}
+.btn-restart:hover { background:var(--violet-soft); color:var(--indigo-deep); border-color:#D7D2F5; }
+
+/* Error state */
+.error-box { padding:36px; text-align:center; }
+.error-icon { font-size:36px; margin-bottom:14px; }
+.error-title { font-size:17px; font-weight:700; color:var(--red); margin-bottom:6px; }
+.error-msg { font-size:13px; color:var(--ink-soft); margin-bottom:22px; line-height:1.55; }
+.btn-retry {
+  font-size:13.5px; font-weight:600; color:#fff; border:none; border-radius:10px;
+  padding:11px 24px; cursor:pointer; background:var(--indigo);
+  transition:filter .15s, transform .15s;
+}
+.btn-retry:hover { filter:brightness(1.1); transform:translateY(-1px); }
+
+/* ── How it works ── */
+.how-wrap { margin-top:52px; }
+.how-title { font-size:13px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:20px; }
+.how-steps { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+.how-step {
+  background:#fff; border:1px solid var(--line); border-radius:16px;
+  padding:20px 18px; text-align:center;
+  transition:border-color .2s, transform .2s, box-shadow .2s;
+}
+.how-step:hover { border-color:#D7D2F5; transform:translateY(-3px); box-shadow:0 12px 28px -12px rgba(108,92,231,.2); }
+.hs-num {
+  width:32px; height:32px; border-radius:10px; margin:0 auto 12px;
+  background:var(--violet-soft); color:var(--indigo-deep);
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px; font-weight:800;
+}
+.hs-text { font-size:13px; color:var(--ink-soft); line-height:1.55; }
+.hs-text b { color:var(--ink); font-weight:600; display:block; margin-bottom:3px; font-size:13.5px; }
+
+/* ── Responsive ── */
+@media (max-width:600px) {
+  .nav { padding:13px 16px; }
+  .page-wrap { padding:36px 16px 60px; }
+  .page-title { font-size:26px; }
+  .upload-zone { padding:36px 18px; }
+  .fields-grid { grid-template-columns:1fr; }
+  .how-steps { grid-template-columns:1fr; }
+  .action-row { flex-direction:column; }
+  .parsing-steps, .result-box, .error-box { padding:24px; }
+  .result-header { flex-direction:column; align-items:flex-start; gap:10px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav class="nav">
+  <div class="brand" onclick="location.href='index.html'">
+    <div class="brand-mark">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+        <path d="M6 2.5h8l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1z" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/>
+        <path d="M14 2.5v5h5" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/>
+        <circle cx="10.5" cy="15.5" r="2.5" fill="#fff"/>
+        <path d="M9.6 15.6l.6.6 1.4-1.4" stroke="#6C5CE7" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="brand-name">Cv<b>Craft</b></div>
+  </div>
+  <a href="index.html" class="back-link">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M19 12H5M12 5l-7 7 7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Back to home
+  </a>
+</nav>
+
+<!-- Main -->
+<main class="page-wrap">
+
+  <!-- Hero -->
+  <div class="page-eyebrow">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    AI-powered import
+  </div>
+  <h1 class="page-title">Import your <span class="accent">existing CV</span></h1>
+  <p class="page-sub">Upload your current CV as a PDF — our AI reads it, extracts every detail, and pre-fills the builder for you. Takes about 10 seconds.</p>
+
+  <!-- Upload zone (shown by default) -->
+  <div class="upload-zone" id="upload-zone">
+    <input type="file" id="file-input" accept=".pdf,.txt,.doc,.docx" />
+    <div class="uz-icon">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+        <path d="M12 16V4M12 4l-4 4M12 4l4 4" stroke="#6C5CE7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M4 16v2.5A2.5 2.5 0 0 0 6.5 21h11a2.5 2.5 0 0 0 2.5-2.5V16" stroke="#6C5CE7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="uz-title">Drop your CV here or click to browse</div>
+    <p class="uz-sub">Supports <b>PDF</b>, DOCX, and TXT files up to 10 MB</p>
+    <p class="uz-note">Your file is processed locally + in your browser — never stored on our servers.</p>
+  </div>
+
+  <!-- Reading PDF state -->
+  <div class="state-box" id="state-reading">
+    <div class="reading-box">
+      <div class="reading-spinner"></div>
+      <div class="reading-label" id="reading-label">Reading your file…</div>
+      <div class="reading-sub" id="reading-sub">Extracting text from your CV</div>
+      <div class="progress-bar-wrap"><div class="progress-bar" id="progress-bar"></div></div>
+    </div>
+  </div>
+
+  <!-- AI parsing state -->
+  <div class="state-box" id="state-parsing">
+    <div class="parsing-steps">
+      <span class="step-title">AI is reading your CV</span>
+      <ul class="step-list" id="step-list">
+        <li class="step-item" id="step-0" data-label="Reading personal details & contact info">
+          <div class="step-icon"><div class="step-dot"></div></div>
+          Reading personal details &amp; contact info
+        </li>
+        <li class="step-item" id="step-1" data-label="Extracting work experience">
+          <div class="step-icon"><div class="step-dot"></div></div>
+          Extracting work experience
+        </li>
+        <li class="step-item" id="step-2" data-label="Parsing education &amp; certifications">
+          <div class="step-icon"><div class="step-dot"></div></div>
+          Parsing education &amp; certifications
+        </li>
+        <li class="step-item" id="step-3" data-label="Identifying skills, languages &amp; achievements">
+          <div class="step-icon"><div class="step-dot"></div></div>
+          Identifying skills, languages &amp; achievements
+        </li>
+        <li class="step-item" id="step-4" data-label="Formatting for KSA / ATS template">
+          <div class="step-icon"><div class="step-dot"></div></div>
+          Formatting for KSA / ATS template
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Result state -->
+  <div class="state-box" id="state-result">
+    <div class="result-box">
+      <div class="result-header">
+        <div class="result-check">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <h2>CV imported successfully!</h2>
+          <p>Review the fields below, then open the builder with everything pre-filled.</p>
+        </div>
+      </div>
+
+      <!-- Quick preview of extracted fields -->
+      <div class="fields-grid" id="fields-grid"></div>
+
+      <!-- Sections detected -->
+      <div class="sections-found">
+        <div class="sf-title">Sections detected</div>
+        <div class="sf-tags" id="sf-tags"></div>
+      </div>
+
+      <!-- Actions -->
+      <div class="action-row">
+        <button class="btn-continue" id="btn-continue" onclick="goToBuilder()">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Open builder with my CV
+        </button>
+        <button class="btn-restart" onclick="restart()">Import another</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error state -->
+  <div class="state-box" id="state-error">
+    <div class="error-box">
+      <div class="error-icon">⚠️</div>
+      <div class="error-title" id="error-title">Something went wrong</div>
+      <p class="error-msg" id="error-msg">We couldn't read your CV. Please try again with a different file.</p>
+      <button class="btn-retry" onclick="restart()">Try again</button>
+    </div>
+  </div>
+
+  <!-- How it works -->
+  <div class="how-wrap">
+    <div class="how-title">How it works</div>
+    <div class="how-steps">
+      <div class="how-step">
+        <div class="hs-num">1</div>
+        <div class="hs-text"><b>Upload your CV</b>PDF, DOCX, or TXT — any format works</div>
+      </div>
+      <div class="how-step">
+        <div class="hs-num">2</div>
+        <div class="hs-text"><b>AI extracts everything</b>Name, jobs, education, skills, certs and more</div>
+      </div>
+      <div class="how-step">
+        <div class="hs-num">3</div>
+        <div class="hs-text"><b>Builder opens pre-filled</b>Edit, enhance with AI, then download as PDF</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+// ── PDF.js worker ──
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+const ALL_SECTIONS = ['SUMMARY','SKILLS','WORK EXPERIENCE','PROJECTS','EDUCATION','CERTIFICATIONS','ACHIEVEMENTS','LANGUAGES','SOFT SKILLS'];
+
+// ── UI helpers ──
+function showState(name) {
+  ['upload-zone','state-reading','state-parsing','state-result','state-error'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const isBox = el.classList.contains('state-box');
+    if (id === name) { if (isBox) el.classList.add('active'); else el.style.display = ''; }
+    else             { if (isBox) el.classList.remove('active'); else el.style.display = 'none'; }
+  });
+}
+
+function setStepActive(idx) {
+  document.querySelectorAll('.step-item').forEach((el, i) => {
+    if (i < idx) {
+      el.classList.remove('active'); el.classList.add('done');
+      el.querySelector('.step-icon').innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    } else if (i === idx) {
+      el.classList.add('active'); el.classList.remove('done');
+      el.querySelector('.step-icon').innerHTML = `<div class="step-spin"></div>`;
+    } else {
+      el.classList.remove('active','done');
+      el.querySelector('.step-icon').innerHTML = `<div class="step-dot"></div>`;
+    }
+  });
+}
+
+function showError(title, msg) {
+  document.getElementById('error-title').textContent = title;
+  document.getElementById('error-msg').textContent = msg;
+  showState('state-error');
+}
+
+function restart() {
+  document.getElementById('file-input').value = '';
+  showState('upload-zone');
+}
+
+// ── Drag and drop ──
+const zone = document.getElementById('upload-zone');
+zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+zone.addEventListener('drop', e => {
+  e.preventDefault(); zone.classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file) handleFile(file);
+});
+
+document.getElementById('file-input').addEventListener('change', e => {
+  if (e.target.files[0]) handleFile(e.target.files[0]);
+});
+
+// ── File handler ──
+async function handleFile(file) {
+  if (file.size > 10 * 1024 * 1024) { showError('File too large', 'Please upload a file under 10 MB.'); return; }
+
+  const ext = file.name.split('.').pop().toLowerCase();
+  if (!['pdf','txt','doc','docx'].includes(ext)) {
+    showError('Unsupported file type', 'Please upload a PDF, DOCX, or TXT file.');
+    return;
+  }
+
+  showState('state-reading');
+  document.getElementById('reading-label').textContent = ext === 'pdf' ? 'Reading PDF…' : 'Reading file…';
+  document.getElementById('reading-sub').textContent = 'Extracting text from your CV';
+
+  try {
+    let rawText = '';
+
+    if (ext === 'pdf') {
+      rawText = await extractPdfText(file);
+    } else {
+      // TXT / DOC fallback — read as text
+      rawText = await new Promise((res, rej) => {
+        const reader = new FileReader();
+        reader.onload = e => res(e.target.result);
+        reader.onerror = () => rej(new Error('Could not read file'));
+        reader.readAsText(file);
+      });
+    }
+
+    if (!rawText || rawText.trim().length < 50) {
+      showError('Could not extract text', 'Your PDF may be image-based (scanned). Try copy-pasting your CV as a TXT file instead.');
+      return;
+    }
+
+    // Truncate to ~12k chars (plenty for Claude)
+    rawText = rawText.slice(0, 12000);
+
+    // Now send to AI
+    await parseWithAI(rawText);
+
+  } catch (err) {
+    showError('Read failed', err.message || 'Unknown error reading your file.');
+  }
+}
+
+// ── PDF text extraction ──
+async function extractPdfText(file) {
+  const bar = document.getElementById('progress-bar');
+  const arrayBuffer = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  let text = '';
+
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    const pageText = content.items.map(item => item.str).join(' ');
+    text += pageText + '\n';
+    bar.style.width = ((i / pdf.numPages) * 100) + '%';
+  }
+  return text;
+}
+
+// ── AI Parsing ──
+async function parseWithAI(rawText) {
+  showState('state-parsing');
+
+  // Animate steps with a timer then advance based on streaming
+  let stepIdx = 0;
+  setStepActive(0);
+
+  const stepTimer = setInterval(() => {
+    stepIdx = Math.min(stepIdx + 1, 3);
+    setStepActive(stepIdx);
+  }, 1800);
+
+  const prompt = `You are an expert CV parser. Below is raw text extracted from someone's CV. Extract ALL information and return it as a single valid JSON object. Return ONLY the JSON, no explanation, no markdown backticks.
+
+JSON schema:
+{
+  "fname": "First name",
+  "lname": "Last name",
+  "targetRole": "Their most recent job title or target role",
+  "phone": "Phone number",
+  "email": "Email address",
+  "city": "City, Country",
+  "linkedin": "LinkedIn URL or blank",
+  "github": "GitHub URL or blank",
+  "dob": "Date of birth if found, else blank",
+  "nationality": "Nationality if found, else blank",
+  "summary": "A 2-3 sentence professional summary capturing their career story (write this yourself based on their CV)",
+  "skillCategories": [
+    { "cat": "Category name e.g. Languages", "val": "Python, SQL, R" }
+  ],
+  "jobs": [
+    {
+      "title": "Job title",
+      "company": "Company name",
+      "location": "City, Country",
+      "dates": "Start – End or Present",
+      "type": "Full-time / Part-time / Remote / On-Site",
+      "notes": "Bullet points about responsibilities and achievements, each starting with •"
+    }
+  ],
+  "projects": [
+    {
+      "name": "Project name",
+      "tools": "Tool1, Tool2",
+      "desc": "What it does, results, impact"
+    }
+  ],
+  "education": [
+    {
+      "degree": "Degree / Qualification",
+      "institution": "University / School name",
+      "location": "City, Country",
+      "dates": "Sep 2020 – Jun 2024"
+    }
+  ],
+  "certifications": [
+    { "name": "Cert name", "issuer": "Issuing org", "date": "Month Year" }
+  ],
+  "achievements": "1. Achievement one\\n2. Achievement two",
+  "languages": [
+    { "lang": "English", "level": "Professional Working" }
+  ],
+  "softSkills": "Comma-separated soft skills"
+}
+
+IMPORTANT:
+- Language levels must be one of: Native, Professional Working, Elementary, Basic
+- If a field is not found, use an empty string "" or empty array []
+- For jobs, write proper bullet points from whatever information is available
+- Extract ALL jobs, ALL education entries, ALL certifications
+- Return ONLY valid JSON, nothing else
+
+CV TEXT:
+---
+${rawText}
+---`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 3000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    clearInterval(stepTimer);
+    setStepActive(4);
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error?.message || 'API error ' + res.status);
+    }
+
+    const data = await res.json();
+    const rawJson = data.content?.find(b => b.type === 'text')?.text || '';
+
+    // Strip any accidental markdown fences
+    const cleaned = rawJson.replace(/```json\s*/gi,'').replace(/```\s*/g,'').trim();
+    const parsed = JSON.parse(cleaned);
+
+    // Final step done
+    setTimeout(() => {
+      setStepActive(5); // marks all done
+      document.querySelectorAll('.step-item').forEach(el => {
+        el.classList.remove('active'); el.classList.add('done');
+        el.querySelector('.step-icon').innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+      });
+      showResultUI(parsed);
+    }, 600);
+
+  } catch (err) {
+    clearInterval(stepTimer);
+    showError(
+      'AI parsing failed',
+      err.message.includes('fetch') || err.message.includes('Network')
+        ? 'Could not reach the AI service. Make sure your proxy server is running.'
+        : err.message.slice(0, 180)
+    );
+  }
+}
+
+// ── Build result UI ──
+function showResultUI(data) {
+  // Store in sessionStorage for builder to pick up
+  sessionStorage.setItem('cvcraft-import', JSON.stringify(data));
+
+  // Build field chips
+  const grid = document.getElementById('fields-grid');
+  grid.innerHTML = '';
+  const fields = [
+    ['Name', [data.fname, data.lname].filter(Boolean).join(' ')],
+    ['Email', data.email],
+    ['Phone', data.phone],
+    ['Location', data.city],
+    ['Target role', data.targetRole],
+    ['Nationality', data.nationality],
+    ['LinkedIn', data.linkedin],
+    ['Jobs found', data.jobs?.length ? `${data.jobs.length} position${data.jobs.length>1?'s':''}` : ''],
+    ['Education', data.education?.length ? `${data.education.length} qualif.` : ''],
+    ['Certifications', data.certifications?.length ? `${data.certifications.length} cert${data.certifications.length>1?'s':''}` : ''],
+    ['Skill categories', data.skillCategories?.length ? `${data.skillCategories.length} categories` : ''],
+    ['Languages', data.languages?.length ? `${data.languages.length} language${data.languages.length>1?'s':''}` : ''],
+  ];
+
+  fields.forEach(([label, val], i) => {
+    const div = document.createElement('div');
+    div.className = 'field-chip' + (val ? ' filled' : '');
+    div.style.animationDelay = (i * 0.04) + 's';
+    div.innerHTML = `<div class="fc-label">${label}</div><div class="fc-val ${val ? 'found' : ''}">${val || '— not found'}</div>`;
+    grid.appendChild(div);
+  });
+
+  // Build section tags
+  const tags = document.getElementById('sf-tags');
+  tags.innerHTML = '';
+  const detected = {
+    'SUMMARY':        !!(data.summary),
+    'SKILLS':         !!(data.skillCategories?.length),
+    'WORK EXPERIENCE':!!(data.jobs?.length),
+    'PROJECTS':       !!(data.projects?.length),
+    'EDUCATION':      !!(data.education?.length),
+    'CERTIFICATIONS': !!(data.certifications?.length),
+    'ACHIEVEMENTS':   !!(data.achievements),
+    'LANGUAGES':      !!(data.languages?.length),
+    'SOFT SKILLS':    !!(data.softSkills),
+  };
+  ALL_SECTIONS.forEach((s, i) => {
+    const span = document.createElement('span');
+    span.className = 'sf-tag' + (detected[s] ? '' : ' missing');
+    span.style.animationDelay = (i * 0.05) + 's';
+    span.textContent = (detected[s] ? '✓ ' : '— ') + s;
+    tags.appendChild(span);
+  });
+
+  showState('state-result');
+}
+
+// ── Go to builder ──
+function goToBuilder() {
+  window.location.href = 'cvcraft-builder.html?source=import';
+}
+</script>
+</body>
+</html>
