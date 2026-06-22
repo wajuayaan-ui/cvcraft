@@ -35,6 +35,30 @@
 
   html { scroll-behavior: smooth; }
 
+  /* ───────── Dark Mode ───────── */
+  html.dark {
+    --ink: #EEEDF8;
+    --ink-soft: #A8A6C0;
+    --ink-faint: #6B6985;
+    --line: #2E2D42;
+    --bg: #13121F;
+    --panel-violet: #1C1A2E;
+    --panel-emerald: #111E1A;
+  }
+  html.dark body { background: var(--bg); }
+  html.dark .nav { background: rgba(19,18,31,0.92); }
+  html.dark .brand-mark { box-shadow: 0 4px 12px rgba(108,92,231,0.5); }
+  html.dark .mv-card,
+  html.dark .value-card,
+  html.dark .team-info { background: #1C1A2E; border-color: var(--line); }
+  html.dark .mission-visual { background: linear-gradient(140deg, #1C1A2E 0%, #18172A 100%); }
+  html.dark .values-section { background: linear-gradient(160deg, #1A1829 0%, #15141F 100%); }
+  html.dark .cta-section { border-color: var(--line); }
+  html.dark .footer { border-color: var(--line); }
+  html.dark .theme-btn { background: #2A2840; color: var(--ink-soft); }
+  html.dark .theme-btn:hover { background: #332F55; }
+  html.dark .tl-dot { background: #13121F; }
+
   body {
     font-family: 'Inter', system-ui, sans-serif;
     background: var(--bg);
@@ -76,6 +100,62 @@
     0% { background-position: -200% center; }
     100% { background-position: 200% center; }
   }
+  @keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  @keyframes avatarPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(108,92,231,0.4); }
+    50% { box-shadow: 0 0 0 14px rgba(108,92,231,0); }
+  }
+  @keyframes floatParticle {
+    0% { transform: translateY(0) translateX(0) scale(1); opacity: 0.7; }
+    33% { transform: translateY(-30px) translateX(12px) scale(1.1); opacity: 1; }
+    66% { transform: translateY(-18px) translateX(-10px) scale(0.9); opacity: 0.8; }
+    100% { transform: translateY(0) translateX(0) scale(1); opacity: 0.7; }
+  }
+  @keyframes borderGlow {
+    0%, 100% { border-color: rgba(108,92,231,0.2); }
+    50% { border-color: rgba(108,92,231,0.6); }
+  }
+  @keyframes countUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ───────── Animated accent text ───────── */
+  .accent {
+    background: linear-gradient(90deg, #6C5CE7, #A855F7, #10B981, #6C5CE7);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 4s ease infinite;
+  }
+
+  /* ───────── Hero particles ───────── */
+  .hero-particles { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+  .particle {
+    position: absolute; border-radius: 50%;
+    background: var(--indigo); opacity: 0.18;
+  }
+  .p1 { width:10px; height:10px; top:20%; left:8%;  animation: floatParticle 6s ease-in-out infinite; }
+  .p2 { width:6px;  height:6px;  top:60%; left:15%; animation: floatParticle 8s ease-in-out infinite 1s; }
+  .p3 { width:14px; height:14px; top:30%; right:12%;animation: floatParticle 7s ease-in-out infinite 0.5s; }
+  .p4 { width:8px;  height:8px;  top:70%; right:20%;animation: floatParticle 9s ease-in-out infinite 2s; }
+  .p5 { width:5px;  height:5px;  top:15%; left:45%; animation: floatParticle 5s ease-in-out infinite 1.5s; }
+  .p6 { width:12px; height:12px; top:80%; left:50%; animation: floatParticle 10s ease-in-out infinite 0.8s; }
+
+  /* ───────── Team avatar pulse ───────── */
+  .team-avatar { animation: avatarPulse 3s ease-in-out infinite; }
+
+  /* ───────── mv-card staggered entrance ───────── */
+  .mv-card { animation: fadeUp 0.5s cubic-bezier(.16,.8,.3,1) both; }
+  .mv-card:nth-child(2) { animation-delay: 0.12s; }
+  .mv-card:nth-child(3) { animation-delay: 0.24s; }
+
+  /* ───────── Team card entrance ───────── */
+  .team-card { animation: popIn 0.6s cubic-bezier(.16,.8,.3,1) both 0.2s; }
 
   .reveal {
     opacity: 0;
@@ -272,9 +352,9 @@
     background: #fff; border-radius: 18px; padding: 28px 26px;
     border: 1px solid var(--line);
     box-shadow: 0 2px 8px rgba(26,27,46,0.04);
-    transition: transform 0.3s cubic-bezier(.16,.8,.3,1), box-shadow 0.3s;
+    transition: transform 0.3s cubic-bezier(.16,.8,.3,1), box-shadow 0.3s, border-color 0.3s;
   }
-  .value-card:hover { transform: translateY(-5px); box-shadow: 0 16px 36px -12px rgba(26,27,46,0.14); }
+  .value-card:hover { transform: translateY(-5px); box-shadow: 0 16px 36px -12px rgba(108,92,231,0.22); border-color: rgba(108,92,231,0.4); }
   .val-icon {
     width: 50px; height: 50px; border-radius: 14px;
     display: flex; align-items: center; justify-content: center;
@@ -314,6 +394,7 @@
   .team-info h4 { font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
   .team-info .role { font-size: 13px; color: var(--indigo); font-weight: 600; margin-bottom: 8px; }
   .team-info p { font-size: 13px; color: var(--ink-soft); line-height: 1.55; }
+  .team-grid-solo { grid-template-columns: 280px; justify-content: center; }
 
   /* ───────── Timeline ───────── */
   .timeline-wrap { position: relative; margin-top: 52px; padding-left: 32px; }
@@ -409,7 +490,9 @@
 <nav class="nav">
   <a href="index.html" class="brand">
     <div class="brand-mark">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+      <img src="cvcraft-logo.png" alt="CvCraft" style="width:38px;height:38px;border-radius:11px;object-fit:cover;display:block;"
+        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="display:none">
         <path d="M6 2.5h8l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1z" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/>
         <path d="M14 2.5v5h5" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/>
         <circle cx="10.5" cy="15.5" r="2.5" fill="#fff"/>
@@ -429,8 +512,6 @@
     <button class="theme-btn" id="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
       <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.4M12 19.1v2.4M21.5 12h-2.4M4.9 12H2.5M18.5 5.5l-1.7 1.7M7.2 16.8l-1.7 1.7M18.5 18.5l-1.7-1.7M7.2 7.2L5.5 5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
     </button>
-    <button class="btn-login">Log in</button>
-    <button class="btn-signup">Sign up</button>
   </div>
 </nav>
 
@@ -438,19 +519,28 @@
 <section class="page-hero">
   <div class="hero-bg-ring ring-1"></div>
   <div class="hero-bg-ring ring-2"></div>
-  <div class="eyebrow"><span class="spark">👋</span> Our story</div>
-  <h1>Built for people who<br><span class="accent">deserve better jobs</span></h1>
-  <p>CvCraft was born from a simple frustration — great candidates losing out because of a poorly formatted CV. We're here to fix that.</p>
+  <div class="hero-particles">
+    <div class="particle p1"></div>
+    <div class="particle p2"></div>
+    <div class="particle p3"></div>
+    <div class="particle p4"></div>
+    <div class="particle p5"></div>
+    <div class="particle p6"></div>
+  </div>
+  <div class="eyebrow"><span class="spark">👋</span> The person behind this</div>
+  <h1>Data Science graduate.<br><span class="accent">Builder. Problem solver.</span></h1>
+  <p>Hi, I'm Wajahat Ali. I build tools that make work faster, smarter, and less painful for the people using them.</p>
 </section>
 
 <!-- ───────── Mission ───────── -->
 <div class="section">
   <div class="mission-grid">
     <div class="reveal">
-      <div class="mission-label">Our Mission</div>
-      <h2>Level the playing field, one CV at a time</h2>
-      <p>The hiring process is broken in a very specific way: brilliant people are filtered out before a human ever reads their name, because their CV didn't tick the right ATS boxes or didn't look the part.</p>
-      <p>CvCraft gives every job seeker the same polished, recruiter-ready presentation that used to require an expensive career coach or hours of frustrating reformatting.</p>
+      <div class="mission-label">About Me</div>
+      <h2>From IT support to AI-powered software</h2>
+      <p>I hold a BS in Data Science from Government College University Faisalabad, with hands-on experience spanning IT support, network engineering, and full-stack desktop development. I've worked across hospital systems, telecom infrastructure, and enterprise showrooms.</p>
+      <p>Currently at Aran Cucine Riyadh, where I handle everything from 3D kitchen design and client presentations to network infrastructure and technical support. Before that, I ranked in the Top 4 out of 96 engineers at Sybrid (a Lakson Group company) for technical support performance.</p>
+      <p>Outside the day job, I build — including a desktop document management system for a trading company in Riyadh, a Telegram transit bot for Riyadh Public Transport, and data tools connecting Firebase with Google Sheets.</p>
     </div>
     <div class="mission-visual reveal" style="transition-delay:0.12s">
       <div class="mv-card">
@@ -458,26 +548,26 @@
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 12h6M9 16h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
         </div>
         <div class="mv-card-text">
-          <h4>ATS-ready every time</h4>
-          <p>Every template is built to clear automated screening software — the first gate most CVs never pass.</p>
+          <h4>Data Science & AI</h4>
+          <p>Python, Power BI, machine learning projects — including a phishing URL detector and gesture-controlled paint app.</p>
         </div>
       </div>
       <div class="mv-card">
         <div class="mv-icon e">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v6c0 4.6-3 8-7 9-4-1-7-4.4-7-9V6l7-3z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="2" y="3" width="20" height="14" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M8 21h8M12 17v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
         </div>
         <div class="mv-card-text">
-          <h4>No design skills needed</h4>
-          <p>Recruiters judge CVs in seconds. We handle the formatting so your content gets the attention it deserves.</p>
+          <h4>Desktop & Web Development</h4>
+          <p>Electron.js, Firebase, Node.js — building real software for real businesses, not just side projects.</p>
         </div>
       </div>
       <div class="mv-card">
         <div class="mv-icon a">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 16l1.5-4L16 3l4 4-9.5 9.5L5 16z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M19 21l.6-1.6L21 19l-1.4-.6L19 17l-.6 1.4L17 19l1.4.6L19 21z" fill="currentColor"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
         </div>
         <div class="mv-card-text">
-          <h4>Minutes, not hours</h4>
-          <p>Upload your existing CV or start fresh — either way you'll have a polished result faster than you'd expect.</p>
+          <h4>Networking & IT Infrastructure</h4>
+          <p>CCNA-certified, with real-world experience configuring switches, firewalls, VPNs, and fiber optic networks.</p>
         </div>
       </div>
     </div>
@@ -541,76 +631,16 @@
 <!-- ───────── Team ───────── -->
 <div class="section">
   <div class="section-header reveal">
-    <h2>The people behind CvCraft</h2>
-    <p>A small team with one obsession — helping people land the jobs they've worked hard for.</p>
+    <h2>The person behind CvCraft</h2>
+    <p>One builder, one obsession — helping people present themselves the way they deserve.</p>
   </div>
-  <div class="team-grid">
-    <div class="team-card reveal" style="transition-delay:0.05s">
+  <div class="team-grid team-grid-solo">
+    <div class="team-card reveal">
       <div class="team-avatar v">🧑‍💻</div>
       <div class="team-info">
-        <h4>Adam Reyes</h4>
-        <div class="role">Co-founder & CEO</div>
-        <p>Former recruiter who got tired of watching strong candidates fail on paper.</p>
-      </div>
-    </div>
-    <div class="team-card reveal" style="transition-delay:0.12s">
-      <div class="team-avatar e">👩‍🎨</div>
-      <div class="team-info">
-        <h4>Sara Osei</h4>
-        <div class="role">Head of Design</div>
-        <p>Makes sure every template feels human, not like it came out of a generator.</p>
-      </div>
-    </div>
-    <div class="team-card reveal" style="transition-delay:0.19s">
-      <div class="team-avatar a">👨‍🔬</div>
-      <div class="team-info">
-        <h4>Liam Park</h4>
-        <div class="role">Head of Engineering</div>
-        <p>Built the ATS parsing engine from scratch and still loses sleep over edge cases.</p>
-      </div>
-    </div>
-    <div class="team-card reveal" style="transition-delay:0.26s">
-      <div class="team-avatar s">👩‍💼</div>
-      <div class="team-info">
-        <h4>Nour Khalil</h4>
-        <div class="role">Growth & Partnerships</div>
-        <p>Connects CvCraft to the employers and career platforms that get our users hired.</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ───────── Story timeline ───────── -->
-<div class="values-section">
-  <div class="values-inner">
-    <div class="section-header reveal">
-      <h2>How we got here</h2>
-      <p>From a weekend frustration to a platform used by thousands.</p>
-    </div>
-    <div class="timeline-wrap">
-      <div class="tl-item reveal" style="transition-delay:0.05s">
-        <div class="tl-dot"><span></span></div>
-        <div class="tl-year">2022</div>
-        <h4>The frustration that started it</h4>
-        <p>Adam, after five years in recruitment, watches a brilliant candidate get auto-rejected because their CV used a table layout. He starts building a tool over a long weekend.</p>
-      </div>
-      <div class="tl-item reveal" style="transition-delay:0.15s">
-        <div class="tl-dot"><span></span></div>
-        <div class="tl-year">2023</div>
-        <h4>First 1,000 users</h4>
-        <p>A quiet beta launch. Word spreads through job-seeker communities. The team grows to four and the first proper ATS-optimised templates ship.</p>
-      </div>
-      <div class="tl-item reveal" style="transition-delay:0.25s">
-        <div class="tl-dot"><span></span></div>
-        <div class="tl-year">2024</div>
-        <h4>Upload & enhance launches</h4>
-        <p>The ability to upload an existing CV and instantly clean, reformat, and improve it becomes CvCraft's most-used feature within weeks of launch.</p>
-      </div>
-      <div class="tl-item reveal" style="transition-delay:0.35s">
-        <div class="tl-dot"><span></span></div>
-        <div class="tl-year">Today</div>
-        <h4>10,000+ CVs created and counting</h4>
-        <p>Thousands of users have used CvCraft to land interviews and jobs worldwide. We're still a small team — still just as obsessed with getting the details right.</p>
+        <h4>Wajahat Ali</h4>
+        <div class="role">Founder & CEO</div>
+        <p>Data Science graduate with a background in IT, networking, and full-stack development. Built CvCraft to make professional CVs accessible to everyone.</p>
       </div>
     </div>
   </div>
@@ -640,12 +670,18 @@
 </footer>
 
 <script>
-  // Theme toggle
+  // Theme toggle — proper dark mode via CSS class
   const themeBtn = document.getElementById('theme-toggle');
-  let isDark = false;
+  const root = document.documentElement;
+
+  // Load saved preference
+  if (localStorage.getItem('theme') === 'dark') {
+    root.classList.add('dark');
+  }
+
   themeBtn.addEventListener('click', () => {
-    isDark = !isDark;
-    document.body.style.filter = isDark ? 'invert(1) hue-rotate(180deg)' : 'none';
+    root.classList.toggle('dark');
+    localStorage.setItem('theme', root.classList.contains('dark') ? 'dark' : 'light');
   });
 
   // Scroll-triggered reveal
