@@ -58,6 +58,8 @@
   html.dark .theme-btn { background: #2A2840; color: var(--ink-soft); }
   html.dark .theme-btn:hover { background: #332F55; }
   html.dark .tl-dot { background: #13121F; }
+  html.dark .team-card { border-color: var(--line); }
+  html.dark .cta-btn-secondary { background: #1C1A2E; color: var(--ink); border-color: var(--line); }
 
   body {
     font-family: 'Inter', system-ui, sans-serif;
@@ -191,14 +193,20 @@
   .brand { display: flex; align-items: center; gap: 10px; }
   .brand-mark {
     width: 38px; height: 38px; border-radius: 11px;
-    background: linear-gradient(135deg, #7C6CF0 0%, #6C5CE7 55%, #5B4BD6 100%);
+    background: #fff;
+    border: 1px solid var(--line);
     display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 4px 12px rgba(108,92,231,0.35); flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(108,92,231,0.15); flex-shrink: 0;
+    overflow: hidden;
     transition: transform 0.35s cubic-bezier(.34,1.56,.64,1), box-shadow 0.3s;
   }
   .brand:hover .brand-mark { transform: rotate(-8deg) scale(1.08); box-shadow: 0 6px 18px rgba(108,92,231,0.45); }
-  .brand-name { font-weight: 700; font-size: 21px; letter-spacing: -0.3px; color: var(--ink); }
-  .brand-name b { color: var(--indigo); font-weight: 800; }
+  .brand-name { font-weight: 800; font-size: 21px; letter-spacing: -0.3px; color: #0D1B4B; }
+  .brand-name b { color: #0D1B4B; font-weight: 900; }
+  .brand-ai { color: #2563EB; font-weight: 700; font-size: 18px; }
+  html.dark .brand-name { color: #E8E7F8; }
+  html.dark .brand-name b { color: #E8E7F8; }
+  html.dark .brand-ai { color: #6C9FFF; }
 
   .nav-links { display: flex; align-items: center; gap: 34px; }
   .nav-links a {
@@ -479,9 +487,29 @@
     .nav-links { display: none; }
     .page-hero h1 { font-size: 32px; }
     .values-grid { grid-template-columns: 1fr; }
-    .team-grid { grid-template-columns: repeat(2, 1fr); }
+    .team-grid { grid-template-columns: 1fr; }
+    .team-grid-solo { grid-template-columns: 1fr; max-width: 340px; }
+    .team-avatar { height: 160px; font-size: 60px; }
+    .team-info { padding: 20px; text-align: center; }
+    .team-info h4 { font-size: 18px; }
+    .team-info .role { font-size: 14px; }
+    .team-info p { font-size: 14px; }
     .footer { flex-direction: column; gap: 12px; text-align: center; padding: 20px 24px; }
+    .section { padding: 48px 18px; }
+    .values-inner { padding: 48px 18px; }
   }
+  .team-grid-solo {
+    grid-template-columns: 300px;
+    justify-content: center;
+    margin-top: 40px;
+  }
+  .team-card {
+    border-radius: 18px; border: 1px solid var(--line);
+    overflow: hidden;
+    transition: transform 0.3s cubic-bezier(.16,.8,.3,1), box-shadow 0.3s;
+    animation: popIn 0.6s cubic-bezier(.16,.8,.3,1) both 0.2s;
+  }
+  .team-card:hover { transform: translateY(-5px); box-shadow: 0 16px 36px -12px rgba(108,92,231,0.22); }
 </style>
 </head>
 <body>
@@ -489,17 +517,11 @@
 <!-- ───────── Nav ───────── -->
 <nav class="nav">
   <a href="index.html" class="brand">
-    <div class="brand-mark">
-      <img src="cvcraft-logo.png" alt="CvCraft" style="width:38px;height:38px;border-radius:11px;object-fit:cover;display:block;"
-        onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="display:none">
-        <path d="M6 2.5h8l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1z" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/>
-        <path d="M14 2.5v5h5" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/>
-        <circle cx="10.5" cy="15.5" r="2.5" fill="#fff"/>
-        <path d="M9.6 15.6l.6.6 1.4-1.4" stroke="#6C5CE7" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
+    <div class="brand-mark" id="brand-mark-wrap">
+      <!-- Logo rendered via canvas crop — shows only the CV document icon part -->
+      <canvas id="logo-canvas" width="38" height="38" style="border-radius:9px;display:block;"></canvas>
     </div>
-    <div class="brand-name">Cv<b>Craft</b></div>
+    <div class="brand-name">Cv<b>Craft</b><span class="brand-ai">.ai</span></div>
   </a>
   <div class="nav-links">
     <a href="index.html">Home</a>
@@ -670,21 +692,48 @@
 </footer>
 
 <script>
-  // Theme toggle — proper dark mode via CSS class
+  // ── Logo: crop only the CV document icon (left ~28%) from the wide logo image ──
+  const canvas = document.getElementById('logo-canvas');
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    img.onload = function() {
+      // The document icon occupies roughly the left 28% of the image
+      const cropW = img.naturalWidth * 0.28;
+      const cropH = img.naturalHeight;
+      const cropX = 0;
+      const cropY = 0;
+      ctx.drawImage(img, cropX, cropY, cropW, cropH, 0, 0, 38, 38);
+    };
+    img.onerror = function() {
+      // Fallback: draw indigo background with CV text
+      ctx.fillStyle = '#6C5CE7';
+      ctx.fillRect(0, 0, 38, 38);
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 13px Inter, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('CV', 19, 24);
+    };
+    img.src = 'cvcraft-logo.png';
+  }
+
+  // ── Theme toggle — default LIGHT, only go dark on explicit click ──
   const themeBtn = document.getElementById('theme-toggle');
   const root = document.documentElement;
 
-  // Load saved preference
-  if (localStorage.getItem('theme') === 'dark') {
+  // Only restore dark if user explicitly chose it before
+  const saved = localStorage.getItem('cvcraft-theme');
+  if (saved === 'dark') {
     root.classList.add('dark');
   }
+  // If no saved preference OR saved is 'light' → stay light (default)
 
   themeBtn.addEventListener('click', () => {
-    root.classList.toggle('dark');
-    localStorage.setItem('theme', root.classList.contains('dark') ? 'dark' : 'light');
+    const isDark = root.classList.toggle('dark');
+    localStorage.setItem('cvcraft-theme', isDark ? 'dark' : 'light');
   });
 
-  // Scroll-triggered reveal
+  // ── Scroll-triggered reveal ──
   const revealEls = document.querySelectorAll('.reveal');
   if ('IntersectionObserver' in window) {
     const observer = new IntersectionObserver((entries) => {
