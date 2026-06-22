@@ -23,36 +23,7 @@
   --shadow-card: 0 1px 2px rgba(26,27,46,0.04), 0 12px 28px -10px rgba(26,27,46,0.12), 0 2px 8px rgba(26,27,46,0.05);
   --shadow-card-lg: 0 4px 8px rgba(26,27,46,0.04), 0 24px 48px -16px rgba(108,92,231,0.18), 0 2px 10px rgba(26,27,46,0.05);
 }
-body { font-family:'Inter',system-ui,sans-serif; background:var(--paper); color:var(--ink); min-height:100vh; font-size:14px; line-height:1.6; transition:background 0.35s, color 0.35s; }
-
-/* ── Dark mode vars (mirrors index.html) ── */
-body.dark {
-  --paper: #0D0C1A; --card: #141327; --ink: #E8E6F4; --ink-soft: #9A98B4; --ink-faint: #6A6880;
-  --line: #1E1C35; --line-soft: #1A183A; --rule: #1E1C35; --rule-dark: #252340;
-  --panel-violet: #131228; --panel-emerald: #0A1C17;
-  --violet-soft: #1E1B36; --emerald-soft: #0B1F16;
-  --red-pale: #200B12;
-  --shadow-card: 0 1px 2px rgba(0,0,0,0.2), 0 12px 28px -10px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.15);
-  --shadow-card-lg: 0 4px 8px rgba(0,0,0,0.2), 0 24px 48px -16px rgba(108,92,231,0.28), 0 2px 10px rgba(0,0,0,0.15);
-}
-body.dark .masthead { background:rgba(13,12,26,0.95); }
-body.dark input, body.dark select, body.dark textarea { background:var(--paper); color:var(--ink); border-color:var(--line); }
-body.dark input:focus, body.dark select:focus, body.dark textarea:focus { background:#1A1835; border-color:var(--indigo); }
-body.dark .rep-row { background:var(--paper); }
-body.dark .rep-row input, body.dark .rep-row textarea { background:#1A1835; }
-body.dark .chip { background:var(--card); border-color:var(--line); color:var(--ink-soft); }
-body.dark .chip:hover { background:var(--panel-violet); border-color:#4A3CB0; color:#C4BBFF; }
-body.dark .add-btn { background:var(--panel-violet); border-color:#2D2660; color:#A89FE0; }
-body.dark .demo-link { background:var(--card); border-color:var(--line); color:var(--ink); }
-body.dark .demo-link:hover { background:var(--panel-violet); border-color:#4A3CB0; color:#C4BBFF; }
-body.dark .tbtn { background:var(--card); border-color:var(--line); color:var(--ink); }
-body.dark .tbtn:hover:not(:disabled) { background:var(--panel-violet); border-color:#4A3CB0; color:#C4BBFF; }
-body.dark .paper { background:var(--card); }
-body.dark .cv-hdr { border-bottom-color:var(--ink); }
-body.dark .ticket { background:var(--card); }
-body.dark .ticket-feats { background:var(--paper); }
-body.dark .overlay { background:rgba(0,0,0,0.7); }
-body.dark .gen-btn:disabled { background:var(--line); color:var(--ink-faint); }
+body { font-family:'Inter',system-ui,sans-serif; background:var(--paper); color:var(--ink); min-height:100vh; font-size:14px; line-height:1.6; }
 h1, h2, h3, .masthead-title { font-family:'Lexend','Inter',sans-serif; }
 @keyframes fadeDown { from{opacity:0;transform:translateY(-10px)} to{opacity:1;transform:translateY(0)} }
 @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
@@ -62,19 +33,17 @@ h1, h2, h3, .masthead-title { font-family:'Lexend','Inter',sans-serif; }
 }
 /* masthead */
 .masthead { border-bottom:1px solid var(--line); padding:13px 28px; display:flex; align-items:center; justify-content:space-between; background:rgba(252,252,254,0.92); backdrop-filter:blur(8px); position:sticky; top:0; z-index:60; animation:fadeDown 0.5s cubic-bezier(.16,.8,.3,1) both; }
-.masthead-brand { display:flex; align-items:center; text-decoration:none; cursor:pointer; transition:opacity 0.15s; }
-.masthead-brand:hover { opacity:0.85; }
-.masthead-brand:hover .brand-logo-img { transform:scale(1.04); }
-.brand-logo-img { height:38px; width:auto; display:block; transition:transform 0.25s cubic-bezier(.34,1.56,.64,1); }
-body.dark .brand-logo-img { filter:brightness(1.15); }
+.masthead-title { font-weight:700; font-size:20px; letter-spacing:-0.3px; display:flex; align-items:center; gap:10px; }
+.masthead-title::before { content:''; width:32px; height:32px; border-radius:9px; flex-shrink:0; background:linear-gradient(135deg,#7C6CF0 0%,var(--indigo) 55%,var(--indigo-dark) 100%); box-shadow:0 3px 10px rgba(108,92,231,0.32); display:inline-block; }
+.masthead-title .mark { color:var(--indigo); }
 .masthead-right { display:flex; align-items:center; gap:10px; }
+.back-link { font-size:13px; font-weight:600; color:var(--ink-soft); padding:7px 13px; border-radius:8px; text-decoration:none; display:flex; align-items:center; gap:5px; transition:background 0.15s,color 0.15s; }
+.back-link:hover { background:var(--violet-soft); color:var(--indigo-deep); }
+.beta-badge { font-size:11px; font-weight:600; letter-spacing:0.02em; color:var(--emerald-dark); border:1px solid var(--emerald-soft); background:var(--panel-emerald); padding:5px 12px; border-radius:999px; }
 .demo-link { font-size:13px; font-weight:600; letter-spacing:0.01em; padding:8px 15px; border-radius:9px; border:1px solid var(--line); background:#fff; color:var(--ink); cursor:pointer; transition:all 0.15s; }
 .demo-link:hover { background:var(--violet-soft); border-color:#D7D2F5; color:var(--indigo-deep); transform:translateY(-1px); }
 /* layout */
 .app { display:grid; grid-template-columns:440px 1fr; height:calc(100vh - 58px); overflow:hidden; }
-@media (max-width:900px) {
-  .app { grid-template-columns:1fr; height:auto; overflow:visible; }
-}
 /* LEFT: form */
 .form-side { background:var(--card); border-right:1px solid var(--line); overflow-y:auto; scrollbar-width:thin; scrollbar-color:var(--rule-dark) transparent; }
 .form-inner { padding:24px 26px 36px; }
@@ -170,8 +139,9 @@ textarea { resize:vertical; min-height:68px; line-height:1.55; }
 .cv-soft-col { display:table-cell; width:50%; color:var(--ink-soft); padding-right:6px; vertical-align:top; }
 .cv-job-block { margin-bottom:0; }
 .cv-line { display:block; }
-.cv-bullet { display:block; padding-left:1.1em; text-indent:-1.1em; text-align:left; color:var(--ink-soft); line-height:1.65; }
-.cv-achieve { display:block; padding-left:1.5em; text-indent:-1.5em; text-align:left; margin-bottom:4px; color:var(--ink-soft); line-height:1.65; }
+.cv-bullet { display:block; padding-left:16px; text-indent:-16px; text-align:left; color:var(--ink-soft); }
+.cv-bullet::marker { color: var(--indigo); }
+.cv-achieve { display:block; padding-left:22px; text-indent:-22px; text-align:left; margin-bottom:4px; color:var(--ink-soft); }
 /* empty state */
 .empty-cv { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:calc(100vh - 160px); text-align:center; padding:40px; color:var(--ink-faint); }
 .empty-mark { font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--indigo-deep); background:var(--violet-soft); border-radius:999px; padding:8px 18px; margin-bottom:16px; }
@@ -202,69 +172,21 @@ textarea { resize:vertical; min-height:68px; line-height:1.55; }
 .pay-btn:active { transform:translateY(0); }
 .cancel-link { background:none; border:none; color:var(--ink-faint); font-size:12px; font-weight:600; cursor:pointer; padding:6px; transition:color 0.15s; }
 .cancel-link:hover { color:var(--ink); }
-/* ── MOBILE ── */
 @media (max-width:900px) {
-  /* Stack form on top, preview below */
-  .form-side, .form-bottom { border-right:none; }
-
-  /* Form side scrolls naturally in page flow */
-  .form-side { overflow-y:visible; height:auto; }
-
-  /* Preview takes its own full height */
-  .preview-side { min-height:80vh; overflow:visible; height:auto; }
-  .paper-wrap { padding:16px; overflow:visible; }
-  .paper { min-height:auto; border-radius:12px; }
-
-  /* Toolbar wraps on small screens */
-  .preview-toolbar { flex-wrap:wrap; gap:8px; height:auto; padding:10px 16px; }
-  .tb-actions { flex-wrap:wrap; gap:6px; }
-  .tbtn { font-size:12px; padding:7px 12px; }
-
-  /* Masthead */
-  .masthead { padding:11px 16px; }
-  .brand-logo-img { height:32px; }
-  .demo-link { font-size:12px; padding:7px 12px; }
-
-  /* Form inner */
-  .form-inner { padding:18px 16px 24px; }
-  .form-bottom { padding:12px 16px 18px; border-right:none; }
-  .form-head h1 { font-size:19px; }
-
-  /* Two-column grids → single on narrow */
-  .f2 { grid-template-columns:1fr; gap:8px; }
-  .skill-cat-row { grid-template-columns:1fr; }
-
-  /* CV preview text scales down slightly */
-  .cv-name { font-size:20px; }
-  .cv-hdr { padding:16px 20px 12px; }
-  .cv-bd { padding:12px 20px 24px; }
-  .cv-sec-body { font-size:11.5px; }
-}
-
-@media (max-width:540px) {
-  .brand-logo-img { height:28px; }
-  .form-inner { padding:14px 14px 20px; }
-  .paper-wrap { padding:10px; }
-  .cv-hdr { padding:14px 14px 10px; }
-  .cv-bd { padding:10px 14px 20px; }
-  .cv-name { font-size:18px; }
-  .cv-contact-line { font-size:10.5px; }
-  .gen-btn { font-size:13.5px; padding:12px; }
-  .f2 { grid-template-columns:1fr; gap:7px; }
-  .rep-row { padding:11px 12px 12px; }
-  .tb-left { font-size:10.5px; }
-  .tbtn { font-size:11.5px; padding:6px 10px; }
+  .app { grid-template-columns:1fr; height:auto; overflow:visible; }
+  .form-side,.form-bottom { border-right:none; }
+  .preview-side { min-height:600px; }
 }
 </style>
 </head>
 <body>
 
 <div class="masthead">
-  <a href="index.html" class="masthead-brand">
-    <img src="cvcraft-logo.png" alt="CvCraft.ai" class="brand-logo-img">
-  </a>
+  <div class="masthead-title">Cv<span class="mark">Craft</span></div>
   <div class="masthead-right">
-    <button class="demo-link" onclick="showDemo()">Demo</button>
+    <a href="index.html" class="back-link">← Home</a>
+    <span class="beta-badge">Free · Beta</span>
+    <button class="demo-link" onclick="showDemo()">View specimen</button>
   </div>
 </div>
 
@@ -324,8 +246,8 @@ textarea { resize:vertical; min-height:68px; line-height:1.55; }
 
   <!-- ── 2. SUMMARY ── -->
   <div class="sec-div"><div class="n">2</div><div class="t">Summary</div><div class="l"></div></div>
-  <div class="f"><div class="flabel">Professional summary <span class="opt">rough notes only — AI writes 3 clean sentences</span></div>
-  <textarea id="summary" rows="3" placeholder="e.g. 3 years in IT support, strong in networking and cloud, led a team of 5 — AI will turn this into a polished 3-sentence summary"></textarea></div>
+  <div class="f"><div class="flabel">Professional summary <span class="opt">rough notes are fine — AI will rewrite</span></div>
+  <textarea id="summary" rows="4" placeholder="e.g. Results-driven professional with 3 years experience in... (rough notes are fine, AI will rewrite)"></textarea></div>
 
   <!-- ── 3. SKILLS ── -->
   <div class="sec-div"><div class="n">3</div><div class="t">Skills</div><div class="l"></div></div>
@@ -448,13 +370,6 @@ textarea { resize:vertical; min-height:68px; line-height:1.55; }
 </div>
 
 <script>
-// ── Dark mode: sync from index.html via localStorage (no default dark) ──
-(function() {
-  if (localStorage.getItem('cvcraft-dark') === '1') {
-    document.body.classList.add('dark');
-  }
-})();
-
 // ── Free mode toggle ──
 const FREE_MODE = true;
 
@@ -741,7 +656,7 @@ function buildPrompt() {
   return `You are an expert CV writer for ${sector} roles. ${regionInstr}
 
 OUTPUT FORMAT RULES:
-- For SUMMARY: write EXACTLY 3 sentences. First sentence: who they are and their years of experience + field. Second sentence: their strongest skill or achievement with a number or concrete result. Third sentence: what they bring to a team or their career focus. Keep it human, warm, and confident — not robotic or keyword-stuffed. Maximum 3 sentences, no exceptions.
+- Output ONLY the CV body starting from SUMMARY section
 - Each section heading must be exactly as shown below, ALL CAPS
 - Under each heading write the content directly
 - For WORK EXPERIENCE: separate each job with a BLANK LINE. Format: "Job Title\nCompany, Location\nDates | Employment Type\n• bullet\n• bullet"
@@ -857,8 +772,7 @@ async function generate() {
             full += p.delta.text;
             for (const l of p.delta.text.split('\n')) {
               let hit = false;
-              const sortedK = [...SECTION_KEYS].sort((a,b) => b.length - a.length);
-              for (const k of sortedK) { if (l.trim()===k) { currentEl=getSection(k); hit=true; break; } }
+              for (const k of SECTION_KEYS) { if (l.trim()===k || l.trim().startsWith(k+'\n')) { currentEl=getSection(k); hit=true; break; } }
               if (!hit && currentEl) currentEl.textContent += (currentEl.textContent ? '\n' : '') + l;
             }
           }
@@ -866,11 +780,9 @@ async function generate() {
       }
     }
 
-    // clean final render — sort keys longest-first so "SOFT SKILLS" matches before "SKILLS"
-    // and "WORK EXPERIENCE" matches before bare words; anchor each key to start of line
+    // clean final render
     const sections = {};
-    const sortedKeys = [...SECTION_KEYS].sort((a, b) => b.length - a.length);
-    const rx = new RegExp('(?:^|\\n)(' + sortedKeys.map(k => k.replace(/ /g, '\\ ')).join('|') + ')[ \\t]*\\n([\\s\\S]*?)(?=(?:^|\\n)(?:' + sortedKeys.map(k => k.replace(/ /g, '\\ ')).join('|') + ')[ \\t]*\\n|$)', 'g');
+    const rx = new RegExp('(' + SECTION_KEYS.join('|') + ')([\\s\\S]*?)(?=' + SECTION_KEYS.join('|') + '|$)', 'g');
     let m; while ((m = rx.exec(full)) !== null) sections[m[1]] = m[2].trim();
     window.__cvSections = sections;
     body.innerHTML = '';
@@ -1089,8 +1001,8 @@ body{font-family:'Source Serif 4',serif;font-size:11.5px;color:#1C1B19;line-heig
 .cv-soft-col{display:table-cell;width:50%;color:#374151;padding-right:6px;vertical-align:top;}
 .cv-job-block{margin-bottom:0;}
 .cv-line{display:block;}
-.cv-bullet{display:block;padding-left:1.1em;text-indent:-1.1em;text-align:left;line-height:1.65;}
-.cv-achieve{display:block;padding-left:1.5em;text-indent:-1.5em;text-align:justify;margin-bottom:3px;line-height:1.65;}
+.cv-bullet{display:block;padding-left:16px;text-indent:-16px;text-align:left;}
+.cv-achieve{display:block;padding-left:22px;text-indent:-22px;text-align:justify;margin-bottom:3px;}
 @media print{html,body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}header,footer,thead{display:none!important;}}
 </style></head><body>
 <div class="cv-hdr">${hdrHtml}</div>
